@@ -119,7 +119,7 @@ const Menu = ({ userId }) => {
                 <Route path="/budgetreply/:idBudget" element={<AdminBudgetReply />} />
                 <Route path="/ticketreply/:idTicket" element={<AdminTicketReply />} />
                 <Route path="/ticketreply" element={<AdminTicketReply />} />
-                <Route path="/sales" element={<AdminSalesDashboard />} />
+                <Route path="/sale" element={<AdminSalesDashboard />} />
               </Routes>
             </div>
           </div>

@@ -11,7 +11,7 @@ function BudgetsListBox({ numRowsToShow }) {
     const [budgetNumberFilter, setBudgetNumberFilter] = useState('');
     const [clientFilter, setClientFilter] = useState('');
     const [statusFilter, setStatusFilter] = useState('');
-    const [descriptionFilter, setDescriptionFilter] = useState(''); // New state for description filter
+    const [descriptionFilter, setDescriptionFilter] = useState(''); 
     const [selectedDate, setSelectedDate] = useState(null);
     const [currentPage, setCurrentPage] = useState(1);
     const [itemsPerPage, setItemsPerPage] = useState(10);

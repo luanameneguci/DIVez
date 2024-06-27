@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import axios from 'axios'; // Import axios for making HTTP requests
 
 function ClientListBox({ clientList }) {
     const [nameFilter, setNameFilter] = useState('');
