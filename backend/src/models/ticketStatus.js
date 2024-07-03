@@ -1,6 +1,5 @@
-// TicketStatus.js
 const Sequelize = require('sequelize');
-const sequelize = require('../config/database'); // Adjust path as per your project structure
+const sequelize = require('./database');
 
 const TicketStatus = sequelize.define('TicketStatus', {
   IDTICKETSTATUS: {

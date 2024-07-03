@@ -1,9 +1,8 @@
-// Ticket.js
 const Sequelize = require('sequelize');
-const sequelize = require('../config/database'); // Adjust path as per your project structure
-const TicketPriority = require('./TicketPriority');
-const TicketDepartment = require('./TicketDepartment');
-const TicketStatus = require('./TicketStatus');
+const sequelize = require('./database');
+const TicketPriority = require('./ticketPriority');
+const TicketDepartment = require('./ticketDepartment');
+const TicketStatus = require('./ticketStatus');
 
 const Ticket = sequelize.define('Ticket', {
   IDTICKET: {
