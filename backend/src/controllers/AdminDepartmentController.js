@@ -1,7 +1,7 @@
 const express = require("express");
 const Sequelize = require('sequelize');
 const sequelize = require("./database");
-const AdminDepartment = require("./models/AdminDepartment");
+const AdminDepartment = require("../models/adminDepartment");
 
 const controllers = {};
 

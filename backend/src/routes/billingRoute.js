@@ -1,18 +1,21 @@
 const express = require("express");
 const router = express.Router();
 
-const billController = require("../controllers/billingController");
+const billingController = require("../controllers/billingControllers");
 
-router.get("/", billController.bill_list); 
+// Get all billing records
+router.get("/", billingController.billing_list);
 
-router.get("/:id", billController.bill_detail);
+// Create a new billing record
+router.post("/create", billingController.billing_create);
 
-router.post("/create", billController.bill_create);
+// Update a billing record by ID
+router.put("/update/:id", billingController.billing_update);
 
-router.put("/update/:id", billController.bill_update);
+// Get a billing record by ID
+router.get("/:id", billingController.billing_detail);
 
-router.get("/Detail/:idBuyer", billController.getBillDetails);
-
-router.get("/lastBillId", billController.bill_getLastBillId);
+// Delete a billing record by ID
+router.delete("/delete/:id", billingController.billing_delete);
 
 module.exports = router;

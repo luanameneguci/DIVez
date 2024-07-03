@@ -1,7 +1,7 @@
 const express = require("express");
 const Sequelize = require('sequelize');
 const sequelize = require("./database");
-const LicenseStatus = require("./models/LicenseStatus");
+const LicenseStatus = require("../models/licenseStatus");
 
 const controllers = {};
 

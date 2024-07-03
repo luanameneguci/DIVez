@@ -1,16 +1,21 @@
 const express = require("express");
 const router = express.Router();
 
-const adminDepartmentController = require("../controllers/adminDepartmentController");
+const adminDepartmentController = require("../controllers/adminDepartmentControllers");
 
-router.get("/", adminDepartmentController.admin_department_list); 
+// Get all admin departments
+router.get("/", adminDepartmentController.adminDepartment_list);
 
-router.post("/create", adminDepartmentController.admin_department_create);
+// Create a new admin department
+router.post("/create", adminDepartmentController.adminDepartment_create);
 
-router.put("/update/:id", adminDepartmentController.admin_department_update);
+// Update an admin department by ID
+router.put("/update/:id", adminDepartmentController.adminDepartment_update);
 
-router.get("/:id", adminDepartmentController.admin_department_detail); 
+// Get an admin department by ID
+router.get("/:id", adminDepartmentController.adminDepartment_detail);
 
-router.delete("/delete/:id", adminDepartmentController.admin_department_delete);
+// Delete an admin department by ID
+router.delete("/delete/:id", adminDepartmentController.adminDepartment_delete);
 
-module.exports = router; 
+module.exports = router;

@@ -1,22 +1,20 @@
 const express = require("express");
 const router = express.Router();
+const budgetController = require("../controllers/budgetControllers");
 
-module.exports = router;
+// Get all budgets
+router.get("/", budgetController.budget_list);
 
-const budgetController = require("../controllers/budgetController");
-
-router.get("/", budgetController.budget_list); 
-
-router.get("/:id", budgetController.budget_detail);
-
-router.get("/findByCart/:id", budgetController.budget_findByCart); 
-
+// Create a new budget
 router.post("/create", budgetController.budget_create);
 
+// Update a budget
 router.put("/update/:id", budgetController.budget_update);
 
-router.get('/countByStatus/:id', budgetController.budget_findByBudgetStatus);
+// Get a budget by id
+router.get("/:id", budgetController.budget_detail);
 
+// Delete a budget by id
 router.delete("/delete/:id", budgetController.budget_delete);
 
 module.exports = router;

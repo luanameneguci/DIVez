@@ -1,7 +1,7 @@
 const express = require("express");
 const Sequelize = require('sequelize');
 const sequelize = require("./database");
-const TicketDepartment = require("./models/TicketDepartment");
+const TicketDepartment = require("../models/ticketDepartment");
 
 const controllers = {};
 

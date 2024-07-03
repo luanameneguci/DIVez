@@ -1,7 +1,7 @@
 const express = require("express");
 const Sequelize = require('sequelize');
 const sequelize = require("./database");
-const Budget = require("../models/Budget");
+const Budget = require("../models/budget");
 
 const controllers = {};
 

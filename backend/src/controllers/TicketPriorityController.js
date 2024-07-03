@@ -1,7 +1,7 @@
 const express = require("express");
 const Sequelize = require('sequelize');
 const sequelize = require("./database");
-const TicketPriority = require("./models/TicketPriority");
+const TicketPriority = require("../models/ticketPriority");
 
 const controllers = {};
 
