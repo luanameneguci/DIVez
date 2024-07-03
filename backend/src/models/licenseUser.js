@@ -1,23 +1,18 @@
-var Sequelize = require("sequelize");
-var sequelize = require("./database");
-var LicenseUser = sequelize.define(
-  "licenseUser",
-  {
+const Sequelize = require('sequelize');
+const sequelize = require('./database');
+
+const LicenseUser = sequelize.define('licenseUser', {
     idLicenseUser: {
-      autoIncrement: true,
-      type: Sequelize.INTEGER,
-      allowNull: false,
-      primaryKey: true,
+        type: Sequelize.INTEGER,
+        primaryKey: true,
+        autoIncrement: true
     },
-    licenseUserEmail: {
-      type: Sequelize.STRING(255),
-      allowNull: true,
-    },
-  },
-  {
+    licenseUser: {
+        type: Sequelize.STRING(100)
+    }
+}, {
     timestamps: false,
     freezeTableName: true
-  }
-);
+});
 
 module.exports = LicenseUser;

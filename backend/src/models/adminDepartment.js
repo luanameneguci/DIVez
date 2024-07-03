@@ -1,21 +1,18 @@
 const Sequelize = require('sequelize');
 const sequelize = require('./database');
 
-const Package = sequelize.define('package', {
-    idPackage: {
+const AdminDepartment = sequelize.define('adminDepartment', {
+    idDepartment: {
         type: Sequelize.INTEGER,
         primaryKey: true,
         autoIncrement: true
     },
-    packageName: {
+    department: {
         type: Sequelize.STRING(50)
-    },
-    packagePrice: {
-        type: Sequelize.REAL
     }
 }, {
     timestamps: false,
     freezeTableName: true
 });
 
-module.exports = Package;
+module.exports = AdminDepartment;

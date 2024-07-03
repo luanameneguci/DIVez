@@ -1,21 +1,20 @@
 const Sequelize = require('sequelize');
 const sequelize = require('./database');
 
-const Package = sequelize.define('package', {
+const BudgetPackage = sequelize.define('budgetPackage', {
     idPackage: {
         type: Sequelize.INTEGER,
         primaryKey: true,
-        autoIncrement: true
+        allowNull: false
     },
-    packageName: {
-        type: Sequelize.STRING(50)
-    },
-    packagePrice: {
-        type: Sequelize.REAL
+    idBudget: {
+        type: Sequelize.INTEGER,
+        primaryKey: true,
+        allowNull: false
     }
 }, {
     timestamps: false,
     freezeTableName: true
 });
 
-module.exports = Package;
+module.exports = BudgetPackage;

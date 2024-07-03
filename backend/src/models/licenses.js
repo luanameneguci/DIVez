@@ -1,86 +1,25 @@
-const Sequelize = require("sequelize");
-const sequelize = require("./database");
-const Buyer = require("./buyer");
-const Bill = require("./bills");
-const Product = require("./products");
-const LicenseStatus = require("./licenseStatus");
-const LicenseUser = require("./licenseUser");
-const Manager = require("./manager");
+const Sequelize = require('sequelize');
+const sequelize = require('./database');
 
-const License = sequelize.define(
-  "license",
-  {
-    idLicense: {
-      autoIncrement: true,
-      type: Sequelize.INTEGER,
-      allowNull: false,
-      primaryKey: true,
-    },
-    licenseDescript: {
-      type: Sequelize.STRING(255),
-      allowNull: true,
-    },
-    idBuyer: {
-      type: Sequelize.INTEGER,
-      allowNull: false,
-      references: {
-        model: Buyer,
-        key: "idBuyer",
-      },
-    },
-    idBill: {
-      type: Sequelize.INTEGER,
-      allowNull: false,
-      references: {
-        model: Bill,
-        key: "idBill",
-      },
+const Licenses = sequelize.define('licenses', {
+    licenseKey: {
+        type: Sequelize.STRING(23),
+        primaryKey: true
     },
     idLicenseStatus: {
-      type: Sequelize.INTEGER,
-      allowNull: false,
-      references: {
-        model: LicenseStatus,
-        key: "idLicenseStatus",
-      },
+        type: Sequelize.INTEGER,
+        allowNull: false
     },
     idLicenseUser: {
-      type: Sequelize.INTEGER,
-      allowNull: true,
-      references: {
-        model: LicenseUser,
-        key: "idLicenseUser",
-      },
+        type: Sequelize.INTEGER
     },
-    idProduct: {
-      type: Sequelize.INTEGER,
-      allowNull: true,
-      references: {
-        model: Product,
-        key: "idProduct",
-      },
-    },
-    idManager: {
-      type: Sequelize.INTEGER,
-      allowNull: true,
-      references: {
-        model: Manager,
-        key: "idManager",
-      },
-    },
-  },
-  {
+    idBill: {
+        type: Sequelize.INTEGER,
+        allowNull: false
+    }
+}, {
     timestamps: false,
-    freezeTableName: true,
-  }
-);
+    freezeTableName: true
+});
 
-// Define associations
-License.belongsTo(Buyer, { foreignKey: 'idBuyer' });
-License.belongsTo(Bill, { foreignKey: 'idBill' });
-License.belongsTo(LicenseStatus, { foreignKey: 'idLicenseStatus' });
-License.belongsTo(LicenseUser, { foreignKey: 'idLicenseUser' });
-License.belongsTo(Product, { foreignKey: 'idProduct' });
-License.belongsTo(Manager, { foreignKey: 'idManager' });
-
-module.exports = License;
+module.exports = Licenses;

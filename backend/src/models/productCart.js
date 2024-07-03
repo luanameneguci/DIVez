@@ -1,13 +1,13 @@
 const Sequelize = require('sequelize');
 const sequelize = require('./database');
 
-const BudgetProduct = sequelize.define('budgetProduct', {
-    idProduct: {
+const ProductCart = sequelize.define('productCart', {
+    idCart: {
         type: Sequelize.INTEGER,
         primaryKey: true,
         allowNull: false
     },
-    idBudget: {
+    idProduct: {
         type: Sequelize.INTEGER,
         primaryKey: true,
         allowNull: false
@@ -17,4 +17,4 @@ const BudgetProduct = sequelize.define('budgetProduct', {
     freezeTableName: true
 });
 
-module.exports = BudgetProduct;
+module.exports = ProductCart;

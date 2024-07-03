@@ -1,23 +1,18 @@
-var Sequelize = require("sequelize");
-var sequelize = require("./database");
-var LicenseStatus = sequelize.define(
-  "licenseStatus",
-  {
+const Sequelize = require('sequelize');
+const sequelize = require('./database');
+
+const LicenseStatus = sequelize.define('licenseStatus', {
     idLicenseStatus: {
-      autoIncrement: true,
-      type: Sequelize.INTEGER,
-      allowNull: false,
-      primaryKey: true,
+        type: Sequelize.INTEGER,
+        primaryKey: true,
+        autoIncrement: true
     },
-    licenseStatusDescript: {
-      type: Sequelize.STRING(255),
-      allowNull: true,
-    },
-  },
-  {
+    licenseStatus: {
+        type: Sequelize.STRING(50)
+    }
+}, {
     timestamps: false,
     freezeTableName: true
-  }
-);
+});
 
 module.exports = LicenseStatus;

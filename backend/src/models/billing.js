@@ -1,26 +1,26 @@
 const Sequelize = require('sequelize');
 const sequelize = require('./database');
 
-const Cart = sequelize.define('cart', {
-    IDCART: {
+const Billing = sequelize.define('billing', {
+    IDBILL: {
         type: Sequelize.INTEGER,
         primaryKey: true,
         autoIncrement: true
     },
-    IDUSER: {
+    IDCART: {
         type: Sequelize.INTEGER,
         allowNull: false,
         references: {
-            model: 'USER',
-            key: 'IDUSER'
+            model: 'CART',
+            key: 'IDCART'
         }
     },
-    CARTPRICE: {
-        type: Sequelize.REAL
+    BILLDATE: {
+        type: Sequelize.DATE
     }
 }, {
     timestamps: false,
     freezeTableName: true
 });
 
-module.exports = Cart;
+module.exports = Billing;

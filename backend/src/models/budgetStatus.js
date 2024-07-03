@@ -1,25 +1,18 @@
-var Sequelize = require("sequelize");
-var sequelize = require("./database");
+const Sequelize = require('sequelize');
+const sequelize = require('./database');
 
-var budgetStatus = sequelize.define(
-  "budgetStatus",
-  {
+const BudgetStatus = sequelize.define('budgetStatus', {
     idBudgetStatus: {
-      autoIncrement: true,
-      type: Sequelize.INTEGER,
-      allowNull: false,
-      primaryKey: true,
+        type: Sequelize.INTEGER,
+        primaryKey: true,
+        autoIncrement: true
     },
-    budgetStatusDescript: {
-      type: Sequelize.STRING(255),
-      allowNull: true,
-    },
-  },
-  {
+    budgetStatus: {
+        type: Sequelize.STRING(50)
+    }
+}, {
     timestamps: false,
     freezeTableName: true
-  }
-);
+});
 
-
-module.exports = budgetStatus;
+module.exports = BudgetStatus;
