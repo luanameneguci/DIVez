@@ -1,4 +1,3 @@
-// Associations
 const User = require('./user');
 const Budget = require('./budget');
 const Cart = require('./cart');
