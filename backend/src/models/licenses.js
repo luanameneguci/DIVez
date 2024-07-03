@@ -1,5 +1,8 @@
 const Sequelize = require('sequelize');
 const sequelize = require('./database');
+const User = require('./user');
+const Billing = require('./billing');
+const LicenseStatus = require('./licenseStatus');
 
 const Licenses = sequelize.define('licenses', {
     licenseKey: {
@@ -21,5 +24,9 @@ const Licenses = sequelize.define('licenses', {
     timestamps: false,
     freezeTableName: true
 });
+
+License.belongsTo(Billing, { foreignKey: 'idBill' });
+License.belongsTo(User, { foreignKey: 'idLicenseUser' });
+License.belongsTo(LicenseStatus, { foreignKey: 'idLicenseStatus' });
 
 module.exports = Licenses;

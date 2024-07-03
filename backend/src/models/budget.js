@@ -1,6 +1,8 @@
 // budget.js
 const Sequelize = require('sequelize');
 const sequelize = require('./database');
+const BudgetProduct = require('./budgetProduct');
+const BudgetPackage = require('./budgetPackage');
 
 const Budget = sequelize.define('budget', {
     idBudget: {
@@ -27,4 +29,11 @@ const Budget = sequelize.define('budget', {
     timestamps: false,
     freezeTableName: true
 });
+
+Budget.hasMany(BudgetProduct, { foreignKey: 'idBudget' });
+BudgetProduct.belongsTo(Budget, { foreignKey: 'idBudget' });
+
+Budget.hasMany(BudgetPackage, { foreignKey: 'idBudget' });
+BudgetPackage.belongsTo(Budget, { foreignKey: 'idBudget' });
+
 module.exports = Budget;

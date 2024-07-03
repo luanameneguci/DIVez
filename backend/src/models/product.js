@@ -1,5 +1,6 @@
 const Sequelize = require('sequelize');
 const sequelize = require('./database');
+const ProductCategory = require('./productCategory');
 
 const Product = sequelize.define('product', {
     idProduct: {
@@ -43,5 +44,7 @@ const Product = sequelize.define('product', {
     timestamps: false,
     freezeTableName: true
 });
+
+Product.belongsTo(ProductCategory, { foreignKey: 'idCategory' });
 
 module.exports = Product;

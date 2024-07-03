@@ -1,5 +1,7 @@
 const Sequelize = require('sequelize');
 const sequelize = require('./database');
+const Budget = require('./budget');
+const Cart = require('./cart');
 
 const User = sequelize.define('user', {
     IDUSER: {
@@ -53,5 +55,11 @@ const User = sequelize.define('user', {
     timestamps: false,
     freezeTableName: true
 });
+
+User.hasMany(Budget, { foreignKey: 'idUser' });
+Budget.belongsTo(User, { foreignKey: 'idUser' });
+
+User.hasMany(Cart, { foreignKey: 'idUser' });
+Cart.belongsTo(User, { foreignKey: 'idUser' });
 
 module.exports = User;
