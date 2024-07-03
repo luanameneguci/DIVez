@@ -1,4 +1,3 @@
-const express = require("express");
 const Sequelize = require('sequelize');
 const sequelize = require("./database");
 const TicketStatus = require("../models/ticketStatus");
