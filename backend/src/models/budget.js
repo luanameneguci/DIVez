@@ -12,7 +12,8 @@ const Budget = sequelize.define('budget', {
         type: Sequelize.STRING(300)
     },
     budgetDate: {
-        type: Sequelize.DATE
+        type: Sequelize.DATE,
+        allowNull: false,
     },
     idBudgetStatus: {
         type: Sequelize.INTEGER,

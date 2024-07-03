@@ -8,7 +8,8 @@ const BudgetStatus = sequelize.define('budgetStatus', {
         autoIncrement: true
     },
     budgetStatus: {
-        type: Sequelize.STRING(50)
+        type: Sequelize.STRING(50),
+        allowNull: false,
     }
 }, {
     timestamps: false,

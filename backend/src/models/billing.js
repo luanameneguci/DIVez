@@ -16,7 +16,8 @@ const Billing = sequelize.define('billing', {
         }
     },
     BILLDATE: {
-        type: Sequelize.DATE
+        type: Sequelize.DATE,
+        allowNull: false,
     }
 }, {
     timestamps: false,
