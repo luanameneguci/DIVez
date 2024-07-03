@@ -2,31 +2,29 @@ const express = require("express");
 const app = express();
 const bodyParser = require("body-parser");
 
-const adminRoutes = require('./routes/adminRoute.js');
-const adminBudgetRoutes = require('./routes/AdminBudgetRoute.js');
-const adminDepartmentRoutes = require("./routes/adminDepartmentRoute.js");
-const adminProductRoutes = require('./routes/AdminProductRoute.js');
-const buyerRoutes = require('./routes/buyerRoute.js');
-const managerRoutes = require('./routes/managerRoute.js');
-const budgetStatusRoutes = require('./routes/budgetStatusRoute.js');
-const AdminTicketRoutes = require('./routes/AdminTicketRoute.js');
-const cartRoutes = require('./routes/cartRoute.js');
-const billingRoutes = require('./routes/billingRoute.js');
-const budgetRoutes = require('./routes/budgetRoute.js');
-const CartProductRoutes = require('./routes/CartProductRoute.js');
-const categoryRoutes = require('./routes/categoryRoute.js');
-const licenseStatusRoutes = require('./routes/licenseStatusRoute.js');
-const licenseUserRoutes = require('./routes/licenseUserRoute.js');
-const licenseRoutes = require('./routes/licenseRoute.js');
-const ManagerLicenseRoutes = require('./routes/ManagerLicenseRoute.js');
-const messageRoutes = require('./routes/messageRoute.js');
-const packageRoutes = require('./routes/packageRoute.js');
-const productRoutes = require('./routes/productRoute.js');
-const ticketDepartmentRoutes = require('./routes/ticketDepartmentRoute.js');
-const ticketPrintRoutes = require('./routes/ticketPrintRoute.js');
-const ticketRoutes = require('./routes/ticketRoute.js');
-const ticketStatusRoutes = require('./routes/ticketStatusRoute.js'); 
-const ManagerProductRoutes = require('./routes/ManagerProductRoute.js')
+const AccountType = require("./routes/accountType");
+const AdminDepartment = require("./routes/adminDepartment");
+const Billing = require("./routes/billing");
+const Budget = require("./routes/budget");
+const BudgetCart = require("./routes/budgetCart");
+const BudgetPackage = require("./routes/budgetCart");
+const BudgetProduct = require("./routes/budgetProduct");
+const BudgetStatus = require("./routes/budgetStatus");
+const Cart = require("./routes/cart");
+const Licenses = require("./routes/licenses");
+const LicenseStatus = require("./routes/licenseStatus");
+const LicenseUser = require("./routes/licenseUser");
+const Package = require("./routes/package");
+const PackageCart = require("./routes/packageCart");
+const PackageProduct = require("./routes/packageProduct");
+const Product = require("./routes/product");
+const ProductCart = require("./routes/productCart");
+const ProductCategory = require("./routes/productCategory");
+const User = require("./routes/user");
+const Ticket = require("./routes/ticket");
+const TicketDepartment = require("./routes/ticketDepartment");
+const TicketPriority = require("./routes/ticketPriority");
+const TicketStatus = require("./routes/ticketStatus");
 
 
 
@@ -44,32 +42,30 @@ app.set("port", process.env.PORT || 8080);
 //Middlewares
 app.use(express.json());
 //Rotas
-app.use('/adminDepartment', adminDepartmentRoutes) 
-app.use('/admin',adminRoutes)
-
-app.use('/adminBudget', adminBudgetRoutes)
-app.use('/adminProduct', adminProductRoutes)
-app.use('/buyer',buyerRoutes)
-app.use('/manager',managerRoutes)
-app.use('/adminTicket',AdminTicketRoutes)
-app.use('/cart',cartRoutes)
-app.use('/billing',billingRoutes)
-app.use('/budgetStatus',budgetStatusRoutes)
-app.use('/budget',budgetRoutes)
-app.use('/cartProduct', CartProductRoutes)
-app.use('/category',categoryRoutes)
-app.use('/licenseStatus',licenseStatusRoutes)
-app.use('/licenseUser',licenseUserRoutes)
-app.use('/license',licenseRoutes)
-app.use('/ManagerLicense',ManagerLicenseRoutes)
-app.use('/message',messageRoutes)
-app.use('/package',packageRoutes)
+app.use('/accountType', AccountType) 
+app.use('/adminDepartment',AdminDepartment)
+app.use('/billing', Billing)
+app.use('/budget', Budget)
+app.use('/budgetCart',BudgetCart)
+app.use('/budgetPackage',BudgetPackage)
+app.use('/budgetProduct',BudgetProduct)
+app.use('/budgetStatus',BudgetStatus)
+app.use('/cart',Cart)
+app.use('/licenses',Licenses)
+app.use('/licenseStatus',LicenseStatus)
+app.use('/licenseUser', LicenseUser)
+app.use('/package',Package)
+app.use('/packageCart',PackageCart)
+app.use('/packageProduct',PackageProduct)
+app.use('/product',Product)
+app.use('/productCart',ProductCart)
+app.use('/productCategory',ProductCategory)
+app.use('/user',User)
 app.use('/product',productRoutes)
-app.use('/ticketDepartment',ticketDepartmentRoutes)
-app.use('/ticketPrint',ticketPrintRoutes)
-app.use('/ticket',ticketRoutes)
-app.use('/ticketStatus',ticketStatusRoutes)
-app.use('/managerProduct',ManagerProductRoutes) 
+app.use('/ticket',Ticket)
+app.use('/ticketDepartment',TicketDepartment)
+app.use('/ticketPriority',TicketPriority)
+app.use('/ticketStatus',TicketStatus)
 
 app.listen(app.get("port"), () => {
   console.log("Start server on port " + app.get("port"));
