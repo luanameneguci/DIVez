@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const licenseStatusController = require("../controllers/licenseStatusController");
+const licenseStatusController = require("../controllers/LicenseStatusController");
 
 // Get all license statuses
 router.get("/", licenseStatusController.licenseStatus_list);

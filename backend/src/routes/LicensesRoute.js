@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const licensesController = require("../controllers/licensesController");
+const licensesController = require("../controllers/LicensesController");
 
 // Get all licenses
 router.get("/", licensesController.licenses_list);
