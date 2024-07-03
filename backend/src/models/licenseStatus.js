@@ -8,7 +8,8 @@ const LicenseStatus = sequelize.define('licenseStatus', {
         autoIncrement: true
     },
     licenseStatus: {
-        type: Sequelize.STRING(50)
+        type: Sequelize.STRING(50),
+        allowNull: false,
     }
 }, {
     timestamps: false,

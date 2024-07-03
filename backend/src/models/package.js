@@ -8,10 +8,12 @@ const Package = sequelize.define('package', {
         autoIncrement: true
     },
     packageName: {
-        type: Sequelize.STRING(50)
+        type: Sequelize.STRING(50),
+        allowNull: false,
     },
     packagePrice: {
-        type: Sequelize.REAL
+        type: Sequelize.REAL,
+        allowNull: false,
     }
 }, {
     timestamps: false,

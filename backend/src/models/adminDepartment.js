@@ -8,7 +8,8 @@ const AdminDepartment = sequelize.define('adminDepartment', {
         autoIncrement: true
     },
     department: {
-        type: Sequelize.STRING(50)
+        type: Sequelize.STRING(50),
+        allowNull: false,
     }
 }, {
     timestamps: false,

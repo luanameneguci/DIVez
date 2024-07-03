@@ -16,7 +16,8 @@ const Cart = sequelize.define('cart', {
         }
     },
     CARTPRICE: {
-        type: Sequelize.REAL
+        type: Sequelize.REAL,
+        allowNull: false,
     }
 }, {
     timestamps: false,

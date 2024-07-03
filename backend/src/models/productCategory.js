@@ -8,7 +8,8 @@ const ProductCategory = sequelize.define('productCategory', {
         autoIncrement: true
     },
     category: {
-        type: Sequelize.STRING(50)
+        type: Sequelize.STRING(50),
+        allowNull: false,
     }
 }, {
     timestamps: false,

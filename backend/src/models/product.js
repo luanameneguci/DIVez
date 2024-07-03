@@ -12,25 +12,32 @@ const Product = sequelize.define('product', {
         allowNull: false
     },
     productName: {
-        type: Sequelize.STRING(50)
+        type: Sequelize.STRING(50),
+        allowNull: false,
     },
     productPrice: {
-        type: Sequelize.REAL
+        type: Sequelize.REAL,
+        allowNull: false,
     },
     productVersion: {
-        type: Sequelize.REAL
+        type: Sequelize.REAL,
+        allowNull: false,
     },
     productImage: {
-        type: Sequelize.STRING(150)
+        type: Sequelize.STRING(150),
+        allowNull: false,
     },
     productDescription: {
-        type: Sequelize.STRING(300)
+        type: Sequelize.STRING(300),
+        allowNull: false,
     },
     productInstalls: {
-        type: Sequelize.INTEGER
+        type: Sequelize.INTEGER,
+        allowNull: false,
     },
     productRating: {
-        type: Sequelize.REAL
+        type: Sequelize.REAL,
+        allowNull: false,
     }
 }, {
     timestamps: false,
