@@ -26,8 +26,6 @@ const TicketDepartment = require("./routes/ticketDepartmentRoute");
 const TicketPriority = require("./routes/ticketPriorityRoute");
 const TicketStatus = require("./routes/ticketStatusRoute");
 
-
-
 // Configurar CORS
 app.use((req, res, next) => {
   res.header('Access-Control-Allow-Origin', '*');

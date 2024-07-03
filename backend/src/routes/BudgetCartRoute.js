@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const budgetCartController = require("../controllers/budgetCartControllers");
+const budgetCartController = require("../controllers/BudgetCartControllers");
 
 // Get all budget cart associations
 router.get("/", budgetCartController.budgetCart_list);
