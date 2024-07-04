@@ -1,7 +1,5 @@
 const Sequelize = require('sequelize');
 const sequelize = require('./database');
-const Product = require('./product');
-const PackageProduct = require('./packageProduct')
 
 const Package = sequelize.define('package', {
     idPackage: {
@@ -21,8 +19,5 @@ const Package = sequelize.define('package', {
     timestamps: false,
     freezeTableName: true
 });
-
-Package.belongsToMany(Product, { through: PackageProduct, foreignKey: 'idPackage' });
-Product.belongsToMany(Package, { through: PackageProduct, foreignKey: 'idProduct' });
 
 module.exports = Package;

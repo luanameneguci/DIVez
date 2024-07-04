@@ -1,6 +1,8 @@
 const express = require("express");
 const app = express();
 const sequelize = require('./models/database');
+const associations = require('./models/associations');
+
 const bodyParser = require("body-parser");
 
 // Import your route modules
@@ -27,6 +29,7 @@ const Ticket = require("./routes/ticketRoute");
 const TicketDepartment = require("./routes/ticketDepartmentRoute");
 const TicketPriority = require("./routes/ticketPriorityRoute");
 const TicketStatus = require("./routes/ticketStatusRoute");
+
 
 // Configure CORS
 app.use((req, res, next) => {

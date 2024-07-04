@@ -1,10 +1,11 @@
 const Sequelize = require('sequelize');
 const sequelize = require('./database');
-const TicketPriority = require('./ticketPriority');
-const TicketDepartment = require('./ticketDepartment');
-const TicketStatus = require('./ticketStatus');
 
-const Ticket = sequelize.define('Ticket', {
+const TicketDepartment = require("./ticketDepartment");
+const TicketPriority = require("./ticketPriority");
+const TicketStatus = require("./ticketStatus");
+
+const Ticket = sequelize.define('ticket', {
   idTicket: {
     type: Sequelize.INTEGER,
     primaryKey: true,
@@ -47,13 +48,7 @@ const Ticket = sequelize.define('Ticket', {
     allowNull: true
   }
 }, {
-  tableName: 'Ticket',
   timestamps: false
 });
-
-// Define associations
-Ticket.belongsTo(TicketPriority, { foreignKey: 'idTicketPriority' });
-Ticket.belongsTo(TicketDepartment, { foreignKey: 'idTicketDepartment' });
-Ticket.belongsTo(TicketStatus, { foreignKey: 'idTicketStatus' });
 
 module.exports = Ticket;

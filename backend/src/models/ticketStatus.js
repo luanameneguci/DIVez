@@ -1,7 +1,7 @@
 const Sequelize = require('sequelize');
 const sequelize = require('./database');
 
-const TicketStatus = sequelize.define('TicketStatus', {
+const TicketStatus = sequelize.define('ticketStatus', {
   idTicketStatus: {
     type: Sequelize.INTEGER,
     primaryKey: true
@@ -11,7 +11,7 @@ const TicketStatus = sequelize.define('TicketStatus', {
     allowNull: false
   }
 }, {
-  tableName: 'TicketStatus',
+  tableName: 'ticketStatus',
   timestamps: false
 });
 

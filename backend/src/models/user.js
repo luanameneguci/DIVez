@@ -1,10 +1,5 @@
 const Sequelize = require('sequelize');
 const sequelize = require('./database');
-const Budget = require('./budget');
-const Cart = require('./cart');
-const AccountType = require('./accountType');
-const AdminDepartment = require('./adminDepartment');
-
 
 const User = sequelize.define('user', {
     idUser: {
@@ -22,6 +17,7 @@ const User = sequelize.define('user', {
     },
     idDepartment: {
         type: Sequelize.INTEGER,
+        allowNull: true,
         references: {
             model: 'adminDepartment',
             key: 'idDepartment'
@@ -58,17 +54,5 @@ const User = sequelize.define('user', {
     timestamps: false,
     freezeTableName: true
 });
-
-User.hasMany(Budget, { foreignKey: 'idUser' });
-Budget.belongsTo(User, { foreignKey: 'idUser' });
-
-User.hasMany(Cart, { foreignKey: 'idUser' });
-Cart.belongsTo(User, { foreignKey: 'idUser' });
-
-AccountType.hasMany(User, { foreignKey: 'idAccountType'});
-User.belongsTo(AccountType, {foreignKey: 'idAccountType'});
-
-AdminDepartment.hasMany(User, { foreignKey: 'idDepartment'});
-User.belongsTo(AdminDepartment, {foreignKey: 'idDepartment'});
 
 module.exports = User;
