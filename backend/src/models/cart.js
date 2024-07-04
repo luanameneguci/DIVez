@@ -3,22 +3,23 @@ const sequelize = require('./database');
 const ProductCart = require('./productCart');
 const PackageCart = require('./packageCart');
 const Billing = require('./billing');
+const User = require('./user');
 
 const Cart = sequelize.define('cart', {
-    IDCART: {
+    idCart: {
         type: Sequelize.INTEGER,
         primaryKey: true,
         autoIncrement: true
     },
-    IDUSER: {
+    idUser: {
         type: Sequelize.INTEGER,
         allowNull: false,
         references: {
-            model: 'USER',
-            key: 'IDUSER'
+            model: 'user',
+            key: 'idUser'
         }
     },
-    CARTPRICE: {
+    cartPrice: {
         type: Sequelize.REAL,
         allowNull: false,
     }
@@ -35,5 +36,8 @@ PackageCart.belongsTo(Cart, { foreignKey: 'idCart' });
 
 Cart.hasOne(Billing, { foreignKey: 'idCart' });
 Billing.belongsTo(Cart, { foreignKey: 'idCart' });
+
+User.hasMany(Cart, { foreignKey: 'idUser' });
+Cart.belongsTo(User, { foreignKey: 'idUser' });
 
 module.exports = Cart;

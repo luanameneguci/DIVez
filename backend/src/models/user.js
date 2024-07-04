@@ -7,12 +7,12 @@ const AdminDepartment = require('./adminDepartment');
 
 
 const User = sequelize.define('user', {
-    IDUSER: {
+    idUser: {
         type: Sequelize.INTEGER,
         primaryKey: true,
         autoIncrement: true
     },
-    IDACCOUNTTYPE: {
+    idAccountType: {
         type: Sequelize.INTEGER,
         allowNull: false,
         references: {
@@ -20,46 +20,44 @@ const User = sequelize.define('user', {
             key: 'idAccountType'
         }
     },
-    IDDEPARTMENT: {
+    idDepartment: {
         type: Sequelize.INTEGER,
         references: {
             model: 'adminDepartment',
             key: 'idDepartment'
         }
     },
-    IDCART: {
+    idCart: {
         type: Sequelize.INTEGER,
         references: {
             model: 'cart',
             key: 'idCart'
         }
     },
-    USERNAME: {
+    userName: {
         type: Sequelize.STRING(100),
         allowNull: false,
     },
-    USERPASSWORD: {
+    userPassword: {
         type: Sequelize.STRING(20),
         allowNull: false,
     },
-    USEREMAIL: {
+    userEmail: {
         type: Sequelize.STRING(50),
         allowNull: false,
     },
-    USERNIF: {
+    userNif: {
         type: Sequelize.INTEGER,
-        allowNull: false,
+        allowNull: true,
     },
-    IDBUYER: {
+    idBuyer: {
         type: Sequelize.INTEGER,
-        allowNull: false,
+        allowNull: true,
     }
 }, {
     timestamps: false,
     freezeTableName: true
 });
-
-// fui buscar agua
 
 User.hasMany(Budget, { foreignKey: 'idUser' });
 Budget.belongsTo(User, { foreignKey: 'idUser' });

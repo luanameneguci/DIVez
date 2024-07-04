@@ -2,16 +2,16 @@ const Sequelize = require('sequelize');
 const sequelize = require('./database');
 
 const TicketStatus = sequelize.define('TicketStatus', {
-  IDTICKETSTATUS: {
+  idTicketStatus: {
     type: Sequelize.INTEGER,
     primaryKey: true
   },
-  TICKETSTATUS: {
+  ticketStatus: {
     type: Sequelize.STRING(50),
     allowNull: false
   }
 }, {
-  tableName: 'TICKETSTATUS',
+  tableName: 'TicketStatus',
   timestamps: false
 });
 

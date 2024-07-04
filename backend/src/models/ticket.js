@@ -5,55 +5,55 @@ const TicketDepartment = require('./ticketDepartment');
 const TicketStatus = require('./ticketStatus');
 
 const Ticket = sequelize.define('Ticket', {
-  IDTICKET: {
+  idTicket: {
     type: Sequelize.INTEGER,
     primaryKey: true,
     autoIncrement: true
   },
-  IDTICKETPRIORITY: {
+  idTicketPriority: {
     type: Sequelize.INTEGER,
     allowNull: false,
     references: {
       model: TicketPriority,
-      key: 'IDTICKETPRIORITY'
+      key: 'idTicketPriority'
     }
   },
-  IDTICKETDEPARTMENT: {
+  idTicketDepartment: {
     type: Sequelize.INTEGER,
     allowNull: true,
     references: {
       model: TicketDepartment,
-      key: 'IDTICKETDEPARTMENT'
+      key: 'idTicketDepartment'
     }
   },
-  IDTICKETSTATUS: {
+  idTicketStatus: {
     type: Sequelize.INTEGER,
     allowNull: false,
     references: {
       model: TicketStatus,
-      key: 'IDTICKETSTATUS'
+      key: 'idTicketStatus'
     }
   },
-  TICKETNAME: {
+  ticketName: {
     type: Sequelize.STRING(100),
     allowNull: false
   },
-  TICKETDESCRIPTION: {
+  ticketDescription: {
     type: Sequelize.STRING(300),
     allowNull: true
   },
-  TICKETDATE: {
+  ticketDate: {
     type: Sequelize.DATE,
     allowNull: true
   }
 }, {
-  tableName: 'TICKET',
+  tableName: 'Ticket',
   timestamps: false
 });
 
 // Define associations
-Ticket.belongsTo(TicketPriority, { foreignKey: 'IDTICKETPRIORITY' });
-Ticket.belongsTo(TicketDepartment, { foreignKey: 'IDTICKETDEPARTMENT' });
-Ticket.belongsTo(TicketStatus, { foreignKey: 'IDTICKETSTATUS' });
+Ticket.belongsTo(TicketPriority, { foreignKey: 'idTicketPriority' });
+Ticket.belongsTo(TicketDepartment, { foreignKey: 'idTicketDepartment' });
+Ticket.belongsTo(TicketStatus, { foreignKey: 'idTicketStatus' });
 
 module.exports = Ticket;

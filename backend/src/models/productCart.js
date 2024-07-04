@@ -4,12 +4,14 @@ const sequelize = require('./database');
 const ProductCart = sequelize.define('productCart', {
     idCart: {
         type: Sequelize.INTEGER,
-        primaryKey: true,
-        allowNull: false
+        allowNull: false,
+        references: {
+            model: 'cart',
+            key: 'idCart'
+        }
     },
     idProduct: {
         type: Sequelize.INTEGER,
-        primaryKey: true,
         allowNull: false
     }
 }, {

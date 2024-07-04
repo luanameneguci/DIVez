@@ -1,4 +1,3 @@
-// budget.js
 const Sequelize = require('sequelize');
 const sequelize = require('./database');
 const BudgetProduct = require('./budgetProduct');

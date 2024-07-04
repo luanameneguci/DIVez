@@ -2,20 +2,20 @@ const Sequelize = require('sequelize');
 const sequelize = require('./database');
 
 const Billing = sequelize.define('billing', {
-    IDBILL: {
+    idBill: {
         type: Sequelize.INTEGER,
         primaryKey: true,
         autoIncrement: true
     },
-    IDCART: {
+    idCart: {
         type: Sequelize.INTEGER,
         allowNull: false,
         references: {
-            model: 'CART',
-            key: 'IDCART'
+            model: 'cart',
+            key: 'idCart'
         }
     },
-    BILLDATE: {
+    billDate: {
         type: Sequelize.DATE,
         allowNull: false,
     }

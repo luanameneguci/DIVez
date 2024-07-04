@@ -2,16 +2,16 @@ const Sequelize = require('sequelize');
 const sequelize = require('./database');
 
 const TicketPriority = sequelize.define('TicketPriority', {
-  IDTICKETPRIORITY: {
+  idTicketPriority: {
     type: Sequelize.INTEGER,
     primaryKey: true
   },
-  TICKETPRIORITY: {
+  ticketPriority: {
     type: Sequelize.INTEGER,
     allowNull: false
   }
 }, {
-  tableName: 'TICKETPRIORITY',
+  tableName: 'TicketPriority',
   timestamps: false
 });
 
