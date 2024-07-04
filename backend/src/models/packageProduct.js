@@ -1,16 +1,29 @@
 const Sequelize = require('sequelize');
 const sequelize = require('./database');
+const Product = require('./product');
+const Package = require('./package');
 
 const PackageProduct = sequelize.define('packageProduct', {
-    idProduct: {
+    idPackageProduct: {
         type: Sequelize.INTEGER,
         primaryKey: true,
-        allowNull: false
+        autoIncrement: true
+    },
+    idProduct: {
+        type: Sequelize.INTEGER,
+        allowNull: false,
+        references: {
+            model: Product,
+            key: "idProduct",
+        },
     },
     idPackage: {
         type: Sequelize.INTEGER,
-        primaryKey: true,
-        allowNull: false
+        allowNull: false,
+        references: {
+            model: Package,
+            key: "idPackage",
+        },
     }
 }, {
     timestamps: false,
