@@ -18,15 +18,19 @@ const Licenses = sequelize.define('licenses', {
     },
     idBill: {
         type: Sequelize.INTEGER,
-        allowNull: false
+        allowNull: false,
+        references: {
+            model: Billing,
+            key: "idBill",
+          },
     }
 }, {
     timestamps: false,
     freezeTableName: true
 });
 
-License.belongsTo(Billing, { foreignKey: 'idBill' });
-License.belongsTo(User, { foreignKey: 'idLicenseUser' });
-License.belongsTo(LicenseStatus, { foreignKey: 'idLicenseStatus' });
+Licenses.belongsTo(Billing, { foreignKey: 'idBill' });
+Licenses.belongsTo(User, { foreignKey: 'idLicenseUser' });
+Licenses.belongsTo(LicenseStatus, { foreignKey: 'idLicenseStatus' });
 
 module.exports = Licenses;

@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const budgetStatusController = require("../controllers/BudgetStatusControllers");
+const budgetStatusController = require("../controllers/BudgetStatusController");
 
 // Get all budget statuses
 router.get("/", budgetStatusController.budgetStatus_list);

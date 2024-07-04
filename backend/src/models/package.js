@@ -1,6 +1,7 @@
 const Sequelize = require('sequelize');
 const sequelize = require('./database');
 const Product = require('./product');
+const PackageProduct = require('./packageProduct')
 
 const Package = sequelize.define('package', {
     idPackage: {

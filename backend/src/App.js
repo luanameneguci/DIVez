@@ -12,7 +12,7 @@ const BudgetProduct = require("./routes/budgetProductRoute");
 const BudgetStatus = require("./routes/budgetStatusRoute");
 const Cart = require("./routes/cartRoute");
 const Licenses = require("./routes/licensesRoute");
-const LicenseStatus = require("./routes/licenseStatusRoute");
+const LicenseStatus = require("./routes/licensesStatusRoute");
 const LicenseUser = require("./routes/licenseUserRoute");
 const Package = require("./routes/packageRoute");
 const PackageCart = require("./routes/packageCartRoute");
@@ -59,7 +59,6 @@ app.use('/product',Product)
 app.use('/productCart',ProductCart)
 app.use('/productCategory',ProductCategory)
 app.use('/user',User)
-app.use('/product',productRoutes)
 app.use('/ticket',Ticket)
 app.use('/ticketDepartment',TicketDepartment)
 app.use('/ticketPriority',TicketPriority)

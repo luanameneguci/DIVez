@@ -38,12 +38,12 @@ var TicketStatus = require("./ticketStatus");
     await User.sync({ alter: true });
     await Budget.sync({ alter: true });
     await Cart.sync({ alter: true });
-    await Licenses.sync({ alter: true });
+    await Billing.sync({ alter: true });
     await Package.sync({ alter: true });
     await Product.sync({ alter: true });
     await Ticket.sync({ alter: true });
 
-    await Billing.sync({ alter: true });
+    await Licenses.sync({ alter: true });
     await BudgetCart.sync({ alter: true });
     await BudgetPackage.sync({ alter: true });
     await BudgetProduct.sync({ alter: true });

@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
 
-const accountTypeController = require("../controllers/AccountTypeControllers");
+const accountTypeController = require("../controllers/AccountTypeController");
 
 // Get all account types
 router.get("/", accountTypeController.accountType_list);

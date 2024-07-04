@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
 
-const adminDepartmentController = require("../controllers/AdminDepartmentControllers");
+const adminDepartmentController = require("../controllers/AdminDepartmentController");
 
 // Get all admin departments
 router.get("/", adminDepartmentController.adminDepartment_list);
