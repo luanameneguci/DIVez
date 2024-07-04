@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
 
-const packageController = require("../controllers/packageController");
+const packageController = require("../controllers/PackageController");
 
 router.get("/", packageController.package_list); 
 

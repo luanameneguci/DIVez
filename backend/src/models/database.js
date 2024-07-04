@@ -1,4 +1,5 @@
 var Sequelize = require('sequelize');
+
 const sequelize = new Sequelize(
     'Divez',
     'postgres',
@@ -9,4 +10,5 @@ const sequelize = new Sequelize(
         dialect: 'postgres'
     }
 );
+
 module.exports = sequelize;

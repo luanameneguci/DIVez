@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
 
-const ticketStatusController = require("../controllers/ticketStatusController");
+const ticketStatusController = require("../controllers/TicketStatusController");
 
 router.get("/", ticketStatusController.ticketStatus_list); 
 

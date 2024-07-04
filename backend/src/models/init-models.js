@@ -35,7 +35,7 @@ var TicketStatus = require("./ticketStatus");
     await TicketPriority.sync({ alter: true });
     await TicketStatus.sync({ alter: true });
 
-    await User.sync({ alter: true });
+    
     await Budget.sync({ alter: true });
     await Cart.sync({ alter: true });
     await Billing.sync({ alter: true });
@@ -51,6 +51,7 @@ var TicketStatus = require("./ticketStatus");
     await PackageCart.sync({ alter: true });
     await PackageProduct.sync({ alter: true });
     await ProductCart.sync({ alter: true });
+    await User.sync({ alter: true });
 
     console.log("All models were synchronized successfully.");
   } catch (error) {

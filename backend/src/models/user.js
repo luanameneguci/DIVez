@@ -2,6 +2,9 @@ const Sequelize = require('sequelize');
 const sequelize = require('./database');
 const Budget = require('./budget');
 const Cart = require('./cart');
+const AccountType = require('./accountType');
+const AdminDepartment = require('./adminDepartment');
+
 
 const User = sequelize.define('user', {
     IDUSER: {
@@ -13,22 +16,22 @@ const User = sequelize.define('user', {
         type: Sequelize.INTEGER,
         allowNull: false,
         references: {
-            model: 'ACCOUNTTYPE',
-            key: 'IDACCOUNTTYPE'
+            model: 'accountType',
+            key: 'idAccountType'
         }
     },
     IDDEPARTMENT: {
         type: Sequelize.INTEGER,
         references: {
-            model: 'ADMINDEPARTMENT',
-            key: 'IDDEPARTMENT'
+            model: 'adminDepartment',
+            key: 'idDepartment'
         }
     },
     IDCART: {
         type: Sequelize.INTEGER,
         references: {
-            model: 'CART',
-            key: 'IDCART'
+            model: 'cart',
+            key: 'idCart'
         }
     },
     USERNAME: {
@@ -56,10 +59,18 @@ const User = sequelize.define('user', {
     freezeTableName: true
 });
 
+// fui buscar agua
+
 User.hasMany(Budget, { foreignKey: 'idUser' });
 Budget.belongsTo(User, { foreignKey: 'idUser' });
 
 User.hasMany(Cart, { foreignKey: 'idUser' });
 Cart.belongsTo(User, { foreignKey: 'idUser' });
+
+AccountType.hasMany(User, { foreignKey: 'idAccountType'});
+User.belongsTo(AccountType, {foreignKey: 'idAccountType'});
+
+AdminDepartment.hasMany(User, { foreignKey: 'idDepartment'});
+User.belongsTo(AdminDepartment, {foreignKey: 'idDepartment'});
 
 module.exports = User;
