@@ -28,7 +28,8 @@ function App() {
   return (
     <div>
       {/* Render the appropriate menu based on user role */}
-      {renderMenu()}
+      {/*renderMenu()*/}
+      <BuyerMenu />
     </div>
   );
 }

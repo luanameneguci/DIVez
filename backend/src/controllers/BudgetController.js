@@ -62,4 +62,19 @@ controllers.budget_delete = async (req, res) => {
   }
 };
 
+controllers.count_budgets_status2 = async (req, res) => {
+  const idUser = req.params.idUser;
+  try {
+    const count = await Budget.count({
+      where: {
+        idBudgetStatus: 2,
+        idUser: idUser
+      }
+    });
+    res.json({ count });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
 module.exports = controllers;

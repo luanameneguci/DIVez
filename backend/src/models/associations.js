@@ -58,6 +58,9 @@ Budget.belongsTo(User, { foreignKey: 'idUser' });
 User.hasMany(Cart, { foreignKey: 'idUser' });
 Cart.belongsTo(User, { foreignKey: 'idUser' });
 
+User.hasMany(Licenses, { foreignKey: 'idUser' });
+Licenses.belongsTo(User, { foreignKey: 'idUser' });
+
 AccountType.hasMany(User, { foreignKey: 'idAccountType' });
 User.belongsTo(AccountType, { foreignKey: 'idAccountType' });
 

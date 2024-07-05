@@ -62,4 +62,36 @@ controllers.licenses_delete = async (req, res) => {
   }
 };
 
+controllers.getActiveLicenses = async (req, res) => {
+  const { idUser } = req.params; // This is the user ID provided in the request
+    try {
+        const count = await Licenses.count({
+            where: {
+                idLicenseStatus: 1,
+                idUser: idUser // Ensure this matches the field representing the owner in your licenses table
+            }
+        });
+        res.json({ count });
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+};
+
+controllers.countLikedUsers = async (req, res) => {
+  const { idUser } = req.params; // This is the user ID provided in the request
+  try {
+      const count = await Licenses.count({
+          where: {
+              idLicenseStatus: {
+                  [Sequelize.Op.in]: [1, 2]
+              },
+              idUser: idUser // Ensure this matches the field representing the owner in your licenses table
+          }
+      });
+      res.json({ count });
+  } catch (error) {
+      res.status(500).json({ error: error.message });
+  }
+};
+
 module.exports = controllers;

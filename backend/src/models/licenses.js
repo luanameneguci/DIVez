@@ -22,6 +22,14 @@ const Licenses = sequelize.define('licenses', {
             model: Billing,
             key: "idBill",
         },
+    },
+    idUser: {
+        type: Sequelize.INTEGER,
+        allowNull: false,
+        references: {
+            model: 'user',
+            key: 'idUser'
+        }
     }
 }, {
     timestamps: false,

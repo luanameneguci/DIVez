@@ -17,4 +17,6 @@ router.get("/:id", budgetController.budget_detail);
 // Delete a budget by id
 router.delete("/delete/:id", budgetController.budget_delete);
 
+router.get('/count/:idUser', budgetController.count_budgets_status2);
+
 module.exports = router;
