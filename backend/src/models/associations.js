@@ -5,6 +5,7 @@ const Budget = require("./budget");
 const BudgetCart = require("./budgetCart");
 const BudgetPackage = require("./budgetPackage");
 const BudgetProduct = require("./budgetProduct");
+const BudgetStatus = require("./budgetStatus");
 const Cart = require("./cart");
 const Licenses = require("./licenses");
 const LicenseStatus = require("./licenseStatus");
@@ -42,6 +43,7 @@ Cart.belongsTo(User, { foreignKey: 'idUser' });
 Licenses.belongsTo(Billing, { foreignKey: 'idBill' });
 Licenses.belongsTo(User, { foreignKey: 'idLicenseUser' });
 Licenses.belongsTo(LicenseStatus, { foreignKey: 'idLicenseStatus' });
+Licenses.belongsTo(Product, { foreignKey: 'idProduct' });
 
 Package.belongsToMany(Product, { through: PackageProduct, foreignKey: 'idPackage' });
 Product.belongsToMany(Package, { through: PackageProduct, foreignKey: 'idProduct' });
@@ -66,6 +68,8 @@ User.belongsTo(AccountType, { foreignKey: 'idAccountType' });
 
 AdminDepartment.hasMany(User, { foreignKey: 'idDepartment' });
 User.belongsTo(AdminDepartment, { foreignKey: 'idDepartment' });
+
+Budget.belongsTo(BudgetStatus, { foreignKey: 'idBudgetStatus' });
 
 module.exports = {
     User,

@@ -2,6 +2,7 @@ const express = require("express");
 const Sequelize = require('sequelize');
 const sequelize = require("../models/database");
 const Budget = require("../models/budget");
+const BudgetStatus = require("../models/budgetStatus");
 
 const controllers = {};
 
@@ -72,6 +73,25 @@ controllers.count_budgets_status2 = async (req, res) => {
       }
     });
     res.json({ count });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
+controllers.getPendingBudgets = async (req, res) => {
+  const { idUser } = req.params; // This is the user ID provided in the request
+  try {
+    const budgets = await Budget.findAll({
+      where: {
+        idUser: idUser,
+        idBudgetStatus: 2
+      },
+      include: [{
+        model: BudgetStatus,
+        attributes: ['budgetStatus'] // Specify the attributes you want to include from BudgetStatus
+      }]
+    });
+    res.json(budgets);
   } catch (error) {
     res.status(500).json({ error: error.message });
   }

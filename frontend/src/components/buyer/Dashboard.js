@@ -18,7 +18,8 @@ const BuyerDashboard = () => {
   const pendingBudgets = useBuyerPendingBudgets();
   const activeLicenses = useBuyerActiveLicenses();
   const linkedUsers = useBuyerLicenses();
-  const rows = useTablePendingBudgets();
+  const idUser = 6;
+  const rows = useTablePendingBudgets(idUser);
   const idCart = useBuyerCart();
   //const nameProduct = FillMostUsedTable();
 
@@ -45,7 +46,7 @@ const BuyerDashboard = () => {
             </div>
             <div className="col">
               <Box
-                title="Linked Users"
+                title="All Licenses"
                 number={linkedUsers}
                 image={notificationicon}
               />
@@ -231,42 +232,42 @@ function useBuyerTickets() {
 }
 
 /*preencher tabela de pending budgets*/
-function useTablePendingBudgets() {
-  const idCart = useBuyerCart();
+function useTablePendingBudgets(idUser) {
   const [tableContent, setTableContent] = useState([]);
 
   useEffect(() => {
     const fetchTablePendingBudgets = async () => {
       try {
-        const url = "http://localhost:8080/budget/findByCart/" + idCart;
+        const url = `http://localhost:8080/budget/status2/user/${idUser}`;
         const res = await axios.get(url);
         if (res.status === 200) {
           const filteredBudgets = res.data.filter(
-            (budget) => budget.idBudgetStatus === 1
+            (budget) => budget.idBudgetStatus === 1 || budget.idBudgetStatus === 2
           );
           setTableContent(filteredBudgets);
         } else {
           alert("Error Web Service!");
         }
       } catch (error) {
-       
+        console.error("Error fetching data:", error);
       }
     };
 
-    if (idCart !== 0) {
+    if (idUser) {
       fetchTablePendingBudgets();
     }
-  }, [idCart]);
+  }, [idUser]);
 
   // Split the tableContent array into rows of 3 items each
   const rows = [];
-  const itemsPerRow = 3;
+  const itemsPerRow = 1;
   for (let i = 0; i < tableContent.length; i += itemsPerRow) {
     rows.push(tableContent.slice(i, i + itemsPerRow));
   }
 
   return rows;
 }
+
 
 function useBuyerManagers(buyerId) {
   const [dataManager, setDataBuyerManager] = useState([]);

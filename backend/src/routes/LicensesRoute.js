@@ -17,6 +17,8 @@ router.get("/:licenseKey", licensesController.licenses_detail);
 // Delete a license by licenseKey
 router.delete("/delete/:licenseKey", licensesController.licenses_delete);
 
-router.get('/status/:idUser', licensesController.getActiveLicenses);
+router.get("/status/:idUser", licensesController.getActiveLicenses);
+
+router.get("/count/:idUser", licensesController.countLikedUsers);
 
 module.exports = router;

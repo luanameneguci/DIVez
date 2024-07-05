@@ -2,6 +2,7 @@ const Sequelize = require('sequelize');
 const sequelize = require('./database');
 
 const Billing = require('./billing');
+const Product = require('./product');
 
 const Licenses = sequelize.define('licenses', {
     licenseKey: {
@@ -29,6 +30,14 @@ const Licenses = sequelize.define('licenses', {
         references: {
             model: 'user',
             key: 'idUser'
+        }
+    },
+    idProduct: {
+        type: Sequelize.INTEGER,
+        allowNull: false,
+        references: {
+            model: Product,
+            key: 'idProduct'
         }
     }
 }, {

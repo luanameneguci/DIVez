@@ -72,7 +72,7 @@ const ProgressBox = () => {
         <div className="box-container bg-white col-auto roundbg d-flex shadow pb-3 shadow h-100">
             <div className="col-12">
                 <span className="box-title d-flex justify-content-start pt-3 ps-3 pb-3">
-                    <strong><h4>Your most used licenses</h4></strong>
+                    <strong><h4>Your most used product</h4></strong>
                 </span>
                 <div className="px-3">
                     {data.map((item, index) => (

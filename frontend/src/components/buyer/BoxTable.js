@@ -30,7 +30,7 @@ function BoxTable({ title, rows }) {
           <thead>
             <tr>
               <th className="ps-3 py-2 text-white">Budget Nº</th>
-              <th className="ps-3 py-2 text-white">Budget title</th>
+              <th className="ps-3 py-2 text-white">Budget description</th>
               <th className="ps-3 py-2 text-white">Status</th>
             </tr>
           </thead>
@@ -43,11 +43,11 @@ function BoxTable({ title, rows }) {
                   <td className="ps-3 py-1 border-bottom" key={colIndex} style={{ height: 40 + "px" }}>
                     {data.idBudget}
                   </td>    
-                  <td className="ps-3 py-1 border-bottom" key={colIndex} style={{ height: 40 + "px" }}>
-                    {data.budgetName}
+                  <td className="ps-3 py-1 border-bottom text-truncate" key={colIndex} style={{ height: 40 + "px" }}>
+                    {data.budgetDescription}
                   </td>    
                   <td className="ps-3 py-1 border-bottom" key={colIndex} style={{ height: 40 + "px" }}>
-                    {data.idBudgetStatus}
+                    {data.budgetStatus ? data.budgetStatus.budgetStatus : 'Unknown'}
                   </td>     
                   </React.Fragment>             
                 ))}                
