@@ -4,7 +4,8 @@ const sequelize = require('./database');
 const TicketDepartment = sequelize.define('ticketDepartment', {
   idTicketDepartment: {
     type: Sequelize.INTEGER,
-    primaryKey: true
+    primaryKey: true,
+    autoIncrement: true
   },
   ticketDepartment: {
     type: Sequelize.STRING(50),

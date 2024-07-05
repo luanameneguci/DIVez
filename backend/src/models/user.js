@@ -25,6 +25,7 @@ const User = sequelize.define('user', {
     },
     idCart: {
         type: Sequelize.INTEGER,
+        allowNull: true,
         references: {
             model: 'cart',
             key: 'idCart'

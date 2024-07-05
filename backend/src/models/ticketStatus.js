@@ -4,7 +4,8 @@ const sequelize = require('./database');
 const TicketStatus = sequelize.define('ticketStatus', {
   idTicketStatus: {
     type: Sequelize.INTEGER,
-    primaryKey: true
+    primaryKey: true,
+    autoIncrement: true
   },
   ticketStatus: {
     type: Sequelize.STRING(50),
