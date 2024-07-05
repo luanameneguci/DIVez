@@ -27,5 +27,4 @@ const Budget = sequelize.define('budget', {
     freezeTableName: true
 });
 
-
 module.exports = Budget;
