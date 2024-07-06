@@ -26,6 +26,7 @@ const { sequelize } = require('./database');
 // Insert initial data function
 async function insertInitialData() {
     const transaction = await sequelize.transaction();
+
     try {
         const accountTypes = [
             { accountType: 'Admin' },
@@ -38,13 +39,13 @@ async function insertInitialData() {
             { department: 'Human Resources' },
             { department: 'Finance' }
         ];
-        const budgetStatuses = [
+        const budgetStatus = [
             { budgetStatus: 'New' },
             { budgetStatus: 'Pending' },
             { budgetStatus: 'Paid' },
             { budgetStatus: 'Rejected' }
         ];
-        const licenseStatuses = [
+        const licenseStatus = [
             { licenseStatus: 'Active' },
             { licenseStatus: 'Inactive' },
             { licenseStatus: 'Revoked' }
@@ -69,7 +70,7 @@ async function insertInitialData() {
             { ticketPriority: 4 },
             { ticketPriority: 0 }
         ];
-        const ticketStatuses = [
+        const ticketStatus = [
             { ticketStatus: 'New' },
             { ticketStatus: 'Pending' },
             { ticketStatus: 'Solved' },
@@ -139,21 +140,138 @@ async function insertInitialData() {
                 { idProduct: 4, idBudget: 2 }
         ];
 
+        const licenseUsers = [
+            { licenseUser: 'LicenseUser1' },
+            { licenseUser: 'LicenseUser2' },
+            { licenseUser: 'LicenseUser3' },
+            { licenseUser: 'LicenseUser4' },
+            { licenseUser: 'LicenseUser5' },
+            { licenseUser: 'LicenseUser6' },
+            { licenseUser: 'LicenseUser7' },
+            { licenseUser: 'LicenseUser8' },
+            { licenseUser: 'LicenseUser9' },
+            { licenseUser: 'LicenseUser10' }
+        ];
+
+        const packageCart = [
+            { idCart: 1, idPackage: 1 },
+            { idCart: 1, idPackage: 2 },
+            { idCart: 2, idPackage: 3 },
+            { idCart: 2, idPackage: 4 },
+            { idCart: 3, idPackage: 1 },
+            { idCart: 3, idPackage: 2 },
+            { idCart: 4, idPackage: 3 },
+            { idCart: 4, idPackage: 4 },
+            { idCart: 1, idPackage: 5 },
+            { idCart: 2, idPackage: 1 }
+        ];
+
+        const budgets = [
+            { budgetDescription: 'Budget for marketing', budgetDate: '2024-01-01', idBudgetStatus: 1, idUser: 5 },
+            { budgetDescription: 'Budget for development', budgetDate: '2024-02-01', idBudgetStatus: 2, idUser: 5 },
+            { budgetDescription: 'Budget for operations', budgetDate: '2024-03-01', idBudgetStatus: 3, idUser: 6 },
+            { budgetDescription: 'Budget for sales', budgetDate: '2024-04-01', idBudgetStatus: 4, idUser: 6 },
+            { budgetDescription: 'Budget for HR', budgetDate: '2024-05-01', idBudgetStatus: 1, idUser: 7 },
+            { budgetDescription: 'Budget for IT', budgetDate: '2024-06-01', idBudgetStatus: 2, idUser: 8 },
+            { budgetDescription: 'Budget for finance', budgetDate: '2024-07-01', idBudgetStatus: 3, idUser: 7 },
+            { budgetDescription: 'Budget for research', budgetDate: '2024-08-01', idBudgetStatus: 4, idUser: 8 },
+            { budgetDescription: 'Budget for logistics', budgetDate: '2024-09-01', idBudgetStatus: 1, idUser: 8 },
+            { budgetDescription: 'Budget for administration', budgetDate: '2024-10-01', idBudgetStatus: 2, idUser: 6 }
+        ];
+
+        const budgetCarts = [
+            { idCart: 1, idBudget: 1 },
+            { idCart: 1, idBudget: 2 },
+            { idCart: 2, idBudget: 3 },
+            { idCart: 3, idBudget: 4 }
+        ];
+
+        const packageProducts = [
+            { idProduct: 1, idPackage: 1 },
+            { idProduct: 2, idPackage: 2 },
+            { idProduct: 3, idPackage: 3 },
+            { idProduct: 4, idPackage: 4 },
+            { idProduct: 5, idPackage: 5 },
+            { idProduct: 6, idPackage: 1 },
+            { idProduct: 7, idPackage: 2 },
+            { idProduct: 8, idPackage: 3 },
+            { idProduct: 9, idPackage: 4 },
+            { idProduct: 10, idPackage: 5 },
+            { idProduct: 1, idPackage: 2 },
+            { idProduct: 2, idPackage: 3 },
+            { idProduct: 3, idPackage: 4 },
+            { idProduct: 4, idPackage: 5 },
+            { idProduct: 5, idPackage: 1 },
+            { idProduct: 6, idPackage: 2 },
+            { idProduct: 7, idPackage: 3 },
+            { idProduct: 8, idPackage: 4 },
+            { idProduct: 9, idPackage: 5 },
+            { idProduct: 10, idPackage: 1 }
+        ];
+
+        const productCarts = [
+            { idCart: 1, idProduct: 1 },
+            { idCart: 1, idProduct: 2 },
+            { idCart: 2, idProduct: 3 },
+            { idCart: 2, idProduct: 4 },
+            { idCart: 3, idProduct: 5 },
+            { idCart: 3, idProduct: 6 },
+            { idCart: 4, idProduct: 7 },
+            { idCart: 4, idProduct: 8 },
+            { idCart: 3, idProduct: 9 },
+            { idCart: 2, idProduct: 10 }
+        ];
+
+        const licenses = [
+            { licenseKey: 'ABC12 3DEF4 56GHI 789JK', idLicenseStatus: 1, idLicenseUser: 1, idBill: 1, idUser: 1 },
+            { licenseKey: 'PQR23 4STU5 67VWX 890YZ', idLicenseStatus: 2, idLicenseUser: 2, idBill: 2, idUser: 2 },
+            { licenseKey: 'DEF34 5GHI6 78JKL 901MN', idLicenseStatus: 1, idLicenseUser: 3, idBill: 3, idUser: 2 }
+        ];
+
+        const users = [
+            { idAccountType: 1, idDepartment: 1, idCart: null, userName: 'admin1', userPassword: '123', userEmail: 'admin1@email.com', userNif: null, idBuyer: null },
+            { idAccountType: 1, idDepartment: 2, idCart: null, userName: 'admin2', userPassword: '123', userEmail: 'admin2@email.com', userNif: null, idBuyer: null },
+            { idAccountType: 1, idDepartment: 3, idCart: null, userName: 'admin3', userPassword: '123', userEmail: 'admin3@email.com', userNif: null, idBuyer: null },
+            { idAccountType: 1, idDepartment: 4, idCart: null, userName: 'admin4', userPassword: '123', userEmail: 'admin4@email.com', userNif: null, idBuyer: null },
+            { idAccountType: 2, idDepartment: null, idCart: null, userName: 'buyer1', userPassword: '123', userEmail: 'buyer1@email.com', userNif: 123456789, idBuyer: null },
+            { idAccountType: 2, idDepartment: null, idCart: null, userName: 'buyer2', userPassword: '123', userEmail: 'buyer2@email.com', userNif: 987654321, idBuyer: null },
+            { idAccountType: 2, idDepartment: null, idCart: null, userName: 'buyer3', userPassword: '123', userEmail: 'buyer3@email.com', userNif: 123459876, idBuyer: null },
+            { idAccountType: 2, idDepartment: null, idCart: null, userName: 'buyer4', userPassword: '123', userEmail: 'buyer4@email.com', userNif: 987651234, idBuyer: null },
+            { idAccountType: 3, idDepartment: null, idCart: null, userName: 'manager1', userPassword: '123', userEmail: 'manager1@email.com', userNif: 124356879, idBuyer: 1 },
+            { idAccountType: 3, idDepartment: null, idCart: null, userName: 'manager2', userPassword: '123', userEmail: 'manager2@email.com', userNif: 213465789, idBuyer: 1 },
+            { idAccountType: 3, idDepartment: null, idCart: null, userName: 'manager3', userPassword: '123', userEmail: 'manager3@email.com', userNif: 123654789, idBuyer: 2 },
+            { idAccountType: 3, idDepartment: null, idCart: null, userName: 'manager4', userPassword: '123', userEmail: 'manager4@email.com', userNif: 321456987, idBuyer: 2 }
+        ];
 
         // Insert data using transactions
+        // First wave
         await AccountType.bulkCreate(accountTypes, { transaction });
         await AdminDepartment.bulkCreate(adminDepartments, { transaction });
-        await BudgetStatus.bulkCreate(budgetStatuses, { transaction });
-        await LicenseStatus.bulkCreate(licenseStatuses, { transaction });
+        await BudgetStatus.bulkCreate(budgetStatus, { transaction });
+        await LicenseStatus.bulkCreate(licenseStatus, { transaction });
         await ProductCategory.bulkCreate(productCategories, { transaction });
         await TicketDepartment.bulkCreate(ticketDepartments, { transaction });
         await TicketPriority.bulkCreate(ticketPriorities, { transaction });
-        await TicketStatus.bulkCreate(ticketStatuses, { transaction });
+        await TicketStatus.bulkCreate(ticketStatus, { transaction });
+
+        // Second Wave
+        await User.bulkCreate(users, { transaction });
         await Cart.bulkCreate(carts, { transaction });
         await Billing.bulkCreate(billings, { transaction });
         await Package.bulkCreate(packages, { transaction });
         await Product.bulkCreate(products, { transaction });
         await Ticket.bulkCreate(tickets, { transaction });
+        await Budget.bulkCreate(budgets, { transaction });
+        await Licenses.bulkCreate(licenses, { transaction });
+
+        // Third Wave
+        await BudgetCart.bulkCreate(budgetCarts, { transaction });
+        await BudgetPackage.bulkCreate(budgetPackage, { transaction });
+        await BudgetProduct.bulkCreate(budgetProduct, { transaction });
+        await LicenseUser.bulkCreate(licenseUsers, { transaction });
+        await ProductCart.bulkCreate(productCarts, { transaction });
+        await PackageCart.bulkCreate(packageCart, { transaction });
+        await PackageProduct.bulkCreate(packageProducts, { transaction });        
 
         await transaction.commit();
         console.log('Initial data inserted successfully');

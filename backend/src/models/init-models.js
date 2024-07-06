@@ -1,29 +1,29 @@
-var AccountType = require("./accountType");
-var AdminDepartment = require("./adminDepartment");
-var Billing = require("./billing");
-var Budget = require("./budget");
-var BudgetCart = require("./budgetCart");
-var BudgetPackage = require("./budgetPackage");
-var BudgetProduct = require("./budgetProduct");
-var BudgetStatus = require("./budgetStatus");
-var Cart = require("./cart");
-var Licenses = require("./licenses");
-var LicenseStatus = require("./licenseStatus");
-var LicenseUser = require("./licenseUser");
-var Package = require("./package");
-var PackageCart = require("./packageCart");
-var PackageProduct = require("./packageProduct");
-var Product = require("./product");
-var ProductCart = require("./productCart");
-var ProductCategory = require("./productCategory");
-var User = require("./user");
-var Ticket = require("./ticket");
-var TicketDepartment = require("./ticketDepartment");
-var TicketPriority = require("./ticketPriority");
-var TicketStatus = require("./ticketStatus");
+const AccountType = require("./accountType");
+const AdminDepartment = require("./adminDepartment");
+const Billing = require("./billing");
+const Budget = require("./budget");
+const BudgetCart = require("./budgetCart");
+const BudgetPackage = require("./budgetPackage");
+const BudgetProduct = require("./budgetProduct");
+const BudgetStatus = require("./budgetStatus");
+const Cart = require("./cart");
+const Licenses = require("./licenses");
+const LicenseStatus = require("./licenseStatus");
+const LicenseUser = require("./licenseUser");
+const Package = require("./package");
+const PackageCart = require("./packageCart");
+const PackageProduct = require("./packageProduct");
+const Product = require("./product");
+const ProductCart = require("./productCart");
+const ProductCategory = require("./productCategory");
+const User = require("./user");
+const Ticket = require("./ticket");
+const TicketDepartment = require("./ticketDepartment");
+const TicketPriority = require("./ticketPriority");
+const TicketStatus = require("./ticketStatus");
 
 // Require the insertInitialData function
-var insertInitialData = require('./insertInitialData');
+const insertInitialData = require('./insertData');
 
 (async () => {
   try {
@@ -45,16 +45,16 @@ var insertInitialData = require('./insertInitialData');
     await Product.sync({ alter: true });
     await Ticket.sync({ alter: true });
     await Budget.sync({ alter: true });
+    await Licenses.sync({ alter: true });
 
     // Final wave
-    await Licenses.sync({ alter: true });
     await BudgetCart.sync({ alter: true });
     await BudgetPackage.sync({ alter: true });
     await BudgetProduct.sync({ alter: true });
     await LicenseUser.sync({ alter: true });
+    await ProductCart.sync({ alter: true });
     await PackageCart.sync({ alter: true });
     await PackageProduct.sync({ alter: true });
-    await ProductCart.sync({ alter: true });
 
     console.log("All models were synchronized successfully.");
 
