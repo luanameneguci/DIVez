@@ -70,13 +70,13 @@ const ProductList = () => {
                             <tr key={product.idProduct} className="align-text-top">
                                 <td>
                                     <Link to={`/productedit/${product.idProduct}`}>
-                                        <img src={product.image} alt="product" style={{ width: '70px', height: '70px' }} />
+                                        <img src={product.productImage} alt="product" style={{ width: '70px', height: '70px' }} />
                                     </Link>
                                 </td>
                                 <td>{product.productName}</td>
                                 <td>{product.productVersion}</td>
                                 <td>{product.productPrice}</td>
-                                <td>{product.productDescript}</td>
+                                <td>{product.productDescription}</td>
                                 <td className="d-flex justify-content-center p-4">
                                     <Link to={"/productedit/" + product.idProduct} className='btn btn-outline-info me-2 hover'>Edit</Link>
                                     <button className='btn btn-outline-danger hover'>Delete</button>

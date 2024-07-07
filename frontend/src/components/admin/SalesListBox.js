@@ -4,7 +4,6 @@ import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import '../../App.css';
 
-
 const SalesListBox = () => {
     const [currentPage, setCurrentPage] = useState(1);
     const [startDate, setStartDate] = useState(null);
@@ -15,9 +14,10 @@ const SalesListBox = () => {
     const [itemsPerPage, setItemsPerPage] = useState(5);
 
     const [bills, setBills] = useState([]);
-    const [buyers, setBuyers] = useState([]);
-    const [cartProducts, setCartProducts] = useState([]);
+    const [users, setUsers] = useState([]);
+    const [carts, setCarts] = useState([]);
     const [products, setProducts] = useState([]);
+    const [productCarts, setProductCarts] = useState([]);
 
     useEffect(() => {
         const loadData = async () => {
@@ -25,14 +25,17 @@ const SalesListBox = () => {
                 const billResponse = await axios.get('http://localhost:8080/billing');
                 setBills(billResponse.data);
 
-                const cartProductResponse = await axios.get('http://localhost:8080/cartProduct');
-                setCartProducts(cartProductResponse.data);
+                const cartResponse = await axios.get('http://localhost:8080/cart');
+                setCarts(cartResponse.data);
 
-                const buyerResponse = await axios.get('http://localhost:8080/buyer');
-                setBuyers(buyerResponse.data);
+                const userResponse = await axios.get('http://localhost:8080/user');
+                setUsers(userResponse.data);
 
                 const productResponse = await axios.get('http://localhost:8080/product');
                 setProducts(productResponse.data);
+
+                const productCartResponse = await axios.get('http://localhost:8080/productcart');
+                setProductCarts(productCartResponse.data);
             } catch (error) {
                 console.error('Error loading data:', error);
             }
@@ -62,25 +65,23 @@ const SalesListBox = () => {
     };
 
     const filteredRows = bills.filter((bill) => {
-        // Find corresponding buyer
-        const buyer = buyers.find(buyer => buyer.idBuyer === bill.cart.idBuyer);
+        const cart = carts.find(cart => cart.idCart === bill.idCart);
+        const user = users.find(user => user.idUser === cart.idUser);
 
-        // Find corresponding cartProduct
-        const cartProduct = cartProducts.find(cp => cp.cartIdCart === bill.idCart);
-        const productId = cartProduct ? cartProduct.productIdProduct : null;
+        const cartProductIds = productCarts
+            .filter(pc => pc.idCart === bill.idCart)
+            .map(pc => pc.idProduct);
 
-        // Find corresponding product
-        const product = products.find(prod => prod.idProduct === productId);
+        const cartProducts = products.filter(product => cartProductIds.includes(product.idProduct));
 
-        // Date comparison
         const rowDate = new Date(bill.billDate);
 
         return (
             (!startDate || rowDate >= startDate) &&
             (!saleId || bill.idBill.toString().includes(saleId)) &&
-            (!client || (buyer && buyer.buyerName.toLowerCase().includes(client.toLowerCase()))) &&
-            (!amount || bill.cart.licenseNumber.toString().toLowerCase().includes(amount.toLowerCase())) &&
-            (!price || product.productPrice.toString().includes(price))
+            (!client || (user && user.userName.toLowerCase().includes(client.toLowerCase()))) &&
+            (!amount || cartProducts.length.toString().toLowerCase().includes(amount.toLowerCase())) &&
+            (!price || cartProducts.some(product => product.productPrice.toString().includes(price)))
         );
     });
 
@@ -144,7 +145,7 @@ const SalesListBox = () => {
                                     onChange={handleAmountChange}
                                 />
                             </th>
-                            <th>Amount
+                            <th>Cost
                                 <input
                                     className="form-control w-75"
                                     id="priofilter"
@@ -159,18 +160,22 @@ const SalesListBox = () => {
                     </thead>
                     <tbody className='text-start'>
                         {currentItems.map((bill, rowIndex) => {
-                            const buyer = buyers.find(buyer => buyer.idBuyer === bill.cart.idBuyer);
-                            const cartProduct = cartProducts.find(cp => cp.cartIdCart === bill.idCart);
-                            const productId = cartProduct ? cartProduct.productIdProduct : null;
-                            const product = products.find(prod => prod.idProduct === productId);
+                            const cart = carts.find(cart => cart.idCart === bill.idCart);
+                            const user = users.find(user => user.idUser === cart.idUser);
+
+                            const cartProductIds = productCarts
+                                .filter(pc => pc.idCart === bill.idCart)
+                                .map(pc => pc.idProduct);
+
+                            const cartProducts = products.filter(product => cartProductIds.includes(product.idProduct));
 
                             return (
                                 <tr key={rowIndex} style={{ borderRadius: rowIndex === currentItems.length - 1 ? '0 0 15px 15px' : '0' }}>
                                     <td>{bill.idBill}</td>
-                                    <td>{buyer ? buyer.buyerName : '-'}</td>
+                                    <td>{user ? user.userName : '-'}</td>
                                     <td>{new Date(bill.billDate).toLocaleDateString('en-GB')}</td>
-                                    <td>{product ? product.productName : '-'}</td>
-                                    <td>{bill.cart.licenseNumber}</td>
+                                    <td>{cartProducts.map(product => product.productName).join(', ')}</td>
+                                    <td>{cartProducts.map(product => product.productPrice).reduce((acc, price) => acc + price, 0).toFixed(2)}</td>
                                     <td>{/* Additional actions or details */}</td>
                                 </tr>
                             );

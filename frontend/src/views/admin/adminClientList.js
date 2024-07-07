@@ -9,29 +9,29 @@ const AdminClientList = () => {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const [managerResponse, buyerResponse] = await Promise.all([
-                    axios.get('http://localhost:8080/manager'),
-                    axios.get('http://localhost:8080/buyer')
-                ]);
+                const userResponse = await axios.get('http://localhost:8080/user');
+                const users = userResponse.data;
 
-                const managers = managerResponse.data.map(manager => [
-                    manager.managerName, 
-                    manager.managerNif, 
-                    manager.managerEmail, 
-                    'Manager',
-                    manager.idManager,
-                ]);
+                // Filter out admins and map users to the desired structure
+                const filteredUsers = users
+                    .filter(user => user.idAccountType === 2 || user.idAccountType === 3)
+                    .map(user => {
+                        let userType;
+                        if (user.idAccountType === 2) {
+                            userType = 'Buyer';
+                        } else if (user.idAccountType === 3) {
+                            userType = 'Manager';
+                        }
+                        return [
+                            user.userName,
+                            user.userNif,
+                            user.userEmail,
+                            userType,
+                            user.idUser
+                        ];
+                    });
 
-                const buyers = buyerResponse.data.map(buyer => [
-                    buyer.buyerName, 
-                    buyer.buyerNif, 
-                    buyer.buyerEmail,
-                    'Buyer',
-                    buyer.idBuyer,
-                ]);
-
-                const combinedList = [...managers, ...buyers];
-                setClientList(combinedList);
+                setClientList(filteredUsers);
             } catch (error) {
                 console.error('Error fetching data:', error);
             }

@@ -17,6 +17,7 @@ const AdminTicketReply = () => {
     const [isLoading, setIsLoading] = useState(true);
     const [departmentOptions, setDepartmentOptions] = useState([]);
     const [statusOptions, setStatusOptions] = useState([]);
+    const [priorityOptions, setPriorityOptions] = useState([]);
     const [department, setDepartment] = useState();
     const [priority, setPriority] = useState();
     const [status, setStatus] = useState();
@@ -38,9 +39,13 @@ const AdminTicketReply = () => {
                 const statusResponse = await axios.get('http://localhost:8080/ticketstatus');
                 setStatusOptions(statusResponse.data);
 
+                // Fetch priority options
+                const priorityResponse = await axios.get('http://localhost:8080/ticketpriority');
+                setPriorityOptions(priorityResponse.data);
+
                 // Set initial values based on fetched data
                 setDepartment(ticketResponse.data.idTicketDepartment);
-                setPriority(ticketResponse.data.ticketPriority);
+                setPriority(ticketResponse.data.idTicketPriority);
                 setStatus(ticketResponse.data.idTicketStatus);
 
                 setIsLoading(false);
@@ -78,14 +83,13 @@ const AdminTicketReply = () => {
     const handleReject = async () => {
         try {
             const response = await axios.put(`http://localhost:8080/ticket/update/${idTicket}`, {
-                idTicketStatus: 2,
+                idTicketStatus: 4, // id of rejected status
             });
             alert('Ticket rejected!');
         } catch (error) {
             alert('Error rejecting ticket:', error);
         }
     };
-
 
     if (isLoading) {
         return <div>Loading...</div>;
@@ -102,7 +106,7 @@ const AdminTicketReply = () => {
                     <div className="row border-bottom">
                         <h4 className='text-start'>Ticket #{ticket.idTicket}</h4>
                         <p className='text-start mt-1'>{formatDate(ticket.ticketDate)}</p>
-                        </div>
+                    </div>
                     <div className="row m-2 border-bottom">
                         {ticket.ticketPrint ? (
                             <img
@@ -120,7 +124,7 @@ const AdminTicketReply = () => {
                             <span>{ticket.ticketDescription}</span>
                         </div>
                     </div>
-                    <form action="https://usebasin.com/f/8a781ebd5951" method="POST" target='_blank'  className='row d-flex mt-4'>
+                    <form className='row d-flex mt-4'>
                         <div className="row d-flex justify-content-between">
                             <div className='col-4'>
                                 <label htmlFor="departmentSelect">Department</label>
@@ -132,7 +136,7 @@ const AdminTicketReply = () => {
                                 >
                                     <option value="">Select Department</option>
                                     {departmentOptions.map(dep => (
-                                        <option key={dep.idTicketDepartment} value={dep.idTicketDepartment.toString()}>{dep.departmentDescript}</option>
+                                        <option key={dep.idTicketDepartment} value={dep.idTicketDepartment.toString()}>{dep.ticketDepartment}</option>
                                     ))}
                                 </select>
                             </div>
@@ -145,9 +149,9 @@ const AdminTicketReply = () => {
                                     onChange={(e) => setPriority(e.target.value)}
                                 >
                                     <option value="">Select Priority</option>
-                                    <option value="1">1</option>
-                                    <option value="2">2</option>
-                                    <option value="3">3</option>
+                                    {priorityOptions.map(prio => (
+                                        <option key={prio.idTicketPriority} value={prio.idTicketPriority.toString()}>{prio.ticketPriority}</option>
+                                    ))}
                                 </select>
                             </div>
                             <div className='col-4'>
@@ -160,7 +164,7 @@ const AdminTicketReply = () => {
                                 >
                                     <option value="">Select Status</option>
                                     {statusOptions.map(stat => (
-                                        <option key={stat.idTicketStatus} value={stat.idTicketStatus.toString()}>{stat.statusDescript}</option>
+                                        <option key={stat.idTicketStatus} value={stat.idTicketStatus.toString()}>{stat.ticketStatus}</option>
                                     ))}
                                 </select>
                             </div>

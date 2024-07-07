@@ -11,7 +11,7 @@ function ClientListBox({ clientList }) {
 
     const filteredRows = clientList.filter(row =>
         row[0].toLowerCase().includes(nameFilter.toLowerCase()) &&
-        row[1].includes(nifFilter) &&
+        (!row[1] || row[1].toString().includes(nifFilter)) &&
         row[2].toLowerCase().includes(mailFilter.toLowerCase()) &&
         row[3].toLowerCase().includes(accountTypeFilter.toLowerCase())
     );

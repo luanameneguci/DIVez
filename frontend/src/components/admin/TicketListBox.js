@@ -12,7 +12,6 @@ const formatDate = (dateString) => {
     return `${day}/${month}/${year}`;
 };
 
-
 function TicketListBox({ numRowsToShow }) {
     const [tickets, setTickets] = useState([]);
     const [ticketIdFilter, setTicketIdFilter] = useState('');
@@ -43,9 +42,9 @@ function TicketListBox({ numRowsToShow }) {
             ticket.idTicket.toString().includes(ticketIdFilter) &&
             ticket.ticketName.toLowerCase().includes(titleFilter.toLowerCase()) &&
             (!dateFilter || ticketDate >= dateFilter) &&
-            ticket.ticketDepartment.departmentDescript.toLowerCase().includes(departmentFilter.toLowerCase()) &&
-            ticket.ticketPriority.toString().includes(priorityFilter.toString()) &&
-            ticket.ticketStatus.statusDescript.toLowerCase().includes(statusFilter.toLowerCase())
+            ticket.ticketDepartment.ticketDepartment.toLowerCase().includes(departmentFilter.toLowerCase()) &&
+            ticket.ticketPriority.ticketPriority.toString().includes(priorityFilter.toString()) &&
+            ticket.ticketStatus.ticketStatus.toLowerCase().includes(statusFilter.toLowerCase())
         );
     });
 
@@ -72,7 +71,7 @@ function TicketListBox({ numRowsToShow }) {
                 return '#EB5757'; // red
             case 'Solved':
                 return '#00B69B'; // green
-            case 'Waiting':
+            case 'Pending':
                 return '#2D9CDB'; // blue
             default:
                 return 'inherit';
@@ -167,9 +166,9 @@ function TicketListBox({ numRowsToShow }) {
                                 <td className='ps-3' style={{ width: '10%' }}>{ticket.idTicket}</td>
                                 <td>{ticket.ticketName}</td>
                                 <td>{formatDate(ticket.ticketDate)}</td>
-                                <td>{ticket.ticketDepartment.departmentDescript}</td>
-                                <td>{ticket.ticketPriority}</td>
-                                <td style={{ color: getStatusColor(ticket.ticketStatus.statusDescript) }}>{ticket.ticketStatus.statusDescript}</td>
+                                <td>{ticket.ticketDepartment.ticketDepartment}</td>
+                                <td>{ticket.ticketPriority.ticketPriority}</td>
+                                <td style={{ color: getStatusColor(ticket.ticketStatus.ticketStatus) }}>{ticket.ticketStatus.ticketStatus}</td>
                                 <td className='text-center'>
                                     <Link to={`/ticketreply/${ticket.idTicket}`} className='btn btn-outline-warning' onClick={() => console.log(ticket.idTicket)}>
                                         See more

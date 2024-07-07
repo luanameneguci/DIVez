@@ -65,7 +65,7 @@ controllers.ticket_detail = async (req, res) => {
   const ticketId = req.params.id;
   try {
     const ticket = await Ticket.findOne({
-      where: { IDTICKET: ticketId },
+      where: { idTicket: ticketId },
       include: [
         { model: TicketPriority },
         { model: TicketDepartment },

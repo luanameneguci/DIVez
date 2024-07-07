@@ -23,7 +23,7 @@ const TicketPriority = require("./ticketPriority");
 const TicketStatus = require("./ticketStatus");
 
 // Require the insertInitialData function
-const insertInitialData = require('./insertData');
+//const insertInitialData = require('./insertData');
 
 (async () => {
   try {
@@ -59,7 +59,7 @@ const insertInitialData = require('./insertData');
     console.log("All models were synchronized successfully.");
 
     // Call the insertInitialData function after all tables are synchronized
-    await insertInitialData();
+    //await insertInitialData();
   } catch (error) {
     console.error("An error occurred while syncing models or inserting initial data:", error);
   }

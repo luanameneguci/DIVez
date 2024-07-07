@@ -25,14 +25,16 @@ const AdminBudgetReply = () => {
                 setIsLoading(true);
                 // Fetch budget details
                 const budgetResponse = await axios.get(`http://localhost:8080/budget/${idBudget}`);
-                setBudget(budgetResponse.data);
+                const budgetData = budgetResponse.data;
+                setBudget(budgetData);
 
                 // Fetch status options
                 const statusResponse = await axios.get('http://localhost:8080/budgetstatus');
                 setStatusOptions(statusResponse.data);
 
                 // Set initial values based on fetched data
-                setSelectedStatus(budgetResponse.data.idBudgetStatus);
+                setSelectedStatus(budgetData.idBudgetStatus);
+                setReply(budgetData.budgetDescription || '');
                 setIsLoading(false);
             } catch (error) {
                 console.error('Error loading budget:', error);
@@ -48,11 +50,10 @@ const AdminBudgetReply = () => {
     const handleSave = async () => {
         try {
             const response = await axios.put(`http://localhost:8080/budget/update/${idBudget}`, {
-                budgetName: budget.budgetName,
-                budgetDescript: reply,
-                date: budget.date,
+                budgetDescription: reply,
+                budgetDate: budget.budgetDate,
                 idBudgetStatus: selectedStatus,
-                idCart: budget.idCart,
+                idUser: budget.idUser,
             });
             alert('Budget updated');
             console.log('Budget updated:', response.data);
@@ -67,7 +68,7 @@ const AdminBudgetReply = () => {
     const handleReject = async () => {
         try {
             const response = await axios.put(`http://localhost:8080/budget/update/${idBudget}`, {
-                idBudgetStatus: 2,
+                idBudgetStatus: 4,
             });
             alert('Budget rejected!');
         } catch (error) {
@@ -89,24 +90,12 @@ const AdminBudgetReply = () => {
                 <div className="box-container bg-white roundbg h-100 p-4 shadow">
                     <div className="row border-bottom">
                         <h4 className='text-start'>Budget #{budget.idBudget}</h4>
-                        <p className='text-start mt-1'>{formatDate(budget.date)}</p>
-                    </div>
-                    <div className="row m-2 border-bottom">
-                        {budget.cart && (
-                            <div className="col-12">
-                                <div className="row border-bottom m-2">
-                                    <div className="d-flex align-items-center">
-                                        <span className='fw-semibold col-4'>Cart Price: {budget.cart.cartPrice}</span>
-                                        <span className='col-5 ms-4'><strong>License Number: {budget.cart.licenseNumber}</strong></span>
-                                    </div>
-                                </div>
-                            </div>
-                        )}
+                        <p className='text-start mt-1'>{formatDate(budget.budgetDate)}</p>
                     </div>
                     <div className='row mt-3'>
                         <h6 className='text-start'>Description</h6>
                         <div className='row'>
-                            <span>{budget.budgetDescript}</span>
+                            <span>{budget.budgetDescription}</span>
                         </div>
                     </div>
                     <form className='row d-flex mt-4'>
@@ -131,7 +120,7 @@ const AdminBudgetReply = () => {
                             >
                                 <option value="">Select Status</option>
                                 {statusOptions.map(stat => (
-                                    <option key={stat.idBudgetStatus} value={stat.idBudgetStatus.toString()}>{stat.budgetStatusDescript}</option>
+                                    <option key={stat.idBudgetStatus} value={stat.idBudgetStatus.toString()}>{stat.budgetStatus}</option>
                                 ))}
                             </select>
                             <div className="row d-flex mt-3 justify-content-end">
