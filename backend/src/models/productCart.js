@@ -24,6 +24,9 @@ const ProductCart = sequelize.define('productCart', {
             model: Product,
             key: 'idProduct'
         }
+    },
+    numberOfLicenses: {
+        type: Sequelize.INTEGER,
     }
 }, {
     timestamps: false,

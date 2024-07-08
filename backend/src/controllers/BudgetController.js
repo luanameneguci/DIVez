@@ -3,6 +3,9 @@ const Sequelize = require('sequelize');
 const sequelize = require("../models/database");
 const Budget = require("../models/budget");
 const BudgetStatus = require("../models/budgetStatus");
+const BudgetProduct = require("../models/budgetProduct");
+const Product = require("../models/product");
+const User = require("../models/user");
 
 const controllers = {};
 
@@ -119,5 +122,42 @@ controllers.getBudgetsByUser = async (req, res) => {
   }
 };
 
+controllers.getBudgetProducts = async (req, res) => {
+  const { idBudget } = req.params;
+
+  try {
+      const budget = await Budget.findOne({
+          where: { idBudget },
+          include: [
+              {
+                  model: BudgetProduct,
+                  include: [
+                      {
+                          model: Product,
+                          attributes: ['idProduct', 'productName', 'productPrice', 'productImage', 'productDescription']
+                      }
+                  ]
+              },
+              {
+                  model: User,
+                  attributes: ['idUser', 'userName', 'userEmail']
+              },
+              {
+                  model: BudgetStatus,
+                  attributes: ['idBudgetStatus', 'budgetStatus']
+              }
+          ]
+      });
+
+      if (!budget) {
+          return res.status(404).json({ error: 'Budget not found' });
+      }
+
+      res.json(budget);
+  } catch (error) {
+      console.error('Error fetching budget details:', error);
+      res.status(500).json({ error: 'An error occurred while fetching budget details' });
+  }
+};
 
 module.exports = controllers;

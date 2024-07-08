@@ -25,6 +25,9 @@ const UserLicense = require("./userLicenses");
 // Define associations
 Budget.hasMany(BudgetProduct, { foreignKey: 'idBudget' });
 BudgetProduct.belongsTo(Budget, { foreignKey: 'idBudget' });
+Product.hasMany(BudgetProduct, { foreignKey: 'idProduct' });
+BudgetProduct.belongsTo(Product, { foreignKey: 'idProduct' });
+
 
 Budget.hasMany(BudgetPackage, { foreignKey: 'idBudget' });
 BudgetPackage.belongsTo(Budget, { foreignKey: 'idBudget' });

@@ -26,7 +26,7 @@ function BudgetsListBox({ numRowsToShow }) {
             const response = await axios.get('http://localhost:8080/budget');
             setBudgets(response.data);
         } catch (error) {
-            console.error('Error fetching budgets:', error);
+            console.error('Error fetching budgets:', error);    
         }
     };
 

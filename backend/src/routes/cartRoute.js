@@ -17,4 +17,8 @@ router.get("/:id", cartController.cart_detail);
 // Delete a cart by ID
 router.delete("/delete/:id", cartController.cart_delete);
 
+router.get("/user/:idUser", cartController.getUserCartDetails);
+
+router.get("/:idCart/products", cartController.getAllProductsInCart);
+
 module.exports = router;

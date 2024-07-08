@@ -16,6 +16,7 @@ import BuyerDashboard from "../../views/buyer/buyerDashboard";
 import Shop from "../../views/buyer/buyerShop";
 import ShopItem from "../../views/buyer/buyerShopItem";
 import BuyerBudgetReply from "./buerBudgetRequest";
+import BuyerBudgetDetail from "./buyerBudgetDetail";
 
 import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap/dist/js/bootstrap.bundle.min";
@@ -131,6 +132,7 @@ const Menu = ({ userId }) => {
               <Route path="/productitem" element={<BuyerProductItem />} />
               <Route path="/shop/:id" element={<BuyerShopItem />} />
               <Route path="/budgetrequest" element={<BuyerBudgetReply />} />
+              <Route path="/budget/details/:idBudget" element={<BuyerBudgetDetail />} />
             </Routes>
           </div>
         </div>
