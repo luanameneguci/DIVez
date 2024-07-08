@@ -2,48 +2,60 @@ import React, { useEffect, useState } from 'react';
 import '../../App.css';
 import axios from 'axios';
 
-const ProgressBox = () => {
+const ProgressBox = ({ idUser }) => { // Accept idUser as a prop
     const [data, setData] = useState([]);
+    const [licenses, setLicenses] = useState([]);
 
     useEffect(() => {
-        const fetchData = async () => {
+        const fetchLicenses = async () => {
             try {
-                const [licensesResponse, productsResponse] = await Promise.all([
-                    axios.get('http://localhost:8080/license'),
-                    axios.get('http://localhost:8080/product')
-                ]);
-
-                const licenses = licensesResponse.data;
-                const products = productsResponse.data;
-
-                // Process the data to calculate percentages
-                const processedData = products.map(product => {
-                    const total = licenses.filter(license => license.idProduct === product.idProduct).length;
-                    const active = licenses.filter(license => license.idProduct === product.idProduct && license.idLicenseStatus === 2).length;
-                    const percentage = (active / total) * 100 || 0; // handle division by zero
-
-                    return {
-                        nome: product.productName,
-                        numeroTotal: total,
-                        numeroAtivos: active,
-                        percentage: percentage.toFixed(0)
-                    };
-                });
-
-                // Sort processedData by percentage descending
-                processedData.sort((a, b) => b.percentage - a.percentage);
-
-                // Take only the top 4 products
-                const top4 = processedData.slice(0, 4);
-
-                setData(top4);
+                const response = await axios.get(`http://localhost:8080/licenses/user/${idUser}`);
+                setLicenses(response.data);
             } catch (error) {
-                console.error('Error fetching data:', error);
+                console.error('Error fetching licenses:', error);
             }
         };
 
-        fetchData();
-    }, []);
+        fetchLicenses();
+    }, [idUser]);
+
+    useEffect(() => {
+        if (licenses.length > 0) {
+            // Filter licenses by idUser
+            const userLicenses = licenses.filter(license => license.idUser === idUser);
+
+            // Create a map to count licenses and active licenses for each product
+            const productMap = userLicenses.reduce((acc, license) => {
+                const productId = license.idProduct;
+                if (!acc[productId]) {
+                    acc[productId] = {
+                        nome: license.product.productName,
+                        numeroTotal: 0,
+                        numeroAtivos: 0
+                    };
+                }
+                acc[productId].numeroTotal++;
+                if (license.idLicenseStatus === 1) {
+                    acc[productId].numeroAtivos++;
+                }
+                return acc;
+            }, {});
+
+            // Convert the map to an array and calculate the percentage
+            const processedData = Object.values(productMap).map(product => ({
+                ...product,
+                percentage: ((product.numeroAtivos / product.numeroTotal) * 100).toFixed(0)
+            }));
+
+            // Sort processedData by percentage descending
+            processedData.sort((a, b) => b.percentage - a.percentage);
+
+            // Take only the top 4 products
+            const top4 = processedData.slice(0, 4);
+
+            setData(top4);
+        }
+    }, [licenses, idUser]);
 
     const ProgressDiv = ({ nome, numeroAtivos, numeroTotal, percentage }) => (
         <div className="mb-3">

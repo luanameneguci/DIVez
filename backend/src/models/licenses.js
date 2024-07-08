@@ -17,6 +17,9 @@ const Licenses = sequelize.define('licenses', {
     idLicenseUser: {
         type: Sequelize.INTEGER
     },
+    licenseVersion: {
+        type: Sequelize.REAL
+    },
     idBill: {
         type: Sequelize.INTEGER,
         allowNull: false,

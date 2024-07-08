@@ -18,7 +18,7 @@ const BuyerShop = () => {
       })
       .then(data => {
         const transformedData = data.map(item => ({
-          id: item.idProduct,
+          idProduct: item.idProduct,
           productName: item.productName,
           image: item.image,
           productPrice: item.productPrice,
@@ -67,7 +67,7 @@ const ItemStatus = ({ itemData }) => {
       <div className="col-12 d-flex align-items-center p-3 justify-content-between flex-column bg-white roundbg">
         <div className="col-12 row">
           <div className="col-2 thumb-img">
-            <Link to={"/shop/" + itemData.id} className="text-black">
+            <Link to={"/shop/" + itemData.idProduct} className="text-black">
               <img src={itemData.image} alt={itemData.productName} className="mr-3" />
             </Link>
           </div>

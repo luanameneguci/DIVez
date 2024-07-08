@@ -4,6 +4,7 @@ const sequelize = require('./database');
 const TicketDepartment = require("./ticketDepartment");
 const TicketPriority = require("./ticketPriority");
 const TicketStatus = require("./ticketStatus");
+const User = require("./user");
 
 const Ticket = sequelize.define('ticket', {
   idTicket: {
@@ -33,6 +34,14 @@ const Ticket = sequelize.define('ticket', {
     references: {
       model: TicketStatus,
       key: 'idTicketStatus'
+    }
+  },
+  idBuyer: {
+    type: Sequelize.INTEGER,
+    allowNull: false,
+    references: {
+      model: User,
+      key: 'idUser'
     }
   },
   ticketName: {

@@ -21,4 +21,6 @@ router.get("/status/:idUser", licensesController.getActiveLicenses);
 
 router.get("/count/:idUser", licensesController.countLikedUsers);
 
+router.get('/user/:idUser', licensesController.licensesByUser);
+
 module.exports = router;

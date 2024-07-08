@@ -3,7 +3,7 @@ function BoughtList({rows}) {
         <table className='col-12 text-start bg-info roundbg'>
             <thead className='text-white roundbg'>
                 <th className="ps-3 py-2">ID</th>
-                <th className="ps-3 py-2">Product</th>
+                <th className="ps-3 py-2">Products</th>
                 <th className="ps-3 py-2">Date</th>
                 <th className="ps-3 py-2">Amount</th>
                 <th className="ps-3 py-2">Price</th>

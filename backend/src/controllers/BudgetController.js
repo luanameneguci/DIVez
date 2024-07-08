@@ -97,4 +97,27 @@ controllers.getPendingBudgets = async (req, res) => {
   }
 };
 
+controllers.getBudgetsByUser = async (req, res) => {
+  const idUser = req.params.idUser; // Assuming you're passing idUser as a route parameter
+
+  try {
+      const budgets = await Budget.findAll({
+          where: {
+              idUser: idUser
+          },
+          include: [{
+              model: BudgetStatus,
+              required: true,
+              attributes: ['budgetStatus'] // Only include the budgetStatus field from BudgetStatus
+          }]
+      });
+
+      res.json(budgets); // Send the budgets as JSON response
+  } catch (error) {
+      console.error('Error fetching budgets:', error);
+      res.status(500).json({ error: 'Failed to fetch budgets' });
+  }
+};
+
+
 module.exports = controllers;

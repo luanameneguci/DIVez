@@ -29,7 +29,7 @@ function App() {
     <div>
       {/* Render the appropriate menu based on user role */}
       {/*renderMenu()*/}
-      <AdminMenu />
+      <BuyerMenu />
     </div>
   );
 }

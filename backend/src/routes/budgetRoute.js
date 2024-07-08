@@ -21,4 +21,6 @@ router.get('/count/:idUser', budgetController.count_budgets_status2);
 
 router.get('/status2/user/:idUser', budgetController.getPendingBudgets);
 
+router.get('/user/:idUser', budgetController.getBudgetsByUser);
+
 module.exports = router;

@@ -5,50 +5,56 @@ import Select from 'react-select';
 import axios from 'axios';
 
 function ManagersList() {
-    // Estados para os filtros de entrada
+    // States for input filters
     const [nameFilter, setNameFilter] = useState('');
     const [nifFilter, setNifFilter] = useState('');
     const [mailFilter, setMailFilter] = useState('');
     const [productsFilter, setProductsFilter] = useState('');
-    
-    // Estado para a lista de gerentes e produtos
+
+    // States for managers and products
     const [managersList, setManagersList] = useState([]);
     const [productList, setProductList] = useState([]);
 
-    // Estado para controlar os dados do modal
+    // State for modal data and visibility
     const [modalData, setModalData] = useState(null);
-    // Estado para controlar a visibilidade do modal
     const [lgShow, setLgShow] = useState(false);
 
     useEffect(() => {
         // Fetch managers list from the URL
-        axios.get('http://localhost:8080/manager/findByBuyer/1')
+        axios.get('http://localhost:8080/userLicenses/6/managers')
             .then(response => {
                 const managers = response.data.map(manager => {
                     return {
                         name: manager.managerName,
-                        nif: manager.managerNif,
+                        nif: manager.managerNif.toString(), // Convert NIF to string if necessary
                         email: manager.managerEmail,
-                        products: manager.ManagerProducts.map(mp => mp.product.productName).join(', ')
+                        products: manager.managedProducts.map(mp => mp.productName).join(', ')
                     };
                 });
                 setManagersList(managers);
             })
             .catch(error => console.error('Error fetching managers:', error));
 
-        // Fetch product list from the URL (assuming a similar endpoint for products)
-        axios.get('http://localhost:8080/products') // Adjust the URL as necessary
+        // Fetch all products associated with licenses for user ID 6
+        axios.get('http://localhost:8080/licenses/user/6')
             .then(response => {
-                const products = response.data.map(product => ({
-                    label: product.productName,
-                    value: product.idProduct
+                const licenses = response.data;
+
+                // Extract unique products from licenses
+                const uniqueProducts = Array.from(new Set(licenses.map(license => license.product.productName)));
+
+                // Map unique products to format suitable for react-select
+                const products = uniqueProducts.map(productName => ({
+                    label: productName,
+                    value: productName // Assuming product name as value for simplicity
                 }));
+
                 setProductList(products);
             })
             .catch(error => console.error('Error fetching products:', error));
     }, []);
 
-    // Função de filtragem dos dados
+    // Function to filter rows based on input filters
     const filteredRows = managersList.filter(row =>
         row.name.toLowerCase().includes(nameFilter.toLowerCase()) &&
         row.nif.includes(nifFilter) &&
@@ -56,16 +62,16 @@ function ManagersList() {
         row.products.toLowerCase().includes(productsFilter.toLowerCase())
     );
 
-    // Função para mostrar o modal com os detalhes do gerente selecionado   
+    // Function to show modal with selected manager details
     const handleShow = (row) => {
-        setModalData(row.email); // Salva o e-mail da linha
+        setModalData(row.email);
         setLgShow(true);
     };
 
-    // Função para fechar o modal
+    // Function to close modal
     const handleClose = () => {
         setLgShow(false);
-        setModalData(null); // Limpa os dados do modal
+        setModalData(null);
     };
 
     return (
