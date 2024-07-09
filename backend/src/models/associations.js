@@ -20,16 +20,22 @@ const Ticket = require("./ticket");
 const TicketDepartment = require("./ticketDepartment");
 const TicketPriority = require("./ticketPriority");
 const TicketStatus = require("./ticketStatus");
+const UserLicense = require("./userLicenses");
 
 // Define associations
 Budget.hasMany(BudgetProduct, { foreignKey: 'idBudget' });
 BudgetProduct.belongsTo(Budget, { foreignKey: 'idBudget' });
+Product.hasMany(BudgetProduct, { foreignKey: 'idProduct' });
+BudgetProduct.belongsTo(Product, { foreignKey: 'idProduct' });
+
 
 Budget.hasMany(BudgetPackage, { foreignKey: 'idBudget' });
 BudgetPackage.belongsTo(Budget, { foreignKey: 'idBudget' });
 
 Cart.hasMany(ProductCart, { foreignKey: 'idCart' });
 ProductCart.belongsTo(Cart, { foreignKey: 'idCart' });
+Product.hasMany(ProductCart, { foreignKey: 'idProduct' });
+ProductCart.belongsTo(Product, { foreignKey: 'idProduct' });
 
 Cart.hasMany(PackageCart, { foreignKey: 'idCart' });
 PackageCart.belongsTo(Cart, { foreignKey: 'idCart' });
@@ -44,6 +50,7 @@ Licenses.belongsTo(Billing, { foreignKey: 'idBill' });
 Licenses.belongsTo(User, { foreignKey: 'idLicenseUser' });
 Licenses.belongsTo(LicenseStatus, { foreignKey: 'idLicenseStatus' });
 Licenses.belongsTo(Product, { foreignKey: 'idProduct' });
+Product.hasMany(Licenses, { foreignKey: 'idProduct' });
 
 Package.belongsToMany(Product, { through: PackageProduct, foreignKey: 'idPackage' });
 Product.belongsToMany(Package, { through: PackageProduct, foreignKey: 'idProduct' });
@@ -57,9 +64,6 @@ Ticket.belongsTo(TicketStatus, { foreignKey: 'idTicketStatus' });
 User.hasMany(Budget, { foreignKey: 'idUser' });
 Budget.belongsTo(User, { foreignKey: 'idUser' });
 
-User.hasMany(Cart, { foreignKey: 'idUser' });
-Cart.belongsTo(User, { foreignKey: 'idUser' });
-
 User.hasMany(Licenses, { foreignKey: 'idUser' });
 Licenses.belongsTo(User, { foreignKey: 'idUser' });
 
@@ -70,6 +74,14 @@ AdminDepartment.hasMany(User, { foreignKey: 'idDepartment' });
 User.belongsTo(AdminDepartment, { foreignKey: 'idDepartment' });
 
 Budget.belongsTo(BudgetStatus, { foreignKey: 'idBudgetStatus' });
+
+User.hasMany(UserLicense, { foreignKey: 'idUser' });
+UserLicense.belongsTo(User, { foreignKey: 'idUser' });
+
+
+User.hasMany(User, { as: 'Managers', foreignKey: 'idBuyer' });
+User.belongsToMany(Product, { through: UserLicense, foreignKey: 'idUser', otherKey: 'idProduct' });
+
 
 module.exports = {
     User,
@@ -87,5 +99,6 @@ module.exports = {
     LicenseStatus,
     ProductCategory,
     AdminDepartment,
-    AccountType
+    AccountType,
+    UserLicense
 };

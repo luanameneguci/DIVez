@@ -3,14 +3,14 @@ import { useParams } from "react-router-dom";
 import Rating from "@mui/material/Rating";
 
 const ShopItem = () => {
-  const { id } = useParams();
+  const { idProduct } = useParams(); // Extract idProduct from URL params
   const [item, setItem] = useState(null);
   const [error, setError] = useState(null);
 
   useEffect(() => {
     const fetchProduct = async () => {
       try {
-        const response = await fetch(`http://localhost:8080/product/${id}`);
+        const response = await fetch(`http://localhost:8080/product/${idProduct}`);
         if (!response.ok) {
           throw new Error('Failed to fetch product');
         }
@@ -33,8 +33,7 @@ const ShopItem = () => {
     };
   
     fetchProduct();
-  }, [id]);
-  
+  }, [idProduct]); // Depend on idProduct to refetch when URL changes
 
   if (error) {
     return <div>Error: {error}</div>;
@@ -64,6 +63,7 @@ const ShopItem = () => {
                         </p>
                       </div>
                       <div className="col-4 mb-2 mt-3 d-flex justify-content-end">
+                        {/* Placeholder icons */}
                         <div>
                           <img
                             className="me-2"

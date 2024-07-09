@@ -1,37 +1,38 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import '../../App.css';
 import BoughtList from "../../components/buyer/BoughtList";
 
-const list = [
-    1, 'Software 1', '01-02-2024', 'Amount', 'Price',
-    1, 'Software 1', '01-02-2024', 'Amount', 'Price',
-    1, 'Software 1', '01-02-2024', 'Amount', 'Price',
-    1, 'Software 1', '01-02-2024', 'Amount', 'Price',
-    1, 'Software 1', '01-02-2024', 'Amount', 'Price',
-    1, 'Software 1', '01-02-2024', 'Amount', 'Price',
-    1, 'Software 1', '01-02-2024', 'Amount', 'Price',
-    1, 'Software 1', '01-02-2024', 'Amount', 'Price',
-];
-
-const rows = [];
-const itemsPerRow = 5;
-
-// Itera sobre a lista 'list' com incrementos de 'itemsPerRow' para criar linhas de dados.
-for (let i = 0; i < list.length; i += itemsPerRow) {
-     // Extrai um subarray da 'list' com 'itemsPerRow' elementos e adiciona à matriz 'rows'.
-    rows.push(list.slice(i, i + itemsPerRow));
-}
-
-
 const BuyerPurchasesList = () => {
+    const [purchases, setPurchases] = useState([]);
+
+    useEffect(() => {
+        // Fetch data from your API endpoint
+        fetch('http://localhost:8080/cart/user/6')
+            .then(response => response.json())
+            .then(data => {
+                // Process the received data into the format needed for the list
+                const formattedList = data.map(cart => ({
+                    idBill: cart.bills.length > 0 ? cart.bills[0].idBill : '', // Assuming there's only one bill per cart
+                    productList: cart.products.map(product => product.productName).join(', '), // Concatenate product names
+                    billDate: cart.bills.length > 0 ? new Date(cart.bills[0].billDate).toLocaleDateString() : '',
+                    numberOfLicenses: cart.licensesCount,
+                    cartPrice: cart.cartPrice
+                }));
+
+                setPurchases(formattedList);
+            })
+            .catch(error => console.error('Error fetching data:', error));
+    }, []);
+
     return (
         <div className="dashboard-content bg-light w-100 h-100">
             <div className='d-flex justify-content-between p-2 mx-3'>
-                <h4 className="title my-2 ">Purchases</h4>
+                <h4 className="title my-2">Purchases</h4>
             </div>
-            <BoughtList rows={rows}/>
+            <div className="p-3">
+                <BoughtList rows={purchases} />
+            </div>
         </div>
-
     );
 }
 

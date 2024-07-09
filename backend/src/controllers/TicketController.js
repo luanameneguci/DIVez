@@ -92,4 +92,30 @@ controllers.ticket_delete = async (req, res) => {
   }
 };
 
+controllers.TicketsById = async (req, res) => {
+  const { idBuyer } = req.params; // Retrieve idBuyer from the request parameters
+
+  try {
+    const tickets = await Ticket.findAll({
+      where: {
+        idBuyer: idBuyer
+      },
+      include: [
+        {
+          model: TicketDepartment,
+          attributes: ['ticketDepartment'] // Include department name
+        },
+        {
+          model: TicketStatus,
+          attributes: ['ticketStatus'] // Include status name
+        }
+      ]
+    });
+
+    res.json(tickets);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
 module.exports = controllers;

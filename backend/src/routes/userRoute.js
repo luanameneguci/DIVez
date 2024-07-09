@@ -7,5 +7,7 @@ router.post("/create", userController.user_create);
 router.put("/update/:id", userController.user_update);
 router.get("/:id", userController.user_detail); 
 router.delete("/delete/:id", userController.user_delete);
+router.get("/managers/:idBuyer", userController.getManagers);
+router.get("/:idUser/billings", userController.billingByUser);
 
 module.exports = router;

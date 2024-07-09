@@ -1,6 +1,8 @@
 const Sequelize = require('sequelize');
 const sequelize = require('./database');
 
+const User = require('./user');
+
 const Cart = sequelize.define('cart', {
     idCart: {
         type: Sequelize.INTEGER,
@@ -11,7 +13,7 @@ const Cart = sequelize.define('cart', {
         type: Sequelize.INTEGER,
         allowNull: false,
         references: {
-            model: 'user',
+            model: User,
             key: 'idUser'
         }
     },

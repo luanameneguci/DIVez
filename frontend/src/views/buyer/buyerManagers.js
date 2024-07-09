@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import '../../App.css';
 import ManagersList from '../../components/buyer/ManagersList';
 import Select from 'react-select';
@@ -6,48 +6,75 @@ import { Modal } from 'react-bootstrap';
 
 const BuyerManagersList = () => {
     const [lgShow, setLgShow] = useState(false);
-    const [modal, setmodal] = useState(null);
+    const [modal, setModal] = useState(null);
+    const [productList, setProductList] = useState([]);
+    const [loading, setLoading] = useState(true);
 
-    const managersList = [
-        ['Luana Meneguci', '123456789', 'luanameneguci@gmail.com', 'Adobe Photoshop'],
-        ['Andre Pascoal', '123456789', 'luanameneguci@gmail.com', 'Adobe Photoshop'],
-        ['Luana Meneguci', '123456789', 'luanameneguci@gmail.com', 'Adobe Photoshop'],
-        ['Luana Meneguci', '123456789', 'luanameneguci@gmail.com', 'Adobe Photoshop'],
-        ['Luana Meneguci', '123456789', 'luanameneguci@gmail.com', 'Adobe Photoshop'],
-        ['Luana Meneguci', '321321321', 'luanameneguci@gmail.com', 'Adobe Photoshop'],
-    ];
+    useEffect(() => {
+        const fetchUserLicenses = async () => {
+            try {
+                const response = await fetch('http://localhost:8080/licenses/user/6');
+                if (!response.ok) {
+                    throw new Error('Failed to fetch user licenses');
+                }
+                const data = await response.json();
+                
+                // Extract unique products from licenses
+                const uniqueProducts = Array.from(new Set(data.map(license => license.product.idProduct)));
+                
+                // Fetch detailed product information for each unique product ID
+                const productRequests = uniqueProducts.map(productId => (
+                    fetch(`http://localhost:8080/product/${productId}`)
+                        .then(response => response.json())
+                ));
 
-    const productList = [
-        { value: 'Photoshop', label: 'Photoshop' },
-        { value: 'Figma', label: 'Figma' },
-        { value: 'VS Code', label: 'VS Code' }
-    ];
+                // Wait for all product requests to complete
+                const productsData = await Promise.all(productRequests);
 
-    const handleShow = (modal) => {
-        setmodal(modal);
+                // Format products for react-select
+                const formattedProducts = productsData.map(product => ({
+                    value: product.idProduct,
+                    label: product.productName
+                }));
+
+                setProductList(formattedProducts);
+                setLoading(false);
+            } catch (error) {
+                console.error('Error fetching user licenses:', error);
+                setLoading(false);
+            }
+        };
+
+        fetchUserLicenses();
+    }, []);
+
+    const handleShow = () => {
         setLgShow(true);
     };
 
     const handleClose = () => {
         setLgShow(false);
-        setmodal(null);
     };
+
+    if (loading) {
+        return <div>Loading...</div>;
+    }
 
     return (
         <div className="container bg-light w-100 h-100">
             <div className='d-flex justify-content-between p-2 mx-4'>
                 <h4 className="title my-2 mx-3">Managers</h4>
                 <button
-                    onClick={() => handleShow(modal)}
+                    onClick={handleShow}
                     className="btn btn-block btn-lg text-info hover1 mx-3"
                     style={{ backgroundColor: "#C8F2FE" }}
                 >
                     <strong>Add Manager</strong>
                 </button>
             </div>
-            <ManagersList managersList={managersList} />
+            <ManagersList />
             <Modal
-                size="mg"
+                size="lg"
                 show={lgShow}
                 onHide={handleClose}
                 aria-labelledby="addmanager"

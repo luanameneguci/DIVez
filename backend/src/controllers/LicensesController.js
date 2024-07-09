@@ -2,12 +2,15 @@ const express = require("express");
 const Sequelize = require('sequelize');
 const sequelize = require("../models/database");
 const Licenses = require("../models/licenses");
+const Product = require("../models/product");
 
 const controllers = {};
 
 controllers.licenses_list = async (req, res) => {
   try {
-    const data = await Licenses.findAll();
+    const data = await Licenses.findAll({
+      include: Product // Include the Product model to fetch associated product data
+    });
     res.json(data);
   } catch (error) {
     res.status(500).json({ error: error.message });
@@ -91,6 +94,35 @@ controllers.countLikedUsers = async (req, res) => {
       res.json({ count });
   } catch (error) {
       res.status(500).json({ error: error.message });
+  }
+};
+
+controllers.licensesByUser = async (req, res) => {
+  const { idUser } = req.params; // Extracting idUser from request parameters
+
+  try {
+    const licenses = await Licenses.findAll({
+      where: {
+        idUser: idUser // Filtering licenses by idUser
+      },
+      include: {
+        model: Product, // Include the Product model
+        as: 'product', // Alias for the included model
+        attributes: [
+          'idProduct',
+          'productName',
+          'productPrice',
+          'productVersion',
+          'productImage',
+          'productDescription',
+          'productInstalls',
+          'productRating'
+        ]
+      }
+    });
+    res.json(licenses);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
   }
 };
 

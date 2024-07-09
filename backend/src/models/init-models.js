@@ -21,6 +21,7 @@ const Ticket = require("./ticket");
 const TicketDepartment = require("./ticketDepartment");
 const TicketPriority = require("./ticketPriority");
 const TicketStatus = require("./ticketStatus");
+const UserLicense = require("./userLicenses");
 
 // Require the insertInitialData function
 //const insertInitialData = require('./insertData');
@@ -55,6 +56,7 @@ const TicketStatus = require("./ticketStatus");
     await ProductCart.sync({ alter: true });
     await PackageCart.sync({ alter: true });
     await PackageProduct.sync({ alter: true });
+    await UserLicense.sync({ alter: true });
 
     console.log("All models were synchronized successfully.");
 

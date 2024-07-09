@@ -15,7 +15,7 @@ const BudgetPackage = require("./routes/budgetPackageRoute");
 const BudgetProduct = require("./routes/budgetProductRoute");
 const BudgetStatus = require("./routes/budgetStatusRoute");
 const Cart = require("./routes/cartRoute");
-const Licenses = require("./routes/licensesRoute");
+const Licenses = require("./routes/LicensesRoute");
 const LicenseStatus = require("./routes/licensesStatusRoute");
 const LicenseUser = require("./routes/licenseUserRoute");
 const Package = require("./routes/packageRoute");
@@ -29,6 +29,7 @@ const Ticket = require("./routes/ticketRoute");
 const TicketDepartment = require("./routes/ticketDepartmentRoute");
 const TicketPriority = require("./routes/ticketPriorityRoute");
 const TicketStatus = require("./routes/ticketStatusRoute");
+const UserLicense = require("./routes/UserLicensesRoute");
 
 
 // Configure CORS
@@ -67,6 +68,7 @@ app.use('/ticket', Ticket);
 app.use('/ticketDepartment', TicketDepartment);
 app.use('/ticketPriority', TicketPriority);
 app.use('/ticketStatus', TicketStatus);
+app.use('/userLicenses', UserLicense);
 
 // Set the port
 app.set("port", process.env.PORT || 8080);

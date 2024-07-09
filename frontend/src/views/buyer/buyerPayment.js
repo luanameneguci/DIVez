@@ -4,86 +4,51 @@ import { BrowserRouter as Router, Route, Link, Routes } from "react-router-dom";
 import Shop from "../../views/buyer/buyerShop";
 
 const BuyerPayment = () => {
-  const items = [
-    // Lista de items no carrinho de compras
-    {
-      image:
-        "https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-shopping-carts/img1.webp",
-      name: "Iphone 11 pro",
-      description: "256GB, Navy Blue",
-      quantity: 2,
-      price: 900,
-    },
-    {
-      image:
-        "https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-shopping-carts/img2.webp",
-      name: "Samsung Galaxy S20",
-      description: "128GB, Cosmic Gray",
-      quantity: 1,
-      price: 800,
-    },
-    {
-      image:
-        "https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-shopping-carts/img3.webp",
-      name: "Google Pixel 4a",
-      description: "128GB, Just Black",
-      quantity: 3,
-      price: 500,
-    },
-  ];
+  const [items, setItems] = useState([]);
+  const [totalPrice, setTotalPrice] = useState(0);
+  const [cardNumber, setCardNumber] = useState("");
+  const [expiry, setExpiry] = useState("");
 
-  // Função para somar a quantidade total dos itens no carrinho
+  // Fetch data from API
+  useEffect(() => {
+    fetch("http://localhost:8080/cart/2/products")
+      .then((response) => response.json())
+      .then((data) => {
+        setItems(data);
+      })
+      .catch((error) => console.error("Error fetching data:", error));
+  }, []);
+
+  // Function to sum the total quantity of items in the cart
   const sumTotalQuantity = (items) => {
-    let totalQuantity = 0;
-    items.forEach((item) => {
-      totalQuantity += item.quantity; // Incrementa o total de quantidade com a quantidade de cada item
-    });
-    return totalQuantity; // Retorna o total de quantidade
+    return items.reduce((total, item) => total + item.numberOfLicenses, 0);
   };
 
-  // Calcular a quantidade total utilizando a função sumTotalQuantity
+  // Calculate the total quantity using the sumTotalQuantity function
   const totalQuantity = sumTotalQuantity(items);
 
-  // Estado para armazenar o preço total
-  const [totalPrice, setTotalPrice] = useState(0);
-
-  // Efeito para calcular o preço total quando os items mudam
+  // Effect to calculate the total price when items change
   useEffect(() => {
-    let totalPrice = 0;
-    items.forEach((item) => {
-      totalPrice += item.price * item.quantity; // multiplica o valor do preço com a quantidade de cada item
-    });
+    const totalPrice = items.reduce(
+      (total, item) => total + item.productPrice * item.numberOfLicenses,
+      0
+    );
     setTotalPrice(totalPrice);
   }, [items]);
 
-  // Estado para o número do cartão
-  const [cardNumber, setCardNumber] = useState("");
-
-  // Função para lidar com a mudança no input do número do cartão e formatá-lo com espaços a cada 4 dígitos
+  // Handle card number change and format it with spaces every 4 digits
   const handleCardNumberChange = (event) => {
-    // Remove tudo o que não é digito
     const inputWithoutSpaces = event.target.value.replace(/\s+/g, "");
-
-    // Formata com espaços a cada 4 digits
-    let formattedValue = inputWithoutSpaces.replace(/(\d{4})/g, "$1 ").trim();
-
-    // Faz update ao estado
+    const formattedValue = inputWithoutSpaces.replace(/(\d{4})/g, "$1 ").trim();
     setCardNumber(formattedValue);
   };
 
-  // Estado para a data de expiração
-  const [expiry, setExpiry] = useState("");
-
-  // Função para lidar com a mudança na data de expiração e inserir '/' após os primeiros 2 caracteres (MM)
+  // Handle expiry date change and insert '/' after the first 2 characters (MM)
   const handleExpiryChange = (event) => {
     let formattedValue = event.target.value;
-
-    // Inserte '/' após os dois primeiros numeros
     if (formattedValue.length === 2 && !formattedValue.includes("/")) {
       formattedValue += "/";
     }
-
-    // Faz update ao estado
     setExpiry(formattedValue);
   };
 
@@ -94,24 +59,21 @@ const BuyerPayment = () => {
           <div className="row d-flex justify-content-center align-items-center h-100">
             <div className="col">
               <div className="bg-white roundbg shadow">
-                <div className=" p-4">
+                <div className="p-4">
                   <div className="row">
                     <div className="col-lg-7">
                       <h5 className="mb-3">
-                        <Link
-                          to="/shop"
-                          className="text-body d-flex align-center"
-                        >
+                        <Link to="/shop" className="text-body d-flex align-center">
                           <svg
                             xmlns="http://www.w3.org/2000/svg"
                             width="16"
                             height="16"
                             fill="currentColor"
-                            class="bi bi-chevron-left my-auto"
+                            className="bi bi-chevron-left my-auto"
                             viewBox="0 0 16 16"
                           >
                             <path
-                              fill-rule="evenodd"
+                              fillRule="evenodd"
                               d="M11.354 1.646a.5.5 0 0 1 0 .708L5.707 8l5.647 5.646a.5.5 0 0 1-.708.708l-6-6a.5.5 0 0 1 0-.708l6-6a.5.5 0 0 1 .708 0"
                             />
                           </svg>
@@ -124,8 +86,7 @@ const BuyerPayment = () => {
                         <div>
                           <p className="mb-1">Shopping cart</p>
                           <p className="mb-0">
-                            You have <strong>{totalQuantity}</strong> items in
-                            your cart
+                            You have <strong>{totalQuantity}</strong> items in your cart
                           </p>
                         </div>
                       </div>
@@ -202,10 +163,7 @@ const BuyerPayment = () => {
                                     pattern="^(0[1-9]|1[0-2])\/(20)\d{2}$"
                                     required
                                   />
-                                  <label
-                                    className="form-label"
-                                    htmlFor="typeExp"
-                                  >
+                                  <label className="form-label" htmlFor="typeExp">
                                     <strong>Expiration</strong>
                                   </label>
                                 </div>
@@ -223,10 +181,7 @@ const BuyerPayment = () => {
                                     pattern="^\d{3}$"
                                     required
                                   />
-                                  <label
-                                    className="form-label"
-                                    htmlFor="typeCvv"
-                                  >
+                                  <label className="form-label" htmlFor="typeCvv">
                                     <strong>CVV</strong>
                                   </label>
                                 </div>
@@ -237,7 +192,7 @@ const BuyerPayment = () => {
 
                             <div className="d-flex justify-content-between mb-4">
                               <p className="mb-2">Total (Incl. taxes)</p>
-                              <p className="mb-2">${totalPrice}</p>
+                              <p className="mb-2">${totalPrice.toFixed(2)}</p>
                             </div>
 
                             <button
@@ -261,7 +216,7 @@ const BuyerPayment = () => {
   );
 };
 
-// Componente ShoppingCart para exibir os itens no carrinho de compras
+// ShoppingCart component to display the items in the shopping cart
 const ShoppingCart = ({ items }) => {
   return (
     <div>
@@ -272,23 +227,23 @@ const ShoppingCart = ({ items }) => {
               <div className="d-flex flex-row align-items-center col-4">
                 <div>
                   <img
-                    src={item.image}
+                    src={item.productImage}
                     className="img-fluid roundbg"
                     alt="Shopping item"
                     style={{ width: "65px" }}
                   />
                 </div>
                 <div className="ms-3">
-                  <h5>{item.name}</h5>
-                  <p className="small mb-0">{item.description}</p>
+                  <h5>{item.productName}</h5>
+                  <p className="small mb-0">{item.productDescription}</p>
                 </div>
               </div>
               <div className="d-flex flex-row align-items-center col-3 text-center">
                 <div style={{ width: "50px" }}>
-                  <h5 className="fw-normal mb-0">{item.quantity}</h5>
+                  <h5 className="fw-normal mb-0">{item.numberOfLicenses}</h5>
                 </div>
                 <div style={{ width: "80px" }}>
-                  <h5 className="mb-0">${item.price * item.quantity}</h5>
+                  <h5 className="mb-0">${(item.productPrice * item.numberOfLicenses).toFixed(2)}</h5>
                 </div>
                 <a href="#!" style={{ color: "#cecece" }}>
                   <i className="fas fa-trash-alt"></i>

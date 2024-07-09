@@ -6,15 +6,17 @@ import React, { useEffect, useState } from "react";
 import Box from "./Box";
 import BoxTable from "./BoxTable";
 import BoxManager from "./BoxManager";
-import BoxProgress from "./BoxProgress";
+import ProgressBox from "./BoxProgress";
 import BoxThird from "./BoxThird";
 import BuyerManagersList from "../../views/buyer/buyerManagers";
 
 const BuyerDashboard = () => {
   const numRowsToShow = 6;
   const buyerId = 1;
+  const someUserId = 6;
+  const idBuyer = 6;
+  const idBuyer1 = 6;
 
-  const dataManager = useBuyerManagers();
   const pendingBudgets = useBuyerPendingBudgets();
   const activeLicenses = useBuyerActiveLicenses();
   const linkedUsers = useBuyerLicenses();
@@ -60,10 +62,10 @@ const BuyerDashboard = () => {
             <BoxTable title="Pending budgets" rows={rows} />
           </div>
           <div className="col-4">
-            <BoxProgress />
+          <ProgressBox idUser={someUserId} />
           </div>
           <div className="col-4">
-          <BoxManager buyerData={dataManager} />
+          <ManagerContainer idBuyer={idBuyer} />
           </div>
         </div>
       </div>
@@ -268,29 +270,36 @@ function useTablePendingBudgets(idUser) {
   return rows;
 }
 
-
-function useBuyerManagers(buyerId) {
-  const [dataManager, setDataBuyerManager] = useState([]);
+const ManagerContainer = ({ idBuyer }) => {
+  const [buyerData, setBuyerData] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
-    const fetchBuyerManagers = async () => {
+    const fetchData = async () => {
       try {
-        const url = `http://localhost:8080/buyer/1/findManagers`; // Use buyerId dynamically
-        const res = await axios.get(url);
-        if (res.status === 200) {
-          setDataBuyerManager(res.data);
-        }
+        const response = await axios.get(`http://localhost:8080/user/managers/${idBuyer}`);
+        setBuyerData({ managers: response.data });
+        setLoading(false);
       } catch (error) {
-        console.error('Error fetching buyer managers:', error);
-        // Handle error state if needed
+        setError(error.message);
+        setLoading(false);
       }
     };
 
-    fetchBuyerManagers();
-  }, [buyerId]);
+    fetchData();
+  }, [idBuyer]);
 
-  return dataManager;
-}
+  if (loading) {
+    return <div>Loading...</div>;
+  }
+
+  if (error) {
+    return <div>Error: {error}</div>;
+  }
+
+  return <BoxManager buyerData={buyerData} />;
+};
 
 
 export default BuyerDashboard;
