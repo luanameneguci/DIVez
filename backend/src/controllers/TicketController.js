@@ -24,15 +24,15 @@ controllers.ticket_list = async (req, res) => {
 };
 
 controllers.ticket_create = async (req, res) => {
-  const { IDTICKETPRIORITY, IDTICKETDEPARTMENT, IDTICKETSTATUS, TICKETNAME, TICKETDESCRIPTION, TICKETDATE } = req.body;
+  const { idTicketPriority, idTicketDepartment, idTicketStatus, ticketName, ticketDescription, ticketDate } = req.body;
   try {
     const newTicket = await Ticket.create({
-      IDTICKETPRIORITY,
-      IDTICKETDEPARTMENT,
-      IDTICKETSTATUS,
-      TICKETNAME,
-      TICKETDESCRIPTION,
-      TICKETDATE
+      idTicketPriority,
+      idTicketDepartment,
+      idTicketStatus,
+      ticketName,
+      ticketDescription,
+      ticketDate
     });
     res.json(newTicket);
   } catch (error) {
@@ -42,18 +42,18 @@ controllers.ticket_create = async (req, res) => {
 
 controllers.ticket_update = async (req, res) => {
   const ticketId = req.params.id;
-  const { IDTICKETPRIORITY, IDTICKETDEPARTMENT, IDTICKETSTATUS, TICKETNAME, TICKETDESCRIPTION, TICKETDATE } = req.body;
+  const { idTicketPriority, idTicketDepartment, idTicketStatus, ticketName, ticketDescription, ticketDate } = req.body;
   try {
     const updatedTicket = await Ticket.update(
       {
-        IDTICKETPRIORITY,
-        IDTICKETDEPARTMENT,
-        IDTICKETSTATUS,
-        TICKETNAME,
-        TICKETDESCRIPTION,
-        TICKETDATE
+        idTicketPriority,
+        idTicketDepartment,
+        idTicketStatus,
+        ticketName,
+        ticketDescription,
+        ticketDate
       },
-      { where: { IDTICKET: ticketId } }
+      { where: { idTicket: ticketId } }
     );
     res.json({ updatedTicket });
   } catch (error) {
@@ -85,7 +85,7 @@ controllers.ticket_detail = async (req, res) => {
 controllers.ticket_delete = async (req, res) => {
   const ticketId = req.params.id;
   try {
-    await Ticket.destroy({ where: { IDTICKET: ticketId } });
+    await Ticket.destroy({ where: { idTicket: ticketId } });
     res.json({ message: "Ticket deleted successfully!" });
   } catch (error) {
     res.status(500).json({ error: error.message });

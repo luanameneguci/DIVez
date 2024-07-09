@@ -72,11 +72,9 @@ const AdminTicketReply = () => {
             });
             alert('Ticket updated:', response.data);
             console.log('Ticket updated:', response.data);
-            // Optionally, update local state or UI after successful save
         } catch (error) {
             alert('Error saving ticket:', error);
             console.error('Error saving ticket:', error);
-            // Handle error (e.g., show error message to user)
         }
     };
 

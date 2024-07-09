@@ -10,6 +10,7 @@ controllers.product_list = async (req, res) => {
     const data = await Product.findAll();
     res.json(data);
   } catch (error) {
+    console.error('Error fetching products:', error);
     res.status(500).json({ error: error.message });
   }
 };
@@ -38,61 +39,52 @@ controllers.product_create = async (req, res) => {
     });
     res.json(newProduct);
   } catch (error) {
+    console.error('Error creating product:', error);
     res.status(400).json({ error: error.message });
   }
 };
 
 controllers.product_update = async (req, res) => {
-  const idReceived = req.params.idProduct;
-  const {
-    idCategory,
-    productName,
-    productPrice,
-    productVersion,
-    productImage,
-    productDescription,
-    productInstalls,
-    productRating
-  } = req.body;
+  const idReceived = req.params.id;
+
   try {
-    const updatedProduct = await Product.update(
-      {
-        idCategory,
-        productName,
-        productPrice,
-        productVersion,
-        productImage,
-        productDescription,
-        productInstalls,
-        productRating
-      },
-      { where: { idProduct: idReceived } }
-    );
-    res.json({ updatedProduct });
+      const [updatedRowsCount, updatedProduct] = await Product.update(req.body, {
+          where: { idProduct: idReceived },
+          returning: true, // Ensure Sequelize returns the updated product
+      });
+
+      if (updatedRowsCount > 0) {
+          res.json({ product: updatedProduct[0] });
+      } else {
+          res.status(404).json({ message: "Product not found" });
+      }
   } catch (error) {
-    res.status(400).json({ error: error.message });
+      console.error('Error updating product:', error);
+      res.status(400).json({ error: error.message });
   }
 };
 
+
 controllers.product_detail = async (req, res) => {
-  const idReceived = req.params.idProduct;
+  const idReceived = req.params.id;
   try {
     const product = await Product.findByPk(idReceived);
-    if (!product) {
+    if (product) {
+      res.json(product);
+    } else {
       res.status(404).json({ message: "Product not found" });
-      return;
     }
-    res.json(product);
   } catch (error) {
+    console.error('Error fetching product details:', error);
     res.status(500).json({ error: error.message });
   }
 };
 
 controllers.product_delete = async (req, res) => {
-  const idReceived = req.params.idProduct;
+  const productId = req.params.id;
   try {
-    await Product.destroy({ where: { idProduct: idReceived } });
-    res.json({ message: "Deleted successfully!" });
+    await Product.destroy({ where: { idProduct: productId } });
+    res.json({ message: "Product deleted successfully!" });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }

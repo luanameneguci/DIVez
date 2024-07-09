@@ -1,17 +1,33 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import '../../App.css';
 
 const ProductAdd = () => {
     const [newProduct, setNewProduct] = useState({
+        idCategory: '',
         productName: '',
         productPrice: '',
         productVersion: '',
-        productDescript: '',
-        installations: '',
-        image: '',
+        productImage: '',
+        productDescription: '',
+        productInstalls: '',
+        productRating: '',
     });
+    const [categories, setCategories] = useState([]);
     const [isLoading, setIsLoading] = useState(false);
+
+    useEffect(() => {
+        const fetchCategories = async () => {
+            try {
+                const response = await axios.get('http://localhost:8080/productCategory');
+                setCategories(response.data);
+            } catch (error) {
+                console.error('Error fetching categories:', error);
+                alert('Error fetching categories. Please try again.');
+            }
+        };
+        fetchCategories();
+    }, []);
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -22,26 +38,28 @@ const ProductAdd = () => {
     };
 
     const handleSave = async () => {
-        const { productName, productPrice, productVersion, productDescript, installations, image } = newProduct;
-        if (!productName || !productPrice || !productVersion || !productDescript || !installations || !image) {
+        const { idCategory, productName, productPrice, productVersion, productImage, productDescription, productInstalls, productRating } = newProduct;
+        if (!idCategory || !productName || !productPrice || !productVersion || !productImage || !productDescription || !productInstalls || !productRating) {
             alert('All fields are required!');
             return;
         }
         setIsLoading(true);
         const url = 'http://localhost:8080/product/create';
-
+    
         try {
             const response = await axios.post(url, newProduct);
             console.log('Response from server:', response);
-
-            if (response.status === 201) {
+    
+            if (response.status === 201 || response.status === 200) {
                 setNewProduct({
+                    idCategory: '',
                     productName: '',
                     productPrice: '',
                     productVersion: '',
-                    productDescript: '',
-                    installations: '',
-                    image: '',
+                    productImage: '',
+                    productDescription: '',
+                    productInstalls: '',
+                    productRating: '',
                 });
                 alert('Product added successfully!');
             } else {
@@ -54,6 +72,7 @@ const ProductAdd = () => {
             setIsLoading(false);
         }
     };
+    
 
     return (
         <div className="container p-2 bg-light">
@@ -63,6 +82,23 @@ const ProductAdd = () => {
                     <form>
                         <div className="row mx-1">
                             <div className="col-6">
+                                <div className="form-group mb-3">
+                                    <label htmlFor="categoryinput">Category</label>
+                                    <select
+                                        className="form-control"
+                                        id="categoryinput"
+                                        name="idCategory"
+                                        value={newProduct.idCategory}
+                                        onChange={handleChange}
+                                    >
+                                        <option value="">Select a category</option>
+                                        {categories.map((category) => (
+                                            <option key={category.idCategory} value={category.idCategory}>
+                                                {category.category}
+                                            </option>
+                                        ))}
+                                    </select>
+                                </div>
                                 <div className="form-group mb-3">
                                     <label htmlFor="productnameinput">Product Name</label>
                                     <input
@@ -92,10 +128,10 @@ const ProductAdd = () => {
                                     <textarea
                                         className="form-control"
                                         id="descriptioninput"
-                                        name="productDescript"
+                                        name="productDescription"
                                         rows="2"
-                                        maxLength="75"
-                                        value={newProduct.productDescript}
+                                        maxLength="300"
+                                        value={newProduct.productDescription}
                                         onChange={handleChange}
                                     ></textarea>
                                 </div>
@@ -104,7 +140,8 @@ const ProductAdd = () => {
                                 <div className="form-group mb-3">
                                     <label htmlFor="productversioninput">Product Version</label>
                                     <input
-                                        type="text"
+                                        type="number"
+                                        step="0.01"
                                         className="form-control"
                                         id="productversioninput"
                                         name="productVersion"
@@ -119,9 +156,9 @@ const ProductAdd = () => {
                                         type="number"
                                         className="form-control"
                                         id="installationsinput"
-                                        name="installations"
+                                        name="productInstalls"
                                         placeholder="Installations"
-                                        value={newProduct.installations}
+                                        value={newProduct.productInstalls}
                                         onChange={handleChange}
                                     />
                                 </div>
@@ -131,9 +168,22 @@ const ProductAdd = () => {
                                         type="text"
                                         className="form-control"
                                         id="imagelinkinput"
-                                        name="image"
-                                        placeholder="Image"
-                                        value={newProduct.image}
+                                        name="productImage"
+                                        placeholder="Image URL"
+                                        value={newProduct.productImage}
+                                        onChange={handleChange}
+                                    />
+                                </div>
+                                <div className="form-group mb-3">
+                                    <label htmlFor="ratinginput">Rating</label>
+                                    <input
+                                        type="number"
+                                        step="0.01"
+                                        className="form-control"
+                                        id="ratinginput"
+                                        name="productRating"
+                                        placeholder="Rating"
+                                        value={newProduct.productRating}
                                         onChange={handleChange}
                                     />
                                 </div>
@@ -141,31 +191,14 @@ const ProductAdd = () => {
                         </div>
                     </form>
                     <div className="row d-flex flex-row m-3">
-                        <div className='col-8'></div>
+                        <div className='col-10'></div>
                         <div className="col-2">
                             <button 
                                 type="button" 
                                 className="btn btn-outline-success col-12 hover" 
                                 onClick={handleSave} 
-                                disabled={isLoading}
                             >
-                                {isLoading ? 'Saving...' : 'Add'}
-                            </button>
-                        </div>
-                        <div className="col-2">
-                            <button 
-                                type="button" 
-                                className="btn btn-outline-danger col-12 hover"
-                                onClick={() => setNewProduct({
-                                    productName: '',
-                                    productPrice: '',
-                                    productVersion: '',
-                                    productDescript: '',
-                                    installations: '',
-                                    image: '',
-                                })}
-                            >
-                                Cancel
+                                Add
                             </button>
                         </div>
                     </div>

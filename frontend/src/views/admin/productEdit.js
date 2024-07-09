@@ -1,10 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import axios from 'axios';
-import '../../App.css';
 
 const EditProduct = () => {
-    const { idProduct } = useParams(); // Fetch the id from URL parameter
+    const { idProduct } = useParams();
     const [product, setProduct] = useState({
         productName: '',
         productPrice: '',
@@ -17,26 +16,25 @@ const EditProduct = () => {
         productDescript: '',
         image: '',
     });
-    const [error, setError] = useState(null);
     const [isLoading, setIsLoading] = useState(true);
-
-    // Define loadProduct function outside of useEffect
-    const loadProduct = async () => {
-        try {
-            const response = await axios.get(`http://localhost:8080/product/${idProduct}`);
-            const data = response.data;
-            setProduct(data);
-            setEditedProduct(data);
-            setIsLoading(false);
-        } catch (error) {
-            console.error('Error fetching product details:', error);
-            setError(error);
-            setIsLoading(false);
-        }
-    };
+    const [error, setError] = useState(null);
 
     useEffect(() => {
-        loadProduct(); // Call loadProduct initially when component mounts
+        const loadProduct = async () => {
+            try {
+                const response = await axios.get(`http://localhost:8080/product/${idProduct}`);
+                const data = response.data;
+                setProduct(data);
+                setEditedProduct(data); // Set initial editedProduct state
+                setIsLoading(false);
+            } catch (error) {
+                console.error('Error fetching product details:', error);
+                setError(error);
+                setIsLoading(false);
+            }
+        };
+
+        loadProduct();
     }, [idProduct]);
 
     const handleChange = (e) => {
@@ -50,24 +48,15 @@ const EditProduct = () => {
     const handleSave = async () => {
         const url = `http://localhost:8080/product/update/${idProduct}`;
 
-        const data = {
-            productName: editedProduct.productName,
-            productPrice: editedProduct.productPrice,
-            productDescript: editedProduct.productDescript,
-            image: editedProduct.image,
-        };
-
         try {
-            const response = await axios.put(url, data);
-            console.log('Response from server:', response); // Log the entire response object for debugging
+            const response = await axios.put(url, editedProduct);
+            console.log('Response from server:', response.data);
 
-            if (response.data && response.data.success === true) {
-                setProduct(response.data.data); // Update local state with updated data
-                alert(response.data.message || 'Product updated successfully!');
-                loadProduct(); // Reload product details after successful update
+            if (response.data && response.data.product) {
+                setProduct(response.data.product); // Update local state with updated data
+                alert('Product updated successfully!');
             } else {
-                let errorMessage = response.data && response.data.message ? response.data.message : 'Unknown error';
-                alert('Failed to update product: ' + errorMessage);
+                alert('Failed to update product.');
             }
         } catch (error) {
             console.error('Error updating product:', error);
@@ -123,7 +112,7 @@ const EditProduct = () => {
                                             id="descriptioninput"
                                             name="productDescript"
                                             rows="2"
-                                            maxLength="75"
+                                            maxLength="300" // Adjusted to match backend max length
                                             value={editedProduct.productDescript}
                                             onChange={handleChange}
                                         ></textarea>
@@ -137,7 +126,7 @@ const EditProduct = () => {
                                             className="form-control"
                                             id="imagelinkinput"
                                             name="image"
-                                            placeholder="Image"
+                                            placeholder="Image URL"
                                             value={editedProduct.image}
                                             onChange={handleChange}
                                         />
@@ -146,12 +135,9 @@ const EditProduct = () => {
                             </div>
                         </form>
                         <div className="row d-flex flex-row m-3">
-                            <div className='col-8'></div>
+                            <div className='col-10'></div>
                             <div className="col-2">
                                 <button type="button" className="btn btn-outline-success col-12 hover" onClick={handleSave}>Save</button>
-                            </div>
-                            <div className="col-2">
-                                <button type="button" className="btn btn-outline-danger col-12 hover">Cancel</button>
                             </div>
                         </div>
                     </div>
@@ -159,6 +145,6 @@ const EditProduct = () => {
             </div>
         </div>
     );
-}
+};
 
 export default EditProduct;

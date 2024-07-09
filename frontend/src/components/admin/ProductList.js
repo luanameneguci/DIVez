@@ -43,6 +43,17 @@ const ProductList = () => {
         );
     }
 
+    const handleDelete = async (productId) => {
+        try {
+            await axios.delete(`http://localhost:8080/product/delete/${productId}`);
+            setProducts(products.filter(product => product.idProduct !== productId));
+            alert('Product deleted successfully!');
+        } catch (error) {
+            console.error('Error deleting product:', error);
+            alert('Failed to delete product. Please try again.');
+        }
+    };
+
     return (
         <div className="box-container px-3 roundbg col-auto d-flex">
             <div className="container roundbg bg-white shadow px-0">
@@ -79,7 +90,12 @@ const ProductList = () => {
                                 <td>{product.productDescription}</td>
                                 <td className="d-flex justify-content-center p-4">
                                     <Link to={"/productedit/" + product.idProduct} className='btn btn-outline-info me-2 hover'>Edit</Link>
-                                    <button className='btn btn-outline-danger hover'>Delete</button>
+                                    <button
+                                        className='btn btn-outline-danger hover'
+                                        onClick={() => handleDelete(product.idProduct)}
+                                    >
+                                        Delete
+                                    </button>
                                 </td>
                             </tr>
                         ))}

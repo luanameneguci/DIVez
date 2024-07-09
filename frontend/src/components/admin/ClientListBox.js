@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import axios from 'axios';
 
 function ClientListBox({ clientList }) {
     const [nameFilter, setNameFilter] = useState('');
@@ -8,8 +9,13 @@ function ClientListBox({ clientList }) {
     const [accountTypeFilter, setAccountTypeFilter] = useState('');
     const [currentPage, setCurrentPage] = useState(1);
     const [itemsPerPage] = useState(5);
+    const [clients, setClients] = useState([]);
 
-    const filteredRows = clientList.filter(row =>
+    useEffect(() => {
+        setClients(clientList);
+    }, [clientList]);
+
+    const filteredRows = clients.filter(row =>
         row[0].toLowerCase().includes(nameFilter.toLowerCase()) &&
         (!row[1] || row[1].toString().includes(nifFilter)) &&
         row[2].toLowerCase().includes(mailFilter.toLowerCase()) &&
@@ -30,6 +36,17 @@ function ClientListBox({ clientList }) {
             </li>
         );
     }
+
+    const handleDelete = async (clientId) => {
+        try {
+            await axios.delete(`http://localhost:8080/user/delete/${clientId}`);
+            setClients(clients.filter(client => client[4] !== clientId));
+            alert('Client deleted successfully!');
+        } catch (error) {
+            console.error('Error deleting client:', error);
+            alert('Failed to delete client. Please try again.');
+        }
+    };
 
     return (
         <div className="container bg-white px-0 roundbg shadow h-100">
@@ -90,7 +107,10 @@ function ClientListBox({ clientList }) {
                                     See more
                                 </Link>
 
-                                <button className='btn btn-outline-danger'>
+                                <button
+                                    className='btn btn-outline-danger'
+                                    onClick={() => handleDelete(row[4])}
+                                >
                                     Delete
                                 </button>
                             </td>

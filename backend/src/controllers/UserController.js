@@ -57,7 +57,7 @@ controllers.user_detail = async (req, res) => {
 controllers.user_delete = async (req, res) => {
   const userId = req.params.id;
   try {
-    await User.destroy({ where: { IDUSER: userId } });
+    await User.destroy({ where: { idUser: userId } });
     res.json({ message: "User deleted successfully!" });
   } catch (error) {
     res.status(500).json({ error: error.message });
