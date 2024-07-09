@@ -24,7 +24,7 @@ const BuyerBudgetDetail = () => {
             try {
                 setIsLoading(true);
                 // Fetch budget details
-                const budgetResponse = await axios.get(`http://localhost:8080/budget/${idBudget}`);
+                const budgetResponse = await axios.get(`http://localhost:8080/budget/products/${idBudget}`);
                 const budgetData = budgetResponse.data;
                 setBudget(budgetData);
 
@@ -49,25 +49,22 @@ const BuyerBudgetDetail = () => {
 
     const handleSave = async () => {
         try {
-            const response = await axios.put(`http://localhost:8080/budget/update/${idBudget}`, {
+            await axios.put(`http://localhost:8080/budget/update/${idBudget}`, {
                 budgetDescription: reply,
                 budgetDate: budget.budgetDate,
                 idBudgetStatus: selectedStatus,
                 idUser: budget.idUser,
             });
             alert('Budget updated');
-            console.log('Budget updated:', response.data);
-            // Optionally update local state or UI after successful save
         } catch (error) {
             alert('Error saving budget:', error);
             console.error('Error saving budget:', error);
-            // Handle error (e.g., show error message to user)
         }
     };
 
     const handleReject = async () => {
         try {
-            const response = await axios.put(`http://localhost:8080/budget/update/${idBudget}`, {
+            await axios.put(`http://localhost:8080/budget/update/${idBudget}`, {
                 idBudgetStatus: 4,
             });
             alert('Budget rejected!');
@@ -90,17 +87,13 @@ const BuyerBudgetDetail = () => {
                 <div className="box-container bg-white roundbg h-100 p-4 shadow">
                     <div className="row border-bottom">
                         <h4 className='text-start'>Budget #{budget.idBudget}</h4>
-                        <p className='text-start mt-1'>{formatDate(budget.budgetDate)}</p>
                     </div>
-                    <div className='row mt-3'>
-                        <h6 className='text-start'>Description</h6>
-                        <div className='row'>
-                            <span>{budget.budgetDescription}</span>
-                        </div>
+                    <div>
+                        <ProductList items={budget.budgetProducts} />
                     </div>
                     <form className='row d-flex mt-4'>
                         <div className="mb-3 col-8">
-                            <label htmlFor="descriptioninput">Reply</label>
+                            <label htmlFor="descriptioninput">Description</label>
                             <textarea
                                 className="form-control"
                                 id="descriptioninput"
@@ -111,33 +104,52 @@ const BuyerBudgetDetail = () => {
                             ></textarea>
                         </div>
                         <div className="mb-3 col">
-                            <label htmlFor="statusSelect">Status</label>
-                            <select
-                                id="statusSelect"
-                                className="form-select"
-                                value={selectedStatus}
-                                onChange={(e) => setSelectedStatus(e.target.value)}
-                            >
-                                <option value="">Select Status</option>
-                                {statusOptions.map(stat => (
-                                    <option key={stat.idBudgetStatus} value={stat.idBudgetStatus.toString()}>{stat.budgetStatus}</option>
-                                ))}
-                            </select>
                             <div className="row d-flex mt-3 justify-content-end">
                                 <div className="col-4">
-                                    <button type="button" className="btn btn-success hover shadow col-12" onClick={handleSave}>Save</button>
+                                    <button type="button" className="btn btn-info text-white hover shadow col-12">Send Budget</button>
                                 </div>
                                 <div className="col-4">
-                                    <button type="button" className="btn btn-info text-white hover shadow col-12">Send Reply</button>
-                                </div>
-                                <div className="col-4">
-                                    <button type="button" className="btn btn-danger hover shadow col-12" onClick={handleReject}>Reject</button>
+                                    <button type="button" className="btn btn-danger hover shadow col-12" onClick={handleReject}>Delete</button>
                                 </div>
                             </div>
                         </div>
                     </form>
                 </div>
             </div>
+        </div>
+    );
+};
+
+const ProductList = ({ items }) => {
+    return (
+        <div>
+            {items.map(({ product }) => (
+                <div className="card-body py-3" key={product.idProduct}>
+                    <div className="d-flex justify-content-between">
+                        <div className="d-flex flex-row align-items-center col-10">
+                            <div className='col-4'>
+                                <img
+                                    src={product.productImage}
+                                    className="img-fluid roundbg"
+                                    alt="Shopping item"
+                                    style={{ width: "65px" }}
+                                />
+                            </div>
+                            <div className="ms-3 col-8">
+                                <h5>{product.productName}</h5>
+                            </div>
+                        </div>
+                        <div className="col-2 my-auto">
+                            <button
+                                type="button"
+                                className="btn btn-danger hover shadow col-12 roundbg"
+                            >
+                                Remove
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            ))}
         </div>
     );
 };
