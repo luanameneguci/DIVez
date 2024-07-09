@@ -7,14 +7,14 @@ const EditProduct = () => {
     const [product, setProduct] = useState({
         productName: '',
         productPrice: '',
-        productDescript: '',
-        image: '',
+        productDescription: '',
+        productImage: '',
     });
     const [editedProduct, setEditedProduct] = useState({
         productName: '',
         productPrice: '',
-        productDescript: '',
-        image: '',
+        productDescription: '',
+        productImage: '',
     });
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState(null);
@@ -106,39 +106,36 @@ const EditProduct = () => {
                                         />
                                     </div>
                                     <div className="form-group mb-3">
-                                        <label htmlFor="descriptioninput">Description</label>
+                                        <label htmlFor="productdescriptioninput">Description</label>
                                         <textarea
                                             className="form-control"
-                                            id="descriptioninput"
-                                            name="productDescript"
-                                            rows="2"
-                                            maxLength="300" // Adjusted to match backend max length
-                                            value={editedProduct.productDescript}
+                                            id="productdescriptioninput"
+                                            name="productDescription"
+                                            placeholder="Description"
+                                            value={editedProduct.productDescription}
                                             onChange={handleChange}
                                         ></textarea>
                                     </div>
-                                </div>
-                                <div className="col-6">
                                     <div className="form-group mb-3">
-                                        <label htmlFor="imagelinkinput">Image</label>
+                                        <label htmlFor="productimageinput">Image URL</label>
                                         <input
                                             type="text"
                                             className="form-control"
-                                            id="imagelinkinput"
-                                            name="image"
+                                            id="productimageinput"
+                                            name="productImage"
                                             placeholder="Image URL"
-                                            value={editedProduct.image}
+                                            value={editedProduct.productImage}
                                             onChange={handleChange}
                                         />
                                     </div>
                                 </div>
+                                <div className="col-6 d-flex justify-content-center align-items-center">
+                                    <img src={product.productImage} alt="Product" className="img-fluid" />
+                                </div>
                             </div>
                         </form>
-                        <div className="row d-flex flex-row m-3">
-                            <div className='col-10'></div>
-                            <div className="col-2">
-                                <button type="button" className="btn btn-outline-success col-12 hover" onClick={handleSave}>Save</button>
-                            </div>
+                        <div className="col-12 text-center">
+                            <button className="btn btn-info m-3" onClick={handleSave}>Save Changes</button>
                         </div>
                     </div>
                 </div>

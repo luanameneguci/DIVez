@@ -38,7 +38,7 @@ const Ticket = sequelize.define('ticket', {
   },
   idBuyer: {
     type: Sequelize.INTEGER,
-    allowNull: false,
+    allowNull: true,
     references: {
       model: User,
       key: 'idUser'

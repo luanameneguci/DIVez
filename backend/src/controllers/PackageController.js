@@ -2,6 +2,8 @@ const express = require("express");
 const Sequelize = require('sequelize');
 const sequelize = require("../models/database");
 const Package = require("../models/package");
+const PackageProduct = require("../models/packageProduct");
+
 
 const controllers = {};
 
@@ -15,14 +17,25 @@ controllers.package_list = async (req, res) => {
 };
 
 controllers.package_create = async (req, res) => {
-  const { packageName, packagePrice } = req.body;
+  const { packageName, packagePrice, products } = req.body;
+
   try {
+    // Create the package
     const newPackage = await Package.create({ packageName, packagePrice });
+
+    // Associate products with the package
+    if (products && products.length > 0) {
+      await Promise.all(products.map(productId =>
+        PackageProduct.create({ idPackage: newPackage.idPackage, idProduct: productId })
+      ));
+    }
+
     res.json(newPackage);
   } catch (error) {
     res.status(400).json({ error: error.message });
   }
 };
+
 
 controllers.package_update = async (req, res) => {
   const idReceived = req.params.id;

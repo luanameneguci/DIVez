@@ -1,7 +1,6 @@
-const express = require("express");
 const Sequelize = require('sequelize');
-const sequelize = require("../models/database");
-const Product = require("../models/product");
+const sequelize = require('../models/database');
+const Product = require('../models/product');
 
 const controllers = {};
 
@@ -64,9 +63,8 @@ controllers.product_update = async (req, res) => {
   }
 };
 
-
 controllers.product_detail = async (req, res) => {
-  const idReceived = req.params.id;
+  const idReceived = req.params.idProduct;
   try {
     const product = await Product.findByPk(idReceived);
     if (product) {
