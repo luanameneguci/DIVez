@@ -2,7 +2,6 @@ import React, { useContext } from 'react';
 import { BrowserRouter as Router, Route, Link, Routes, useLocation } from 'react-router-dom';
 import "../../App.css";
 import logo from "../../images/logo-navbar.svg";
-import notificationicon from "../../images/notification.png";
 import { UserContext } from '../All/UserContext';
 
 import BuyerProductItem from "../../views/buyer/buyerProductItem";
@@ -103,13 +102,6 @@ const Menu = ({ userId }) => {
             <div className="account-type">
               <span className="account-text">Client</span>
             </div>
-          </div>
-          <div className="my-auto me-3">
-            <img
-              src={notificationicon}
-              alt="notifications button"
-              className="notification-icon"
-            />
           </div>
           <div className="mx-3">
             <Link to="/checkout" className="text-black">

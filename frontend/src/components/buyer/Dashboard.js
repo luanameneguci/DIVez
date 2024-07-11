@@ -2,6 +2,9 @@ import "../../App.css";
 import notificationicon from "../../images/notification.png";
 import axios from "axios";
 import React, { useEffect, useState } from "react";
+import pb from "../../images/pendingbudgets.svg";
+import pt from "../../images/pendingtickets.svg";
+import userimg from "../../images/user.svg";
 
 import Box from "./Box";
 import BoxTable from "./BoxTable";
@@ -33,21 +36,21 @@ const BuyerDashboard = ({ userId }) => {
               <Box
                 title="Pending budgets"
                 number={pendingBudgets}
-                image={notificationicon}
+                image={pb}
               />
             </div>
             <div className="col">
               <Box
                 title="Active Licenses"
                 number={activeLicenses}
-                image={notificationicon}
+                image={userimg}
               />
             </div>
             <div className="col">
               <Box
                 title="All Licenses"
                 number={linkedUsers}
-                image={notificationicon}
+                image={userimg}
               />
             </div>
           </div>

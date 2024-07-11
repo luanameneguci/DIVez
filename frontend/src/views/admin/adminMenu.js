@@ -5,7 +5,6 @@ import { UserContext } from '../All/UserContext';
 
 // images import
 import logo from "../../images/logo-navbar.svg";
-import notificationicon from "../../images/notification.png";
 
 // views import
 import AdminDashboard from "../../views/admin/adminDashboard";
@@ -104,13 +103,6 @@ const Menu = ({ userId }) => {
               <div className="account-type">
                 <span className="account-text">Admin</span>
               </div>
-            </div>
-            <div className="my-auto me-3">
-              <img
-                src={notificationicon}
-                alt="notifications button"
-                className="notification-icon"
-              />
             </div>
           </div>
           <div className="w-100 bg-light">

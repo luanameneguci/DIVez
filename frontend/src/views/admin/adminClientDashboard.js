@@ -1,9 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import "../../App.css";
-import notificationicon from "../../images/notification.png";
-import Box from '../../components/admin/Box';
-//import ProductsListBox from '../../components/admin/ProductsListBox';
 import ManagerTicketList from '../../components/admin/ManagerTicketList';
 import BuyerBudgetList from '../../components/admin/BuyerBudgetList';
 import axios from 'axios';

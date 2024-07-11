@@ -1,6 +1,9 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import notificationicon from "../../images/notification.png";
+import pb from "../../images/pendingbudgets.svg";
+import pt from "../../images/pendingtickets.svg";
+import userimg from "../../images/user.svg";
+
 import Box from "../../components/admin/Box";
 import BoxProgress from "../../components/admin/ProgressBox";
 import TicketListBox from "../../components/admin/TicketListBox";
@@ -131,7 +134,7 @@ const AdminDashboard = () => {
               <Box
                 title="Pending tickets"
                 number={waitingTicketsCount}
-                image={notificationicon}
+                image={pt}
                 evolution="10"
               />
             </div>
@@ -139,7 +142,7 @@ const AdminDashboard = () => {
               <Box
                 title="Pending Budgets"
                 number={pendingBudgetsCount}
-                image={notificationicon}
+                image={pb}
                 evolution="10"
               />
             </div>
@@ -147,7 +150,7 @@ const AdminDashboard = () => {
               <Box
                 title="Active Licences"
                 number={activeLicensesCount}
-                image={notificationicon}
+                image={userimg}
                 evolution="10"
               />
             </div>
@@ -155,7 +158,7 @@ const AdminDashboard = () => {
               <Box
                 title="Inactive Licences"
                 number={inactiveLicensesCount}
-                image={notificationicon}
+                image={userimg}
                 evolution="10"
               />
             </div>

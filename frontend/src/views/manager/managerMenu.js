@@ -10,8 +10,6 @@ import {
 } from "react-router-dom";
 import "../../App.css";
 import logo from "../../images/logo-navbar.svg";
-import notificationicon from "../../images/notification.png";
-
 import ManagerProducts from "../../views/manager/managerProducts";
 import FAQ from "../../views/buyer/faq";
 import ManagerTicketList from "../../views/manager/managerTicketList";
@@ -81,13 +79,6 @@ const Menu = ({ userId }) => {
             <div className="account-type">
               <span className="account-text">Manager</span>
             </div>
-          </div>
-          <div className="my-auto me-3">
-            <img
-              src={notificationicon}
-              alt="notifications button"
-              className="notification-icon"
-            />
           </div>
         </div>
 

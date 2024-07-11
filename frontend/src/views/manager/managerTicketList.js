@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import Modal from 'react-bootstrap/Modal';
-import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import notificationicon from "../../images/notification.png";
 
@@ -14,19 +13,19 @@ const formatDateString = (dateString) => {
 const getStatusColor = (status) => {
     switch (status) {
         case 'New':
-            return '#FFD56D'; // amarelo
-        case 'Unsolved':
-            return '#EB5757'; // vermelho
+            return '#FFD56D'; // yellow
+        case 'Rejected':
+            return '#EB5757'; // red
         case 'Solved':
-            return '#00B69B'; // verde
-        case 'Waiting':
-            return '#2D9CDB'; // azul
+            return '#00B69B'; // green
+        case 'Pending':
+            return '#2D9CDB'; // blue
         default:
-            return 'inherit'; // cor padrão
+            return 'inherit';
     }
 };
 
-const TicketListBox = () => {
+const TicketListBox = ({ userId }) => {
     // Estados para controlo de modais e tickets selecionados
     const [lgShow, setLgShow] = useState(false);
     const [selectedTicket, setSelectedTicket] = useState(null);
@@ -45,7 +44,7 @@ const TicketListBox = () => {
     const [ticketData, setTicketData] = useState([]);
 
     useEffect(() => {
-        fetch('http://localhost:8080/ticket/buyer/10')
+        fetch(`http://localhost:8080/ticket/buyer/${userId}`)
             .then(response => response.json())
             .then(data => setTicketData(data))
             .catch(error => console.error('Error fetching data:', error));
@@ -82,10 +81,10 @@ const TicketListBox = () => {
                     <thead className='text-white pt-2'>
                         <tr>
                             <th>Ticket</th>
-                            <th>Título</th>
-                            <th>Data</th>
+                            <th>Title</th>
+                            <th>Date</th>
                             <th>Status</th>
-                            <th>Ação</th>
+                            <th>Action</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -98,7 +97,7 @@ const TicketListBox = () => {
                                     {ticket.ticketStatus.ticketStatus}
                                 </td>
                                 <td className='text-center'>
-                                    <button className='btn btn-outline-warning' onClick={() => handleShow(ticket)}>Ver mais</button>
+                                    <button className='btn btn-outline-warning' onClick={() => handleShow(ticket)}>See more</button>
                                 </td>
                             </tr>
                         ))}
@@ -138,36 +137,28 @@ const TicketListBox = () => {
                             <form>
                                 <div className='container'>
                                     <div className="row mb-4">
-                                        <div className="col-3 text-body-secondary">DATA</div>
+                                        <div className="col-3 text-body-secondary">Date</div>
                                         <div className="col-9">{formatDateString(selectedTicket.ticketDate)}</div>
                                     </div>
                                     <div className="row mb-4">
-                                        <div className="col-3 text-body-secondary">DESCRIÇÃO</div>
+                                        <div className="col-3 text-body-secondary">Description</div>
                                         <div className="col-9">
                                             {selectedTicket.ticketDescription}
                                         </div>
                                     </div>
                                     <div className="row mb-4">
-                                        <div className="col-3 text-body-secondary">ANEXOS</div>
+                                        <div className="col-3 text-body-secondary">Attachments</div>
                                         <div className="col-9">
                                             <div className="row">
                                                 <div className="col-4 d-flex flex-column text-center fw-medium">
-                                                    Impressões
-                                                    <img src={notificationicon} className='ticket-print mx-auto mt-1' alt="Impressões" />
-                                                </div>
-                                                <div className="col-4 d-flex flex-column text-center fw-medium">
-                                                    Impressões
-                                                    <img src={notificationicon} className='ticket-print mx-auto mt-1' alt="Impressões" />
-                                                </div>
-                                                <div className="col-4 d-flex flex-column text-center fw-medium">
-                                                    Impressões
+                                                    Print
                                                     <img src={notificationicon} className='ticket-print mx-auto mt-1' alt="Impressões" />
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
                                     <div className="row mb-4">
-                                        <div className="col-3 text-body-secondary">STATUS</div>
+                                        <div className="col-3 text-body-secondary">Status</div>
                                         <div className="col-4" style={{ color: getStatusColor(selectedTicket.ticketStatus.ticketStatus) }}>
                                             {selectedTicket.ticketStatus.ticketStatus}
                                         </div>
@@ -183,13 +174,13 @@ const TicketListBox = () => {
 };
 
 // Faz o display da TicketListBox
-const ManagerTicketList = () => {
+const ManagerTicketList = ({ userId }) => {
     return (
         <div className="dashboard-content bg-light w-100">
             <h4 className="title my-2 mx-4">Tickets</h4>
             <div className="container">
                 <div className="my-4">
-                    <TicketListBox />
+                    <TicketListBox userId={userId}/>
                 </div>
             </div>
         </div>
