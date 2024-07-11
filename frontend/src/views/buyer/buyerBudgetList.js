@@ -35,7 +35,7 @@ const BuyerBudgetList = ({ userId }) => {
         <div className="dashboard-content bg-light w-100">
             <h3 className="title my-2 mx-4">Budgets</h3>
             <div className='d-flex justify-content-between p-2 mx-4'>
-                <h4 className="title my-2 mx-3">Managers</h4>
+                <h4 className="title my-2 mx-3"></h4>
                 <button
                     className="btn btn-block btn-lg text-info hover1 mx-3"
                     style={{ backgroundColor: "#C8F2FE" }}

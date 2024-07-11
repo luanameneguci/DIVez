@@ -4,6 +4,7 @@ import BoughtList from "../../components/buyer/BoughtList";
 
 const BuyerPurchasesList = ({ userId }) => {
     const [purchases, setPurchases] = useState([]);
+    const idUser = 6;
 
     useEffect(() => {
         // Fetch data from your API endpoint
@@ -17,12 +18,12 @@ const BuyerPurchasesList = ({ userId }) => {
                     billDate: cart.bills.length > 0 ? new Date(cart.bills[0].billDate).toLocaleDateString() : '',
                     numberOfLicenses: cart.licensesCount,
                     cartPrice: cart.cartPrice
-                }));
+                })).filter(cart => cart.idBill !== ''); // Filter out entries with empty idBill
 
                 setPurchases(formattedList);
             })
             .catch(error => console.error('Error fetching data:', error));
-    }, []);
+    }, [idUser]); // Add idUser to dependency array to re-fetch when idUser changes
 
     return (
         <div className="dashboard-content bg-light w-100 h-100">
