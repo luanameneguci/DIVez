@@ -4,7 +4,7 @@ import Rating from "@mui/material/Rating";
 import { Link } from "react-router-dom";
 import { Modal } from "react-bootstrap";
 
-const BuyerShop = () => {
+const BuyerShop = ({ userId }) => {
   const [items, setItems] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -14,7 +14,7 @@ const BuyerShop = () => {
   const [selectedProductId, setSelectedProductId] = useState(null);
   const [budgets, setBudgets] = useState([]);
   const [selectedBudgetId, setSelectedBudgetId] = useState("");
-  const idUser = 6;
+  const idUser = userId;
 
   useEffect(() => {
     fetch("http://localhost:8080/product")

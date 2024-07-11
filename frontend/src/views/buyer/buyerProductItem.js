@@ -6,13 +6,13 @@ import { BrowserRouter as Router, Route, Link, Routes, useParams } from 'react-r
 
 const productVersion = 1.3;
 
-const BuyerProductItem = () => {
+const BuyerProductItem = ({ userId }) => {
   const { idProduct } = useParams();
   const [item, setItem] = useState(null);
   const [resultado, setResultado] = useState(null);
 
   useEffect(() => {
-    const idUser = 6;
+    const idUser = userId;
     fetch(`http://localhost:8080/user/${idUser}/billings`)
       .then(response => response.json())
       .then(data => {

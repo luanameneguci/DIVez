@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Modal from 'react-bootstrap/Modal';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
@@ -6,83 +6,25 @@ import notificationicon from "../../images/notification.png";
 
 // Função auxiliar para formatar a data
 const formatDateString = (dateString) => {
-    const [day, month, year] = dateString.split('/');
-    return new Date(`${year}-${month}-${day}`);
+    const date = new Date(dateString);
+    return date.toLocaleDateString();
 };
 
-// Função getStatusClass para retornar classes CSS com base no status
-const getStatusClass = (status) => {
+// Função para obter a cor do status com base no valor do status
+const getStatusColor = (status) => {
     switch (status) {
-        case "Unsolved":
-            return "text-danger";
-        case "Solved":
-            return "text-success";
-        case "Waiting":
-            return "text-primary";
-        case "New":
-            return "text-warning";
+        case 'New':
+            return '#FFD56D'; // amarelo
+        case 'Unsolved':
+            return '#EB5757'; // vermelho
+        case 'Solved':
+            return '#00B69B'; // verde
+        case 'Waiting':
+            return '#2D9CDB'; // azul
         default:
-            return "";
+            return 'inherit'; // cor padrão
     }
 };
-
-// Conteúdo de exemplo para a tabela de tickets
-const ticketboxcontent = [
-    [1, 'Maquina Pifou', '13/12/2022', 'Solved'],
-    [2, 'Chatbot Avariou', '15/06/2024', 'New'],
-    [3, 'Não sei', '13/06/2024', 'Waiting'],
-    [4, 'João Ratão', '13/06/2024', 'Unsolved'],
-    [5, 'João Ratão', '13/06/2024', 'New'],
-    [6, 'João Ratão', '13/06/2024', 'New'],
-    [7, 'João Ratão', '13/06/2024', 'New'],
-    [8, 'João Ratão', '13/06/2024', 'New'],
-    [9, 'João Ratão', '22/06/2024', 'New'],
-    [10, 'João Ratão', '13/06/2024', 'New'],
-    [11, 'João Ratão', '13/06/2024', 'New'],
-    [12, 'João Ratão', '13/06/2024', 'New'],
-    [13, 'João Ratão', '13/06/2024', 'New'],
-    [14, 'João Ratão', '13/06/2024', 'New'],
-    [15, 'João Ratão', '31/06/2024', 'New'],
-    [16, 'João Ratão', '13/06/2024', 'New'],
-    [17, 'João Ratão', '13/06/2024', 'New'],
-    [18, 'João Ratão', '13/06/2024', 'New'],
-    [1, 'Maquina Pifou', '13/12/2022', 'Solved'],
-    [2, 'Chatbot Avariou', '15/06/2024', 'New'],
-    [3, 'Não sei', '13/06/2024', 'Waiting'],
-    [4, 'João Ratão', '13/06/2024', 'Unsolved'],
-    [5, 'João Ratão', '13/06/2024', 'New'],
-    [6, 'João Ratão', '13/06/2024', 'New'],
-    [7, 'João Ratão', '13/06/2024', 'New'],
-    [8, 'João Ratão', '13/06/2024', 'New'],
-    [9, 'João Ratão', '22/06/2024', 'New'],
-    [10, 'João Ratão', '13/06/2024', 'New'],
-    [11, 'João Ratão', '13/06/2024', 'New'],
-    [12, 'João Ratão', '13/06/2024', 'New'],
-    [13, 'João Ratão', '13/06/2024', 'New'],
-    [14, 'João Ratão', '13/06/2024', 'New'],
-    [15, 'João Ratão', '31/06/2024', 'New'],
-    [16, 'João Ratão', '13/06/2024', 'New'],
-    [17, 'João Ratão', '13/06/2024', 'New'],
-    [18, 'João Ratão', '13/06/2024', 'New'],
-    [1, 'Maquina Pifou', '13/12/2022', 'Solved'],
-    [2, 'Chatbot Avariou', '15/06/2024', 'New'],
-    [3, 'Não sei', '13/06/2024', 'Waiting'],
-    [4, 'João Ratão', '13/06/2024', 'Unsolved'],
-    [5, 'João Ratão', '13/06/2024', 'New'],
-    [6, 'João Ratão', '13/06/2024', 'New'],
-    [7, 'João Ratão', '13/06/2024', 'New'],
-    [8, 'João Ratão', '13/06/2024', 'New'],
-    [9, 'João Ratão', '22/06/2024', 'New'],
-    [10, 'João Ratão', '13/06/2024', 'New'],
-    [11, 'João Ratão', '13/06/2024', 'New'],
-    [12, 'João Ratão', '13/06/2024', 'New'],
-    [13, 'João Ratão', '13/06/2024', 'New'],
-    [14, 'João Ratão', '13/06/2024', 'New'],
-    [15, 'João Ratão', '31/06/2024', 'New'],
-    [16, 'João Ratão', '13/06/2024', 'New'],
-    [17, 'João Ratão', '13/06/2024', 'New'],
-    [18, 'João Ratão', '13/06/2024', 'New'],
-];
 
 const TicketListBox = () => {
     // Estados para controlo de modais e tickets selecionados
@@ -99,19 +41,29 @@ const TicketListBox = () => {
     const [currentPage, setCurrentPage] = useState(1);
     const [rowsPerPage] = useState(20);
 
+    // Estado para os tickets
+    const [ticketData, setTicketData] = useState([]);
+
+    useEffect(() => {
+        fetch('http://localhost:8080/ticket/buyer/10')
+            .then(response => response.json())
+            .then(data => setTicketData(data))
+            .catch(error => console.error('Error fetching data:', error));
+    }, []);
+
     const handleShow = (ticket) => {
         setSelectedTicket(ticket);
         setLgShow(true);
     };
 
     // Filtragem dos tickets com base nos valores de entrada
-    const filteredRows = ticketboxcontent.filter(row => {
-        const rowDate = formatDateString(row[2]);
+    const filteredRows = ticketData.filter(ticket => {
+        const rowDate = new Date(ticket.ticketDate);
         return (
-            row[0].toString().includes(ticketId.toString()) &&
-            row[1].toLowerCase().includes(title.toLowerCase()) &&
+            ticket.idTicket.toString().includes(ticketId.toString()) &&
+            ticket.ticketName.toLowerCase().includes(title.toLowerCase()) &&
             (!date || rowDate >= date) && // Comparar rowDate com a data selecionada
-            row[3].toLowerCase().includes(status.toLowerCase())
+            ticket.ticketStatus.ticketStatus.toLowerCase().includes(status.toLowerCase())
         );
     });
 
@@ -122,22 +74,6 @@ const TicketListBox = () => {
 
     // Alterar página
     const paginate = (pageNumber) => setCurrentPage(pageNumber);
-
-    // Função para obter a cor do status com base no valor do status
-    const getStatusColor = (status) => {
-        switch (status) {
-            case 'New':
-                return '#FFD56D'; // amarelo
-            case 'Unsolved':
-                return '#EB5757'; // vermelho
-            case 'Solved':
-                return '#00B69B'; // verde
-            case 'Waiting':
-                return '#2D9CDB'; // azul
-            default:
-                return 'inherit'; // cor padrão
-        }
-    };
 
     return (
         <div className="container d-flex px-0 roundbg h-100 pb-3 bg-white shadow">
@@ -155,24 +91,17 @@ const TicketListBox = () => {
                     <tbody>
                         {currentRows.map((ticket, rowIndex) => (
                             <tr key={rowIndex}>
-                                {ticket.map((data, colIndex) => {
-                                    let color = 'inherit';
-                                    if (colIndex === 3) {
-                                        // Aplicar cor do status com base na função getStatusColor
-                                        color = getStatusColor(data);
-                                    }
-                                    return (
-                                        <td key={colIndex} className='ps-3' style={{ color }}>
-                                            {data}
-                                        </td>
-                                    );
-                                })}
+                                <td className='ps-3'>{ticket.idTicket}</td>
+                                <td className='ps-3'>{ticket.ticketName}</td>
+                                <td className='ps-3'>{formatDateString(ticket.ticketDate)}</td>
+                                <td className='ps-3' style={{ color: getStatusColor(ticket.ticketStatus.ticketStatus) }}>
+                                    {ticket.ticketStatus.ticketStatus}
+                                </td>
                                 <td className='text-center'>
                                     <button className='btn btn-outline-warning' onClick={() => handleShow(ticket)}>Ver mais</button>
                                 </td>
                             </tr>
                         ))}
-
                     </tbody>
                 </table>
                 {/* Mostrar o seletor de página se filteredRows.length for maior que rowsPerPage */}
@@ -201,7 +130,7 @@ const TicketListBox = () => {
                 >
                     <Modal.Header closeButton>
                         <Modal.Title>
-                            Ticket #{selectedTicket ? selectedTicket[0] : ''}
+                            Ticket #{selectedTicket ? selectedTicket.idTicket : ''}
                         </Modal.Title>
                     </Modal.Header>
                     <Modal.Body>
@@ -210,12 +139,12 @@ const TicketListBox = () => {
                                 <div className='container'>
                                     <div className="row mb-4">
                                         <div className="col-3 text-body-secondary">DATA</div>
-                                        <div className="col-9">{selectedTicket[2]}</div>
+                                        <div className="col-9">{formatDateString(selectedTicket.ticketDate)}</div>
                                     </div>
                                     <div className="row mb-4">
                                         <div className="col-3 text-body-secondary">DESCRIÇÃO</div>
                                         <div className="col-9">
-                                            Lorem Ipsum é simplesmente texto fictício da indústria de impressão e composição. Lorem Ipsum tem sido o texto fictício padrão da indústria desde os anos 1500.
+                                            {selectedTicket.ticketDescription}
                                         </div>
                                     </div>
                                     <div className="row mb-4">
@@ -239,8 +168,8 @@ const TicketListBox = () => {
                                     </div>
                                     <div className="row mb-4">
                                         <div className="col-3 text-body-secondary">STATUS</div>
-                                        <div className="col-4" style={{ color: getStatusColor(selectedTicket[3]) }}>
-                                            {selectedTicket[3]}
+                                        <div className="col-4" style={{ color: getStatusColor(selectedTicket.ticketStatus.ticketStatus) }}>
+                                            {selectedTicket.ticketStatus.ticketStatus}
                                         </div>
                                     </div>
                                 </div>

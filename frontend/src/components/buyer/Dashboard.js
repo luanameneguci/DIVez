@@ -10,11 +10,11 @@ import ProgressBox from "./BoxProgress";
 import BoxThird from "./BoxThird";
 import BuyerManagersList from "../../views/buyer/buyerManagers";
 
-const BuyerDashboard = () => {
+const BuyerDashboard = ({ userId }) => {
   const numRowsToShow = 6;
-  const someUserId = 6;
-  const idBuyer = 6;
-  const idUser = 6;
+  const someUserId = userId;
+  const idBuyer = userId;
+  const idUser = userId;
 
   const pendingBudgets = BuyerPendingBudgets(idUser);
   const activeLicenses = BuyerActiveLicenses(idUser);

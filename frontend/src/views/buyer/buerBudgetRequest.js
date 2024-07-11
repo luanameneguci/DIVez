@@ -22,7 +22,7 @@ const budgetProducts = [
 ];
 
 
-const BuyerBudgetReply = () => {
+const BuyerBudgetReply = ({ userId }) => {
     return (
         <div className="container bg-light w-100 p-2x">
             <div className="container">

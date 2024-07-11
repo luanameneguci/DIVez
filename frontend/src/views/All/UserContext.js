@@ -22,7 +22,6 @@ export const UserProvider = ({ children }) => {
     localStorage.removeItem('idUser');
     localStorage.removeItem('userRole');
     window.location.href = 'http://localhost:3000/';
-
   };
 
   return (

@@ -33,7 +33,7 @@ const managersList = [
   ["Luana Meneguci", "321321321", "luanameneguci@gmail.com", "Manager"],
 ];
 
-const BuyerProductItem = () => {
+const ManagerProductItem = () => {
   const [itemsDataArray, setItemsDataArray] = useState(initialItemsDataArray);
   const [resultado, setResultado] = useState([]);
   const [showModal, setShowModal] = useState(false);
@@ -268,4 +268,4 @@ function calculatePercentages(result) {
   return resultado;
 }
 
-export default BuyerProductItem;
+export default ManagerProductItem;

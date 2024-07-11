@@ -5,8 +5,8 @@ import axios from 'axios';
 
 const numRowsToShow = 20;
 
-const BuyerBudgetList = () => {
-    const [idUser, setIdUser] = useState(6); // Set idUser to 6 as default
+const BuyerBudgetList = ({ userId }) => {
+    const [idUser, setIdUser] = useState(userId);
 
     // Function to handle new budget creation
     const handleNewBudget = async () => {

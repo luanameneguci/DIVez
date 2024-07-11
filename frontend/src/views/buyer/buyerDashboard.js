@@ -2,9 +2,9 @@
 
 import BuyerDashboard from '../../components/buyer/Dashboard';
 
-const BuyerDashboardView = () => {
+const BuyerDashboardView = ({ userId }) => {
   return (
-      <BuyerDashboard />
+      <BuyerDashboard userId={userId} />
   )
 };
 

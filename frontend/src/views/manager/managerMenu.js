@@ -95,9 +95,9 @@ const Menu = ({ userId }) => {
           <div className="row dashboard-content">
             {/*Corrigir rotas*/}
             <Routes>
-              <Route path="/dashboard" element={<ManagerProducts />} />
-              <Route path="/tickets" element={<ManagerTicketList />} />
-              <Route path="/product" element={<ManagerProduct />} />
+              <Route path="/dashboard" element={<ManagerProducts userId={userId} />} />
+              <Route path="/tickets" element={<ManagerTicketList userId={userId} />} />
+              <Route path="/product" element={<ManagerProduct userId={userId} />} />
               <Route path="/faq" element={<FAQ />} />
             </Routes>
           </div>

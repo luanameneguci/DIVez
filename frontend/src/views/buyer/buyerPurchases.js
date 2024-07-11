@@ -2,17 +2,17 @@ import React, { useState, useEffect } from 'react';
 import '../../App.css';
 import BoughtList from "../../components/buyer/BoughtList";
 
-const BuyerPurchasesList = () => {
+const BuyerPurchasesList = ({ userId }) => {
     const [purchases, setPurchases] = useState([]);
 
     useEffect(() => {
         // Fetch data from your API endpoint
-        fetch('http://localhost:8080/cart/user/6')
+        fetch(`http://localhost:8080/cart/user/${userId}`)
             .then(response => response.json())
             .then(data => {
                 // Process the received data into the format needed for the list
                 const formattedList = data.map(cart => ({
-                    idBill: cart.bills.length > 0 ? cart.bills[0].idBill : '', // Assuming there's only one bill per cart
+                    idBill: cart.bills.length > 0 ? cart.bills[0].idBill : '', 
                     productList: cart.products.map(product => product.productName).join(', '), // Concatenate product names
                     billDate: cart.bills.length > 0 ? new Date(cart.bills[0].billDate).toLocaleDateString() : '',
                     numberOfLicenses: cart.licensesCount,

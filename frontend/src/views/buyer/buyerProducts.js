@@ -5,7 +5,7 @@ import Select from "react-select";
 import { Link } from "react-router-dom";
 import axios from "axios";
 
-const BuyerProductList = () => {
+const BuyerProductList = ({ userId }) => {
   const [lgShow, setLgShow] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [userData, setUserData] = useState(null);
@@ -14,7 +14,7 @@ const BuyerProductList = () => {
   const [selectedProducts, setSelectedProducts] = useState([]);
   const [modalData, setModalData] = useState(null);
   const [emailInput, setEmailInput] = useState("");
-  const idUser = 6; // Set idUser to 6
+  const idUser = userId;
 
   useEffect(() => {
     const fetchUserData = async () => {

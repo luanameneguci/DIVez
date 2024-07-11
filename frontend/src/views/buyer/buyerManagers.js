@@ -5,11 +5,11 @@ import Select from 'react-select';
 import { Modal } from 'react-bootstrap';
 import axios from 'axios';
 
-const BuyerManagersList = () => {
+const BuyerManagersList = ({ userId }) => {
     const [lgShow, setLgShow] = useState(false);
     const [modalData, setModalData] = useState(null);
     const [email, setEmail] = useState('');
-    const idUser = 6;
+    const idUser = userId;
     const buyerId = idUser; 
     const [productList, setProductList] = useState([]);
     const [selectedProducts, setSelectedProducts] = useState([]);
