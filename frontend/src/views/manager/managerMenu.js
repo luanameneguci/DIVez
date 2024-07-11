@@ -1,4 +1,6 @@
-import React from "react";
+import React, { useContext } from 'react';
+import { UserContext } from '../All/UserContext';
+
 import {
   BrowserRouter as Router,
   Route,
@@ -19,7 +21,12 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap/dist/js/bootstrap.bundle.min";
 
 const Menu = ({ userId }) => {
+  const { logoutUser } = useContext(UserContext);
   const location = useLocation();
+
+  const handleLogout = () => {
+    logoutUser();
+  };
 
   const getNavItemClass = (path) => {
     return location.pathname.includes(path)
@@ -62,6 +69,11 @@ const Menu = ({ userId }) => {
       <div className="col-auto col-md-3 col-xl-2 px-sm-3 px-0"></div>
       <div className="col-10 h-25 bg-light px-0">
         <div className="d-flex align-self-end sticky-top flex-row-reverse bg-white px-5 py-2">
+          <div>
+            <button className="btn btn-danger ms-3" onClick={handleLogout}>
+              x
+            </button>
+          </div>
           <div>
             <div>
               <span className="username-text">User</span>

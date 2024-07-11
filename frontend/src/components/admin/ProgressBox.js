@@ -8,24 +8,22 @@ const ProgressBox = () => {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const [licensesResponse, productsResponse] = await Promise.all([
-                    axios.get('http://localhost:8080/license'),
-                    axios.get('http://localhost:8080/product')
-                ]);
+                const departmentResponse = await axios.get('http://localhost:8080/ticketdepartment');
+                const ticketResponse = await axios.get('http://localhost:8080/ticket/dpending');
 
-                const licenses = licensesResponse.data;
-                const products = productsResponse.data;
+                const departments = departmentResponse.data;
+                const ticketData = ticketResponse.data;
 
                 // Process the data to calculate percentages
-                const processedData = products.map(product => {
-                    const total = licenses.filter(license => license.idProduct === product.idProduct).length;
-                    const active = licenses.filter(license => license.idProduct === product.idProduct && license.idLicenseStatus === 2).length;
-                    const percentage = (active / total) * 100 || 0; // handle division by zero
+                const processedData = departments.map(department => {
+                    const total = ticketData.find(ticket => ticket.idTicketDepartment === department.idTicketDepartment)?.total || 0;
+                    const pending = ticketData.find(ticket => ticket.idTicketDepartment === department.idTicketDepartment)?.pending || 0;
+                    const percentage = (pending / total) * 100 || 0;
 
                     return {
-                        nome: product.productName,
+                        nome: department.ticketDepartment,
                         numeroTotal: total,
-                        numeroAtivos: active,
+                        numeroPendentes: pending,
                         percentage: percentage.toFixed(0)
                     };
                 });
@@ -33,7 +31,7 @@ const ProgressBox = () => {
                 // Sort processedData by percentage descending
                 processedData.sort((a, b) => b.percentage - a.percentage);
 
-                // Take only the top 4 products
+                // Take only the top 4 departments
                 const top4 = processedData.slice(0, 4);
 
                 setData(top4);
@@ -45,12 +43,12 @@ const ProgressBox = () => {
         fetchData();
     }, []);
 
-    const ProgressDiv = ({ nome, numeroAtivos, numeroTotal, percentage }) => (
+    const ProgressDiv = ({ nome, numeroPendentes, numeroTotal, percentage }) => (
         <div className="mb-3">
             <div className="d-flex justify-content-between">
                 <p><strong>{nome}</strong></p>
                 <div className="d-flex">
-                    <p>{numeroAtivos} of {numeroTotal}</p>
+                    <p>{numeroPendentes} of {numeroTotal}</p>
                 </div>
             </div>
             <div className="progress">
@@ -79,7 +77,7 @@ const ProgressBox = () => {
                         <ProgressDiv
                             key={index}
                             nome={item.nome}
-                            numeroAtivos={item.numeroAtivos}
+                            numeroPendentes={item.numeroPendentes}
                             numeroTotal={item.numeroTotal}
                             percentage={item.percentage}
                         />

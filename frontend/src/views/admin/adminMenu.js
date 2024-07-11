@@ -1,6 +1,7 @@
 // npms import
-import React from "react";
+import React, { useContext } from 'react';
 import { BrowserRouter as Router, Route, Link, Routes, useLocation } from "react-router-dom";
+import { UserContext } from '../All/UserContext';
 
 // images import
 import logo from "../../images/logo-navbar.svg";
@@ -29,7 +30,12 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap/dist/js/bootstrap.bundle.min";
 
 const Menu = ({ userId }) => {
+  const { logoutUser } = useContext(UserContext);
   const location = useLocation();
+
+  const handleLogout = () => {
+    logoutUser();
+  };
 
   const getNavItemClass = (path) => {
     return location.pathname.includes(path) ? 'navbar-link text-decoration-none text-white align-middle px-5 py-2 bg-info roundbg w-100 col-12' : 'navbar-link text-decoration-none text-black align-middle px-5 py-2';
@@ -86,6 +92,11 @@ const Menu = ({ userId }) => {
         <div className="col-auto col-md-3 col-xl-2 px-sm-3 px-0"></div>
         <div className="col-10 h-25 bg-white px-0">
           <div className="d-flex align-self-end sticky-top flex-row-reverse bg-white px-5 py-2">
+            <div>
+              <button className="btn btn-danger ms-3" onClick={handleLogout}>
+                x
+              </button>
+            </div>
             <div>
               <div>
                 <span className="username-text">User</span>

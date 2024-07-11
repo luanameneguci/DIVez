@@ -15,11 +15,11 @@ const BudgetsListBox = ({ numRowsToShow, clientId }) => {
 
   useEffect(() => {
     loadBudgets();
-  }, []);
+  }, [clientId]);
 
   const loadBudgets = async () => {
     try {
-      const response = await axios.get("http://localhost:8080/budget/");
+      const response = await axios.get(`http://localhost:8080/budget/user/${clientId}`);
       setBudgets(response.data);
     } catch (error) {
       console.error('Error fetching budgets:', error);

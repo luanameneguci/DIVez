@@ -1,17 +1,14 @@
-// App.js
 import React, { useContext } from 'react';
-import BuyerDashboard from './components/buyer/Dashboard';
-import Login from "./views/All/login";
-import AdminMenu from "./views/admin/adminMenu";
-import BuyerMenu from "./views/buyer/buyerMenu";
-import ManagerMenu from "./views/manager/managerMenu";
-import Menu from "./views/All/menu";
-import { UserContext } from '../src/views/All/UserContext';
+import { UserContext } from './views/All/UserContext';
+import AdminMenu from './views/admin/adminMenu';
+import BuyerMenu from './views/buyer/buyerMenu';
+import ManagerMenu from './views/manager/managerMenu';
+import Menu from './views/All/menu';
 
 function App() {
-  const { userRole, userId } = useContext(UserContext);
+  const { user } = useContext(UserContext);
+  const { userRole, userId } = user;
 
-  // Function to render menu based on user role
   const renderMenu = () => {
     switch (userRole) {
       case "admin":
@@ -28,8 +25,7 @@ function App() {
   return (
     <div>
       {/* Render the appropriate menu based on user role */}
-      {/*renderMenu()*/}
-      <AdminMenu />
+      {renderMenu()}
     </div>
   );
 }

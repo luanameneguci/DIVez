@@ -93,7 +93,7 @@ controllers.ticket_delete = async (req, res) => {
 };
 
 controllers.TicketsById = async (req, res) => {
-  const { idBuyer } = req.params; // Retrieve idBuyer from the request parameters
+  const { idBuyer } = req.params;
 
   try {
     const tickets = await Ticket.findAll({
@@ -134,29 +134,46 @@ controllers.countTicketsWithStatus2 = async (req, res) => {
 
 controllers.countTicketsByStatusAndDepartment = async (req, res) => {
   try {
-    const ticketCounts = await Ticket.findAll({
-      attributes: [
-        'idTicketDepartment',
-        [Sequelize.fn('COUNT', Sequelize.col('idTicket')), 'count']
-      ],
-      where: {
-        idTicketStatus: 2
-      },
-      group: ['idTicketDepartment'],
-      raw: true
-    });
+      // Get the count of all tickets grouped by department
+      const totalTicketCounts = await Ticket.findAll({
+          attributes: [
+              'idTicketDepartment',
+              [Sequelize.fn('COUNT', Sequelize.col('idTicket')), 'total']
+          ],
+          group: ['idTicketDepartment'],
+          raw: true
+      });
 
-    const formattedCounts = ticketCounts.map(item => ({
-      idTicketDepartment: item.idTicketDepartment,
-      count: parseInt(item.count)
-    }));
+      // Get the count of pending tickets grouped by department
+      const pendingTicketCounts = await Ticket.findAll({
+          attributes: [
+              'idTicketDepartment',
+              [Sequelize.fn('COUNT', Sequelize.col('idTicket')), 'pending']
+          ],
+          where: {
+              idTicketStatus: 2
+          },
+          group: ['idTicketDepartment'],
+          raw: true
+      });
 
-    res.json(formattedCounts);
+      // Merge the results
+      const ticketCounts = totalTicketCounts.map(totalItem => {
+          const pendingItem = pendingTicketCounts.find(p => p.idTicketDepartment === totalItem.idTicketDepartment);
+          return {
+              idTicketDepartment: totalItem.idTicketDepartment,
+              total: parseInt(totalItem.total),
+              pending: pendingItem ? parseInt(pendingItem.pending) : 0
+          };
+      });
+
+      res.json(ticketCounts);
   } catch (error) {
-    console.error('Error:', error);
-    res.status(500).json({ error: 'Internal Server Error' });
+      console.error('Error:', error);
+      res.status(500).json({ error: 'Internal Server Error' });
   }
 };
+
 
 
 module.exports = controllers;

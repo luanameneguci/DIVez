@@ -1,8 +1,9 @@
-import React from "react";
+import React, { useContext } from 'react';
 import { BrowserRouter as Router, Route, Link, Routes, useLocation } from 'react-router-dom';
 import "../../App.css";
 import logo from "../../images/logo-navbar.svg";
 import notificationicon from "../../images/notification.png";
+import { UserContext } from '../All/UserContext';
 
 import BuyerProductItem from "../../views/buyer/buyerProductItem";
 import BuyerPayment from "../../views/buyer/buyerPayment";
@@ -22,7 +23,12 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap/dist/js/bootstrap.bundle.min";
 
 const Menu = ({ userId }) => {
+  const { logoutUser } = useContext(UserContext);
   const location = useLocation();
+
+  const handleLogout = () => {
+    logoutUser();
+  };
 
   const getNavItemClass = (path) => {
     return location.pathname.includes(path) ? 'navbar-link text-decoration-none text-white align-middle px-5 py-2 bg-info roundbg w-100 col-12' : 'navbar-link text-decoration-none text-black align-middle px-5 py-2';
@@ -85,6 +91,12 @@ const Menu = ({ userId }) => {
       <div className="col-10 h-25 bg-light px-0">
         <div className="d-flex align-self-end sticky-top flex-row-reverse bg-white px-5 py-2">
           <div>
+            <button className="btn btn-danger ms-3" onClick={handleLogout}>
+              x
+            </button>
+          </div>
+          <div>
+
             <div>
               <span className="username-text">User</span>
             </div>
@@ -118,7 +130,6 @@ const Menu = ({ userId }) => {
 
         <div className="mw-100 h-25 bg-light py-2 px-3">
           <div className="row dashboard-content">
-            {/*Corrigir rotas*/}
             <Routes>
               <Route path="/dashboard" element={<BuyerDashboard />} />
               <Route path="/managers" element={<BuyerManagerList />} />

@@ -20,58 +20,62 @@ controllers.user_list = async (req, res) => {
 };
 
 controllers.user_create = async (req, res) => {
+  console.log(req.body); // Log the request body to inspect incoming data
   const {
-    IDACCOUNTTYPE,
-    IDDEPARTMENT,
-    IDCART,
-    USERNAME,
-    USERPASSWORD,
-    USEREMAIL,
-    USERNIF,
-    IDBUYER,
+    idAccountType,
+    idDepartment,
+    idCart,
+    userName,
+    userPassword,
+    userEmail,
+    userNif,
+    idBuyer,
   } = req.body;
+
   try {
     const newUser = await User.create({
-      IDACCOUNTTYPE,
-      IDDEPARTMENT,
-      IDCART,
-      USERNAME,
-      USERPASSWORD,
-      USEREMAIL,
-      USERNIF,
-      IDBUYER,
+      idAccountType,
+      idDepartment,
+      idCart,
+      userName,
+      userPassword,
+      userEmail,
+      userNif,
+      idBuyer,
     });
-    res.json(newUser);
+
+    res.status(201).json(newUser); // Return 201 for successful creation
   } catch (error) {
     res.status(400).json({ error: error.message });
   }
 };
 
+
 controllers.user_update = async (req, res) => {
   const userId = req.params.id;
   const {
-    IDACCOUNTTYPE,
-    IDDEPARTMENT,
-    IDCART,
-    USERNAME,
-    USERPASSWORD,
-    USEREMAIL,
-    USERNIF,
-    IDBUYER,
+    idAccountType,
+    idDepartment,
+    idCart,
+    userName,
+    userPassword,
+    userEmail,
+    userNif,
+    idBuyer,
   } = req.body;
   try {
     const updatedUser = await User.update(
       {
-        IDACCOUNTTYPE,
-        IDDEPARTMENT,
-        IDCART,
-        USERNAME,
-        USERPASSWORD,
-        USEREMAIL,
-        USERNIF,
-        IDBUYER,
+        idAccountType,
+        idDepartment,
+        idCart,
+        userName,
+        userPassword,
+        userEmail,
+        userNif,
+        idBuyer,
       },
-      { where: { IDUSER: userId } }
+      { where: { idUser: userId } }
     );
     res.json({ updatedUser });
   } catch (error) {

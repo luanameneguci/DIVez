@@ -1,89 +1,67 @@
-// Login.js
-import React, { useState, useEffect, useContext } from "react";
-import axios from "axios";
-import { useNavigate } from "react-router-dom";
-import logo from "../../images/logo-navbar.svg";
-import { Link } from "react-router-dom";
-import { UserContext } from './UserContext';
-import { Form, Button } from "react-bootstrap";
+import React, { useState, useEffect, useContext } from 'react';
+import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
+import { UserContext } from '../All/UserContext';
+import logo from '../../images/logo-navbar.svg';
+import { Link } from 'react-router-dom';
 
 const Login = () => {
-  const { setUserRole, setUserId } = useContext(UserContext);
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [accountType, setAccountType] = useState("buyer");
-  const [error, setError] = useState("");
-  const [admins, setAdmins] = useState([]);
-  const [buyers, setBuyers] = useState([]);
-  const [managers, setManagers] = useState([]);
+  const { updateUser } = useContext(UserContext);
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [accountType, setAccountType] = useState('buyer');
+  const [error, setError] = useState('');
+  const [users, setUsers] = useState([]);
   const navigate = useNavigate();
 
   useEffect(() => {
-    fetchAdmins();
-    fetchBuyers();
-    fetchManagers();
+    fetchUsers();
   }, []);
 
-  const fetchAdmins = async () => {
+  const fetchUsers = async () => {
     try {
-      const response = await axios.get("http://localhost:8080/admin");
-      setAdmins(response.data);
+      const response = await axios.get('http://localhost:8080/user');
+      setUsers(response.data);
     } catch (error) {
-      console.error("Error fetching admins:", error);
-    }
-  };
-
-  const fetchBuyers = async () => {
-    try {
-      const response = await axios.get("http://localhost:8080/buyer");
-      setBuyers(response.data);
-    } catch (error) {
-      console.error("Error fetching buyers:", error);
-    }
-  };
-
-  const fetchManagers = async () => {
-    try {
-      const response = await axios.get("http://localhost:8080/manager");
-      setManagers(response.data);
-    } catch (error) {
-      console.error("Error fetching managers:", error);
+      console.error('Error fetching users:', error);
     }
   };
 
   const handleLogin = async (e) => {
     e.preventDefault();
-
-    console.log("Logging in with:", email, password, accountType);
-
-    let foundUser = null;
-
-    switch (accountType) {
-      case "buyer":
-        foundUser = buyers.find((buyer) => buyer.buyerEmail === email.trim() && buyer.buyerPassword === password.trim());
-        break;
-      case "manager":
-        foundUser = managers.find((manager) => manager.managerEmail === email.trim() && manager.managerPassword === password.trim());
-        break;
-      case "admin":
-        foundUser = admins.find((admin) => admin.adminEmail === email.trim() && admin.adminPassword === password.trim());
-        break;
-      default:
-        break;
-    }
+    const foundUser = users.find(
+      (user) =>
+        user.userEmail === email.trim() &&
+        user.userPassword === password.trim() &&
+        ((accountType === 'buyer' && user.idAccountType === 2) ||
+          (accountType === 'manager' && user.idAccountType === 3) ||
+          (accountType === 'admin' && user.idAccountType === 1))
+    );
 
     if (foundUser) {
-      console.log("Successful login:", foundUser);
-      setUserRole(accountType);  // Set the user role in context
-      setUserId(foundUser.id);  // Set the user ID in context
-      navigate("/dashboard"); // Redirect to dashboard on successful login
+      console.log('Successful login:', foundUser);
+      updateUser(foundUser.idUser, accountType);
+
+      switch (accountType) {
+        case 'buyer':
+          navigate('/buyer-dashboard');
+          break;
+        case 'manager':
+          navigate('/manager-dashboard');
+          break;
+        case 'admin':
+          navigate('/admin-dashboard');
+          break;
+        default:
+          navigate('/');
+      }
     } else {
-      setError("Invalid email or password");
+      setError('Invalid email or password');
     }
   };
 
   return (
-    <section className="gradient-form d-flex align-items-center" style={{ height: "100vh" }}>
+    <section className="gradient-form d-flex align-items-center" style={{ height: '100vh' }}>
       <div className="container py-5 h-100 my-auto">
         <div className="row d-flex justify-content-center align-items-center h-100">
           <div className="col-xl-10 shadow roundbg px-0">
@@ -92,7 +70,7 @@ const Login = () => {
                 <div className="col-lg-6">
                   <div className="card-body p-md-5 mx-md-4">
                     <div className="text-center">
-                      <img src={logo} style={{ width: "185px" }} alt="logo" />
+                      <img src={logo} style={{ width: '185px' }} alt="logo" />
                       <h4 className="mt-1 mb-5 pb-1">We are The Divez Team</h4>
                     </div>
 
@@ -139,7 +117,7 @@ const Login = () => {
                             id="buyer"
                             name="type"
                             value="buyer"
-                            checked={accountType === "buyer"}
+                            checked={accountType === 'buyer'}
                             onChange={(e) => setAccountType(e.target.value)}
                           />
                           <label htmlFor="buyer" className="form-label">
@@ -152,7 +130,7 @@ const Login = () => {
                             id="manager"
                             name="type"
                             value="manager"
-                            checked={accountType === "manager"}
+                            checked={accountType === 'manager'}
                             onChange={(e) => setAccountType(e.target.value)}
                           />
                           <label htmlFor="manager" className="form-label">
@@ -165,7 +143,7 @@ const Login = () => {
                             id="admin"
                             name="type"
                             value="admin"
-                            checked={accountType === "admin"}
+                            checked={accountType === 'admin'}
                             onChange={(e) => setAccountType(e.target.value)}
                           />
                           <label htmlFor="admin" className="form-label">
