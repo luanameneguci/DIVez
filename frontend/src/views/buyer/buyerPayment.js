@@ -1,33 +1,45 @@
 import React, { useState, useEffect } from "react";
-import "../../App.css";
-import { BrowserRouter as Router, Route, Link, Routes } from "react-router-dom";
-import Shop from "../../views/buyer/buyerShop";
+import { Link } from "react-router-dom";
+import ShoppingCart from "../../components/buyer/ShoppingCart";
+import axios from "axios";
 
 const BuyerPayment = () => {
   const [items, setItems] = useState([]);
   const [totalPrice, setTotalPrice] = useState(0);
   const [cardNumber, setCardNumber] = useState("");
   const [expiry, setExpiry] = useState("");
+  const [idCart, setIdCart] = useState(1);
 
-  // Fetch data from API
-  useEffect(() => {
-    fetch("http://localhost:8080/cart/2/products")
-      .then((response) => response.json())
-      .then((data) => {
-        setItems(data);
-      })
-      .catch((error) => console.error("Error fetching data:", error));
-  }, []);
+  const handleDeleteFromCart = async (idProductCart) => {
+    try {
+      const response = await fetch(`http://localhost:8080/productCart/delete/${idProductCart}`, {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
 
-  // Function to sum the total quantity of items in the cart
+      if (response.ok) {
+        fetch(`http://localhost:8080/cart/${idCart}/products`)
+          .then((response) => response.json())
+          .then((data) => {
+            setItems(data);
+          })
+          .catch((error) => console.error("Error fetching data:", error));
+      } else {
+        console.error("Failed to delete product from cart");
+      }
+    } catch (error) {
+      console.error("Error deleting product from cart:", error);
+    }
+  };
+
   const sumTotalQuantity = (items) => {
     return items.reduce((total, item) => total + item.numberOfLicenses, 0);
   };
 
-  // Calculate the total quantity using the sumTotalQuantity function
   const totalQuantity = sumTotalQuantity(items);
 
-  // Effect to calculate the total price when items change
   useEffect(() => {
     const totalPrice = items.reduce(
       (total, item) => total + item.productPrice * item.numberOfLicenses,
@@ -36,20 +48,78 @@ const BuyerPayment = () => {
     setTotalPrice(totalPrice);
   }, [items]);
 
-  // Handle card number change and format it with spaces every 4 digits
   const handleCardNumberChange = (event) => {
     const inputWithoutSpaces = event.target.value.replace(/\s+/g, "");
     const formattedValue = inputWithoutSpaces.replace(/(\d{4})/g, "$1 ").trim();
     setCardNumber(formattedValue);
   };
 
-  // Handle expiry date change and insert '/' after the first 2 characters (MM)
   const handleExpiryChange = (event) => {
     let formattedValue = event.target.value;
     if (formattedValue.length === 2 && !formattedValue.includes("/")) {
       formattedValue += "/";
     }
     setExpiry(formattedValue);
+  };
+
+  useEffect(() => {
+    fetch(`http://localhost:8080/cart/${idCart}/products`)
+      .then((response) => response.json())
+      .then((data) => {
+        setItems(data);
+        console.log("Fetched items:", data); // Log items to verify data
+      })
+      .catch((error) => console.error("Error fetching data:", error));
+  }, [idCart]);
+
+  const handleCheckout = async (event) => {
+    event.preventDefault();
+  
+    try {
+      // Step 1: Create a bill
+      const billResponse = await axios.post("http://localhost:8080/billing/create", {
+        idCart: idCart
+      });
+  
+      if (billResponse.status === 201) {
+        console.log("Bill created successfully:", billResponse.data);
+  
+        // Step 2: Fetch idUser associated with idCart
+        const cartResponse = await axios.get(`http://localhost:8080/cart/${idCart}`);
+        const idUser = cartResponse.data.idUser;
+  
+        console.log("Fetched idUser:", idUser);
+  
+        // Step 3: Prepare licenses data and create licenses
+        const licensesData = items.map((item) => ({
+          numberOfLicenses: item.numberOfLicenses, // Ensure item.numberOfLicenses is set correctly
+          idLicenseStatus: 2, // Example value for idLicenseStatus
+          licenseVersion: item.productVersion,
+          idBill: billResponse.data.idBill,
+          idUser: idUser,
+          idProduct: item.idProduct
+        }));
+  
+        console.log("Sending licensesData:", licensesData);
+  
+        // Step 4: Send licensesData to create licenses
+        const licensesResponse = await axios.post("http://localhost:8080/licenses/create", licensesData);
+  
+        if (licensesResponse.status === 200) {
+          console.log(`${licensesData.length} licenses created successfully.`);
+          // Optionally, you can redirect or show a success message
+        } else {
+          console.error("Error creating licenses:", licensesResponse.statusText);
+        }
+      } else {
+        console.error("Failed to create bill:", billResponse.statusText);
+      }
+    } catch (error) {
+      console.error("Error during checkout:", error);
+      if (error.response) {
+        console.error("Server responded with:", error.response.data);
+      }
+    }
   };
 
   return (
@@ -92,7 +162,7 @@ const BuyerPayment = () => {
                       </div>
 
                       <div>
-                        <ShoppingCart items={items} />
+                        <ShoppingCart items={items} onDelete={handleDeleteFromCart} />
                       </div>
                     </div>
                     <div className="col-lg-5">
@@ -112,7 +182,7 @@ const BuyerPayment = () => {
                             <strong>Card type</strong>
                           </p>
 
-                          <form className="mt-4">
+                          <form className="mt-4" onSubmit={handleCheckout}>
                             <div className="form-outline form-white mb-4">
                               <input
                                 type="text"
@@ -216,55 +286,4 @@ const BuyerPayment = () => {
   );
 };
 
-// ShoppingCart component to display the items in the shopping cart
-const ShoppingCart = ({ items }) => {
-  return (
-    <div>
-      {items.map((item, index) => (
-        <div className="p-3 mb-3 shadow roundbg" key={index}>
-          <div className="card-body">
-            <div className="d-flex justify-content-between">
-              <div className="d-flex flex-row align-items-center col-4">
-                <div>
-                  <img
-                    src={item.productImage}
-                    className="img-fluid roundbg"
-                    alt="Shopping item"
-                    style={{ width: "65px" }}
-                  />
-                </div>
-                <div className="ms-3">
-                  <h5>{item.productName}</h5>
-                  <p className="small mb-0">{item.productDescription}</p>
-                </div>
-              </div>
-              <div className="d-flex flex-row align-items-center col-3 text-center">
-                <div style={{ width: "50px" }}>
-                  <h5 className="fw-normal mb-0">{item.numberOfLicenses}</h5>
-                </div>
-                <div style={{ width: "80px" }}>
-                  <h5 className="mb-0">${(item.productPrice * item.numberOfLicenses).toFixed(2)}</h5>
-                </div>
-                <a href="#!" style={{ color: "#cecece" }}>
-                  <i className="fas fa-trash-alt"></i>
-                </a>
-              </div>
-              <div className="col-2 my-auto">
-                <button
-                  type="button"
-                  className="btn btn-danger hover shadow col-12 roundbg"
-                >
-                  Remove
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
-      ))}
-    </div>
-  );
-};
-
 export default BuyerPayment;
-
-//npm i bootstrap-icons

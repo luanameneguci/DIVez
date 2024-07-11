@@ -19,12 +19,20 @@ controllers.billing_list = async (req, res) => {
 };
 
 controllers.billing_create = async (req, res) => {
-  const { IDCART, BILLDATE } = req.body;
+  const { idCart } = req.body;
+
   try {
-    const newBilling = await Billing.create({ IDCART, BILLDATE });
-    res.json(newBilling);
-  } catch (error) {
-    res.status(400).json({ error: error.message });
+    // Create a new bill using Sequelize model
+    const newBill = await Billing.create({
+      idCart: idCart
+      // billDate will automatically default to the current date
+    });
+
+    // Respond with the created bill object
+    res.status(201).json(newBill);
+  } catch (err) {
+    console.error("Error creating bill:", err);
+    res.status(400).json({ error: "Failed to create bill" });
   }
 };
 

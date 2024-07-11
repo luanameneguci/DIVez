@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import '../../App.css';
 
@@ -13,6 +13,7 @@ const formatDate = (dateString) => {
 
 const BuyerBudgetDetail = () => {
     const { idBudget } = useParams();
+    const navigate = useNavigate(); // Initialize useNavigate hook
     const [budget, setBudget] = useState(null);
     const [isLoading, setIsLoading] = useState(true);
     const [statusOptions, setStatusOptions] = useState([]);
@@ -52,10 +53,10 @@ const BuyerBudgetDetail = () => {
             await axios.put(`http://localhost:8080/budget/update/${idBudget}`, {
                 budgetDescription: reply,
                 budgetDate: budget.budgetDate,
-                idBudgetStatus: selectedStatus,
+                idBudgetStatus: 2,
                 idUser: budget.idUser,
             });
-            alert('Budget updated');
+            alert('Budget sended');
         } catch (error) {
             alert('Error saving budget:', error);
             console.error('Error saving budget:', error);
@@ -64,10 +65,9 @@ const BuyerBudgetDetail = () => {
 
     const handleReject = async () => {
         try {
-            await axios.put(`http://localhost:8080/budget/update/${idBudget}`, {
-                idBudgetStatus: 4,
-            });
-            alert('Budget rejected!');
+            await axios.delete(`http://localhost:8080/budget/delete/${idBudget}`);
+            alert('Budget deleted!');
+            navigate('/budgets'); // Navigate back to the budgets page
         } catch (error) {
             alert('Error rejecting budget:', error);
         }
@@ -103,16 +103,18 @@ const BuyerBudgetDetail = () => {
                                 onChange={(e) => setReply(e.target.value)}
                             ></textarea>
                         </div>
-                        <div className="mb-3 col">
-                            <div className="row d-flex mt-3 justify-content-end">
-                                <div className="col-4">
-                                    <button type="button" className="btn btn-info text-white hover shadow col-12">Send Budget</button>
-                                </div>
-                                <div className="col-4">
-                                    <button type="button" className="btn btn-danger hover shadow col-12" onClick={handleReject}>Delete</button>
+                        {budget.idBudgetStatus === 1 && (
+                            <div className="mb-3 col">
+                                <div className="row d-flex mt-3 justify-content-end">
+                                    <div className="col-4">
+                                        <button type="button" className="btn btn-info text-white hover shadow col-12" onClick={handleSave}>Send Budget</button>
+                                    </div>
+                                    <div className="col-4">
+                                        <button type="button" className="btn btn-danger hover shadow col-12" onClick={handleReject}>Delete</button>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
+                        )}
                     </form>
                 </div>
             </div>

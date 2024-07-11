@@ -19,6 +19,64 @@ controllers.user_list = async (req, res) => {
   }
 };
 
+controllers.list = async (req, res) => {
+  const data = await User.findAll()
+    .then(function (data) {
+      return data;
+    })
+    .catch((error) => {
+      return error;
+    });
+  res.json({ success: true, data: data });
+};
+
+controllers.login = async (req, res) => {
+  const { email, password } = req.body;
+
+  if (!email || !password) {
+    return res.status(403).json({
+      success: false,
+      message: "Campos em Branco",
+    });
+  }
+
+  try {
+    const user = await User.findOne({ where: { userEmail: email } });
+
+    if (!user) {
+      return res.status(403).json({
+        success: false,
+        message: "Dados de autenticação inválidos.",
+      });
+    }
+
+    const isMatch = await bcrypt.compare(password, user.userPassword);
+
+    if (isMatch) {
+      const token = jwt.sign({ userEmail: email }, config.secret, {
+        expiresIn: "1h", // Expires in 1 hour
+      });
+
+      return res.json({
+        success: true,
+        message: "Autenticação realizada com sucesso!",
+        token: token,
+      });
+    } else {
+      return res.status(403).json({
+        success: false,
+        message: "Dados de autenticação inválidos.",
+      });
+    }
+  } catch (error) {
+    console.error("Erro: ", error);
+    return res.status(500).json({
+      success: false,
+      message: "Erro no processo de autenticação. Tente de novo mais tarde.",
+    });
+  }
+};
+
 controllers.user_create = async (req, res) => {
   console.log(req.body); // Log the request body to inspect incoming data
   const {
@@ -188,6 +246,39 @@ controllers.billingByUser = async (req, res) => {
     res.status(500).send({ error: "An error occurred while fetching billings" });
   }
 };
+
+controllers.updateBuyerId = async (req, res) => {
+  const { email, buyerId } = req.body;
+
+  console.log('Received update request:', { email, buyerId });
+
+  try {
+    // Find the user by email
+    const user = await User.findOne({ where: { userEmail: email } });
+
+    if (!user) {
+      console.log('User not found:', email);
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    // Update the idBuyer
+    if (buyerId === null) {
+      user.idBuyer = null;
+    } else {
+      user.idBuyer = buyerId;
+    }
+
+    await user.save();
+
+    console.log('Updated user:', user);
+
+    res.status(200).json({ message: "idBuyer updated successfully", user });
+  } catch (error) {
+    console.error("Error updating idBuyer:", error);
+    res.status(500).json({ message: "Failed to update idBuyer" });
+  }
+};
+
 
 
 module.exports = controllers;

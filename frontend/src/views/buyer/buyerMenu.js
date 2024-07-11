@@ -140,7 +140,7 @@ const Menu = ({ userId }) => {
               <Route path="/budgets" element={<BuyerBudgetList />} />
               <Route path="/faq" element={<FAQ />} />
               <Route path="/checkout" element={<BuyerPayment />} />
-              <Route path="/productitem" element={<BuyerProductItem />} />
+              <Route path="/productitem/:idProduct" element={<BuyerProductItem />} />
               <Route path="/shop/:id" element={<BuyerShopItem />} />
               <Route path="/budgetrequest" element={<BuyerBudgetReply />} />
               <Route path="/budget/details/:idBudget" element={<BuyerBudgetDetail />} />

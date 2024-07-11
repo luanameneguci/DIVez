@@ -56,12 +56,21 @@ controllers.licenses_detail = async (req, res) => {
 };
 
 controllers.licenses_delete = async (req, res) => {
-  const licenseKeyReceived = req.params.licenseKey;
+  const { idUser, idProduct } = req.body;
+
   try {
-    await Licenses.destroy({ where: { licenseKey: licenseKeyReceived } });
-    res.json({ message: "Deleted successfully!" });
+    // Delete licenses with matching idUser and idProduct
+    const deletedCount = await Licenses.destroy({
+      where: {
+        idUser,
+        idProduct
+      }
+    });
+
+    res.status(200).json({ deletedCount });
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    console.error('Error deleting licenses:', error);
+    res.status(500).json({ error: 'Failed to delete licenses' });
   }
 };
 
@@ -154,5 +163,63 @@ controllers.countLicensesWithStatus2 = async (req, res) => {
   }
 };
 
+
+function generateRandomLicenseKey() {
+  const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789'; // Available characters
+  let licenseKey = '';
+
+  for (let i = 0; i < 23; i++) {
+    if (i > 0 && i % 5 === 0) {
+      licenseKey += ' '; // Insert space every 5 characters
+    } else {
+      const randomIndex = Math.floor(Math.random() * characters.length);
+      licenseKey += characters.charAt(randomIndex);
+    }
+  }
+
+  return licenseKey;
+}
+
+controllers.createLicenses = async (req, res) => {
+  const licensesData = req.body;
+
+  try {
+    const createdLicenses = await Promise.all(licensesData.map(async (license) => {
+      const { numberOfLicenses, idLicenseStatus, idUser, idBill, idProduct, licenseVersion } = license;
+
+      if (!numberOfLicenses || numberOfLicenses <= 0) {
+        return res.status(400).json({ error: 'Number of licenses must be greater than zero.' });
+      }
+
+      const licenses = [];
+
+      for (let i = 0; i < numberOfLicenses; i++) {
+        const licenseKey = generateRandomLicenseKey(); // Assuming this function generates a unique key
+
+        // Create license object
+        const newLicense = {
+          licenseKey: licenseKey,
+          idLicenseStatus: idLicenseStatus,
+          idLicenseUser: idUser, // Or whatever logic you use to assign the user ID
+          licenseVersion: licenseVersion, // Assuming this is how you get the version from the license
+          idBill: idBill, // Assign the bill ID received from the client
+          idUser: idUser, // Assign the user ID received from the client
+          idProduct: idProduct // Assign the product ID received from the client
+        };
+
+        licenses.push(newLicense);
+      }
+
+      // Bulk create licenses in the database
+      const created = await Licenses.bulkCreate(licenses);
+      return created;
+    }));
+
+    res.status(200).json(createdLicenses);
+  } catch (error) {
+    console.error('Error creating licenses:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+};
 
 module.exports = controllers;

@@ -1,6 +1,7 @@
 const express = require("express");
 const router = express.Router();
-const billingController = require("../controllers/billingController");
+
+const billingController = require("../controllers/BillingController");
 
 // Get all billing records
 router.get("/", billingController.billing_list);

@@ -1,64 +1,63 @@
-import React, { useState , useEffect} from "react";
+import React, { useState, useEffect } from "react";
 import "../../App.css";
 import Rating from "@mui/material/Rating";
 import ManagersList from "../../components/buyer/ManagersList";
-import { BrowserRouter as Router, Route, Link, Routes } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Link, Routes, useParams } from 'react-router-dom';
 
 const productVersion = 1.3;
 
-const managersList = [
-  ["Luana Meneguci", "123456789", "luanameneguci@gmail.com", "Client"],
-  ["Andre Pascoal", "123456789", "luanameneguci@gmail.com", "Client"],
-  ["Luana Meneguci", "123456789", "luanameneguci@gmail.com", "Client"],
-  ["Luana Meneguci", "123456789", "luanameneguci@gmail.com", "Client"],
-  ["Luana Meneguci", "123456789", "luanameneguci@gmail.com", "Client"],
-  ["Luana Meneguci", "321321321", "luanameneguci@gmail.com", "Manager"],
-];
-
-const itemsDataArray = [
-  {
-    nomeApp: "Adobe Photoshop",
-    photo: "https://img.icons8.com/?size=100&id=13677&format=png&color=000000",
-    price: 4.99,
-    Packages: "Adobe Essencials",
-    Category: "Photography",
-    ActiveInstall: 1000000,
-    Version: "1.2.3",
-    Review: 3.4,
-    description:
-      "A fitness tracking app to help you achieve your health goals.",
-    id: 1,
-    numeroTotal: 1000,
-    numeroAtivos: 750,
-  },
-];
-
 const BuyerProductItem = () => {
-  // Declaração de dois estados: 'items' e 'resultado', ambos inicializados como arrays vazios.
-  const [items, setItems] = useState([]);
-  const [resultado, setResultado] = useState([]);
+  const { idProduct } = useParams();
+  const [item, setItem] = useState(null);
+  const [resultado, setResultado] = useState(null);
 
-  // Utilização do hook useEffect para executar código após o componente ser montado.
   useEffect(() => {
-    // Criação de um array de itens a partir de 'itemsDataArray' utilizando a função 'createDataArraysItems'.
-    let itemsArray = createDataArraysItems(itemsDataArray);
-    // Criação de um array de resultados a partir de 'itemsDataArray' utilizando a função 'createDataArrays'.
-    let resultArray = createDataArrays(itemsDataArray);
-    // Cálculo das percentagens a partir do 'resultArray' utilizando a função 'calculatePercentages'.
-    let resultadoArray = calculatePercentages(resultArray);
-    // Atualização do estado 'items' com 'itemsArray'.
-    setItems(itemsArray);
-    // Atualização do estado 'resultado' com 'resultadoArray'.
-    setResultado(resultadoArray);
-  }, []); // O array vazio como segundo argumento significa que este useEffect só é executado uma vez, após a montagem do componente.
+    const idUser = 6;
+    fetch(`http://localhost:8080/user/${idUser}/billings`)
+      .then(response => response.json())
+      .then(data => {
+        const product = data.carts
+          .flatMap(cart => cart.productCarts)
+          .find(productCart => productCart.product.idProduct === parseInt(idProduct));
 
+        if (product) {
+          const itemData = {
+            nomeApp: product.product.productName,
+            photo: product.product.productImage,
+            price: product.product.productPrice,
+            Packages: "N/A",
+            Category: `Category ${product.product.idCategory}`,
+            ActiveInstall: product.product.productInstalls,
+            Version: product.product.productVersion,
+            Review: product.product.productRating,
+            description: product.product.productDescription,
+            id: product.product.idProduct,
+            numeroTotal: product.numberOfLicenses,
+            numeroAtivos: product.product.licenses.filter(
+              license => license.idLicenseStatus === 1
+            ).length
+          };
+
+          const itemsArray = createDataArraysItems([itemData]);
+          const resultArray = createDataArrays([itemData]);
+          const resultadoArray = calculatePercentages(resultArray);
+          setItem(itemsArray[0]);
+          setResultado(resultadoArray[0]);
+        }
+      })
+      .catch(error => console.error("Error fetching data:", error));
+  }, [idProduct]);
+
+  if (!item) {
+    return <div>Loading...</div>;
+  }
 
   return (
     <div className="bg-light w-100">
       <div className="container text-center pt-4">
         <div className="row">
           <div className="col-12">
-            <ItemList items={items} resultado={resultado} />
+            <ItemStatus itemData={item} resultado={resultado} />
           </div>
         </div>
       </div>
@@ -67,10 +66,8 @@ const BuyerProductItem = () => {
 };
 
 function createDataArraysItems(item) {
-  // Inicia o array items
   let items = [];
 
-  // Faz loop nos componentes dentro do array item
   for (let i = 0; i < item.length; i++) {
     let subArray = [
       item[i].nomeApp,
@@ -156,11 +153,11 @@ const ItemStatus = ({ itemData, resultado }) => {
           </button>
         </div>
 
-        <ManagersList managersList={managersList} />
+        <ManagersList />
       </div>
       <div className="col d-flex align-items-center justify-content-between flex-column bg-white roundbg shadow my-3">
         <div className="col-12 px-4 py-3">
-        <h3 className=" text-start">Need any  help with this product?</h3>
+        <h3 className=" text-start">Need any help with this product?</h3>
         <p className="text-start">Check our <Link className="text-info" to="/faq">FAQ</Link>. </p>
         </div>
       </div>
@@ -210,24 +207,19 @@ const ItemList = ({ items, resultado }) => {
 const ProgressDivs = ({ resultado }) => {
   return (
     <div>
-      {resultado.map((item, index) => (
-        <ProgressDiv
-          key={index}
-          nome={item[0]}
-          numeroAtivos={item[2]}
-          numeroTotal={item[1]}
-          percentage={item[3]}
-        />
-      ))}
+      <ProgressDiv
+        nome={resultado[0]}
+        numeroAtivos={resultado[2]}
+        numeroTotal={resultado[1]}
+        percentage={resultado[3]}
+      />
     </div>
   );
 };
 
 function createDataArrays(data) {
-  // Inicia o array result
   let result = [];
 
-  // Loop through the data and create sub-arrays
   for (let i = 0; i < data.length; i++) {
     let subArray = [data[i].nomeApp, data[i].numeroTotal, data[i].numeroAtivos];
     result.push(subArray);
@@ -237,19 +229,15 @@ function createDataArrays(data) {
 }
 
 function calculatePercentages(result) {
-  // Inicio o array resultado
   let resultado = [];
 
-  // Faz loop no array result e preenche um sub-array com percentagens
   for (let i = 0; i < result.length; i++) {
     let item = result[i];
     let percentage = (item[2] / item[1]) * 100;
-    // Cria um array com os vaores iniciais e o valor da percentagem calculada
     let newItem = [...item, percentage.toFixed(0)];
     resultado.push(newItem);
   }
 
-  // Retorno o valor de resultado
   return resultado;
 }
 

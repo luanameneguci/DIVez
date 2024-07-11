@@ -2,6 +2,7 @@ const express = require("express");
 const app = express();
 const sequelize = require('./models/database');
 const associations = require('./models/associations');
+const middleware = require('./middleware');
 
 const bodyParser = require("body-parser");
 
@@ -12,7 +13,7 @@ const Billing = require("./routes/billingRoute");
 const Budget = require("./routes/budgetRoute");
 const BudgetCart = require("./routes/budgetCartRoute");
 const BudgetPackage = require("./routes/budgetPackageRoute");
-const BudgetProduct = require("./routes/budgetProductRoute");
+const BudgetProduct = require("./routes/BudgetProductRoute");
 const BudgetStatus = require("./routes/budgetStatusRoute");
 const Cart = require("./routes/cartRoute");
 const Licenses = require("./routes/LicensesRoute");

@@ -12,17 +12,14 @@ import BuyerManagersList from "../../views/buyer/buyerManagers";
 
 const BuyerDashboard = () => {
   const numRowsToShow = 6;
-  const buyerId = 1;
   const someUserId = 6;
   const idBuyer = 6;
-  const idBuyer1 = 6;
-
-  const pendingBudgets = useBuyerPendingBudgets();
-  const activeLicenses = useBuyerActiveLicenses();
-  const linkedUsers = useBuyerLicenses();
   const idUser = 6;
+
+  const pendingBudgets = BuyerPendingBudgets(idUser);
+  const activeLicenses = BuyerActiveLicenses(idUser);
+  const linkedUsers = BuyerLicenses(idUser);
   const rows = useTablePendingBudgets(idUser);
-  const idCart = useBuyerCart();
   //const nameProduct = FillMostUsedTable();
 
 
@@ -32,7 +29,7 @@ const BuyerDashboard = () => {
         <h2 className="title py-3">Dashboard</h2>
         <div className="col-12 text-center">
           <div className="row">
-            <div className="col">
+          <div className="col">
               <Box
                 title="Pending budgets"
                 number={pendingBudgets}
@@ -76,162 +73,86 @@ const BuyerDashboard = () => {
   );
 };
 
-/* function FillMostUsedTable() {
-  const [productName, setProductName] = useState("");
-  async function fetchTopProducts() {
-    try {
-      const response = await fetch("http://localhost:8080/product/topProducts");
-      const products = await response.json();
-      products.forEach((product) => {
-        setProductName(product.productName);
-      });
-    } catch (error) {
-      console.error("Error fetching top products:", error);
-    }
-  }
-
-  fetchTopProducts();
-  console.log(productName);
-  return productName;
-} */
-
-/*find buyer active licenses*/
-function useBuyerActiveLicenses() {
+function BuyerActiveLicenses(idUser) {
   const [activeLicenses, setActiveLicenses] = useState(0);
 
   useEffect(() => {
     const fetchActiveLicenses = async () => {
       try {
-        const url = "http://localhost:8080/license/findByBuyer/1";
+        const url = `http://localhost:8080/licenses/status/${idUser}`;
         const res = await axios.get(url);
         if (res.status === 200) {
-          const data1 = res.data;
-          const activeCount = data1.filter(
-            (license) => license.idLicenseStatus === 2
-          ).length;
-          setActiveLicenses(activeCount);
-        } 
-      } catch (error) 
-      {}
+          const { count } = res.data; // Destructure count from res.data
+          setActiveLicenses(count); // Set activeLicenses directly to count
+        } else {
+          console.error("Error fetching active licenses:", res.statusText);
+        }
+      } catch (error) {
+        console.error("Error fetching active licenses:", error);
+      }
     };
 
     fetchActiveLicenses();
-  }, []);
+  }, [idUser]);
 
   return activeLicenses;
 }
 
-/*find buyer cart*/
-function useBuyerCart() {
-  const [idCart, setCartId] = useState(0);
-
-  useEffect(() => {
-    const fetchCartId = async () => {
-      try {
-        const url = "http://localhost:8080/cart/findByBuyer/1";
-        const res = await axios.get(url);
-        if (res.status === 200) {
-          const data2 = res.data;
-          setCartId(data2.idCart);
-        } else {
-          alert("Error Web Service!");
-        }
-      } catch (error) {
-       
-      }
-    };
-
-    fetchCartId();
-  }, []);
-
-  return idCart;
-}
-
-/*find buyer pending budgets*/
-function useBuyerPendingBudgets() {
-  const idCart = useBuyerCart();
+function BuyerPendingBudgets(idUser) {
   const [pendingBudgets, setPendingBudgets] = useState(0);
 
   useEffect(() => {
     const fetchPendingBudgets = async () => {
       try {
-        const url = "http://localhost:8080/budget/findByCart/" + idCart;
+        const url = `http://localhost:8080/budget/count/${idUser}`;
         const res = await axios.get(url);
         if (res.status === 200) {
-          const data3 = res.data;
-
-          const pendingCount = data3.filter(
-            (budget) => budget.idBudgetStatus === 1
-          ).length;
-          setPendingBudgets(pendingCount);
+          const { count } = res.data;
+          setPendingBudgets(count);
         } else {
-          alert("Error Web Service!");
+          console.error("Error fetching pending budgets:", res.statusText);
         }
       } catch (error) {
-       
+        console.error("Error fetching pending budgets:", error);
+        console.log(idUser)
       }
     };
 
-    if (idCart !== 0) {
+    if (idUser !== 0) {
       fetchPendingBudgets();
     }
-  }, [idCart]);
+  }, [idUser]);
 
   return pendingBudgets;
 }
 
+
 /*find buyer licenses*/
-function useBuyerLicenses() {
+function BuyerLicenses(idUser) {
   const [linkedUsers, setLinkedUsers] = useState(0);
 
   useEffect(() => {
     const fetchBuyerLicenses = async () => {
       try {
-        const url = "http://localhost:8080/license/findByBuyer/1";
+        const url = `http://localhost:8080/licenses/count/${idUser}`;
         const res = await axios.get(url);
         if (res.status === 200) {
-          const data4 = res.data;
-          setLinkedUsers(data4.length);
+          const { count } = res.data; // Assuming the response structure is { count: 10 }
+          setLinkedUsers(count); // Set linkedUsers state to the count of licenses
         } else {
-          alert("Error Web Service!");
+          console.error("Error fetching licenses:", res.statusText);
         }
       } catch (error) {
-       
+        console.error("Error fetching licenses:", error);
       }
     };
 
     fetchBuyerLicenses();
-  }, []);
+  }, [idUser]);
 
   return linkedUsers;
 }
 
-
-/*find buyer tickets*/
-function useBuyerTickets() {
-  const [buyerTickets, setBuyerTickets] = useState([]);
-
-  useEffect(() => {
-    const fetchBuyerTickets = async () => {
-      try {
-        const url = "http://localhost:8080/ticket/findByBuyer/1";
-        const res = await axios.get(url);
-        if (res.status === 200) {
-          const data = res.data;
-          setBuyerTickets(data);
-        } else {
-          alert("Error Web Service!");
-        }
-      } catch (error) {
-       
-      }
-    };
-
-    fetchBuyerTickets();
-  }, []);
-
-  return buyerTickets;
-}
 
 /*preencher tabela de pending budgets*/
 function useTablePendingBudgets(idUser) {

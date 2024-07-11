@@ -136,10 +136,10 @@ controllers.getAllProductsInCart = async (req, res) => {
           where: { idCart },
           include: [{
               model: ProductCart,
-              attributes: ['numberOfLicenses'],
+              attributes: ['numberOfLicenses', 'idProductCart'],
               include: [{
                   model: Product,
-                  attributes: ['idProduct', 'productName', 'productPrice', 'productDescription', 'productImage'] // Specify the attributes you want to fetch
+                  attributes: ['idProduct', 'productName', 'productPrice', 'productDescription', 'productImage', 'productVersion'] // Specify the attributes you want to fetch
               }]
           }]
       });
@@ -155,7 +155,9 @@ controllers.getAllProductsInCart = async (req, res) => {
           productName: productCart.product.productName,
           productPrice: productCart.product.productPrice,
           productDescription: productCart.product.productDescription,
-          numberOfLicenses: productCart.numberOfLicenses
+          numberOfLicenses: productCart.numberOfLicenses,
+          idProductCart: productCart.idProductCart,
+          productVersion: productCart.product.productVersion
           // Add more fields as needed
       }));
 
