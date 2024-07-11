@@ -8,6 +8,13 @@ router.get("/", licensesController.licenses_list);
 // Create a new license
 router.post("/create", licensesController.licenses_create);
 
+// Get count of licenses with idLicenseStatus = 1
+router.get('/active', licensesController.countLicensesWithStatus1);
+
+// Get count of licenses with idLicenseStatus = 2
+router.get('/inactive', licensesController.countLicensesWithStatus2);
+
+
 // Update a license by licenseKey
 router.put("/update/:licenseKey", licensesController.licenses_update);
 

@@ -57,7 +57,11 @@ function BudgetsListBox({ numRowsToShow }) {
 
     const indexOfLastItem = currentPage * itemsPerPage;
     const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-    const currentItems = filteredRows.slice(indexOfFirstItem, indexOfLastItem);
+    let currentItems = filteredRows.slice(indexOfFirstItem, indexOfLastItem);
+
+    if (numRowsToShow !== 20 && numRowsToShow !== 5) {
+        currentItems = filteredRows.slice(0, 6);
+    }
 
     const paginate = (pageNumber) => setCurrentPage(pageNumber);
 
@@ -73,13 +77,13 @@ function BudgetsListBox({ numRowsToShow }) {
     const getStatusColor = (status) => {
         switch (status) {
             case 1:
-                return '#FFD56D'; // blue
+                return '#FFD56D'; // yellow
             case 2:
-                return '#2D9CDB'; // green
+                return '#2D9CDB'; // blue
             case 3:
-                return '#00B69B'; // red
+                return '#00B69B'; // green
             case 4:
-                return '#EB5757'; // gray
+                return '#EB5757'; // red
             default:
                 return 'inherit';
         }
@@ -175,7 +179,7 @@ function BudgetsListBox({ numRowsToShow }) {
                                 <td>{row.budgetDescription.slice(0, 30)}</td>
                                 <td style={{ color: getStatusColor(row.idBudgetStatus) }}>{getStatusName(row.idBudgetStatus)}</td>
                                 <td className='text-center'>
-                                    <Link to={"/budgetreply/" + row.idBudget} className='btn btn-outline-warning' onClick={() => console.log(row.idBudget)}>
+                                    <Link to={`/budgetreply/${row.idBudget}`} className='btn btn-outline-warning' onClick={() => console.log(row.idBudget)}>
                                         See more
                                     </Link>
                                 </td>

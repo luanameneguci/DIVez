@@ -118,4 +118,45 @@ controllers.TicketsById = async (req, res) => {
   }
 };
 
+controllers.countTicketsWithStatus2 = async (req, res) => {
+  try {
+      const count = await Ticket.count({
+          where: {
+              idTicketStatus: 2
+          }
+      });
+      res.json({ count });
+  } catch (error) {
+      console.error('Error:', error);
+      res.status(500).json({ error: 'Internal Server Error' });
+  }
+};
+
+controllers.countTicketsByStatusAndDepartment = async (req, res) => {
+  try {
+    const ticketCounts = await Ticket.findAll({
+      attributes: [
+        'idTicketDepartment',
+        [Sequelize.fn('COUNT', Sequelize.col('idTicket')), 'count']
+      ],
+      where: {
+        idTicketStatus: 2
+      },
+      group: ['idTicketDepartment'],
+      raw: true
+    });
+
+    const formattedCounts = ticketCounts.map(item => ({
+      idTicketDepartment: item.idTicketDepartment,
+      count: parseInt(item.count)
+    }));
+
+    res.json(formattedCounts);
+  } catch (error) {
+    console.error('Error:', error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+};
+
+
 module.exports = controllers;

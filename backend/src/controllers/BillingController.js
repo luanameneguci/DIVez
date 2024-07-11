@@ -1,12 +1,11 @@
-const express = require("express");
-const Sequelize = require("sequelize");
 const sequelize = require("../models/database");
 const Billing = require("../models/billing");
 const Cart = require("../models/cart");
 const ProductCart = require("../models/productCart");
-const Product = require("../models/product");
-const Licenses = require("../models/licenses")
 
+
+
+const { Op } = require('sequelize');
 
 const controllers = {};
 
@@ -66,5 +65,49 @@ controllers.billing_delete = async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 };
+/*
+controllers.sales_data = async (req, res) => {
+  try {
+      // Calculate date 7 days ago from today
+      const sevenDaysAgo = new Date();
+      sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
+
+      // Fetch sales data and calculate products sold and total profit
+      const data = await Billing.findAll({
+          attributes: [
+              [sequelize.fn('date_trunc', 'day', sequelize.col('billDate')), 'day'],
+              [sequelize.fn('count', sequelize.col('productCart.idProductCart')), 'productsSold'],
+              [sequelize.literal('SUM("cart.cartPrice")'), 'totalProfit']
+          ],
+          include: [
+              {
+                  model: ProductCart,
+                  attributes: [],
+                  required: true,
+                  include: [
+                      { model: Cart, attributes: [], required: true }
+                  ]
+              }
+          ],
+          where: {
+              billDate: { [Op.gte]: sevenDaysAgo }
+          },
+          group: [sequelize.fn('date_trunc', 'day', sequelize.col('billDate'))],
+          order: [[sequelize.fn('date_trunc', 'day', sequelize.col('billDate')), 'ASC']],
+      });
+
+      // Map the data to match frontend expectations
+      const mappedData = data.map(item => ({
+          day: item.dataValues.day,
+          productsSold: item.dataValues.productsSold,
+          totalProfit: item.dataValues.totalProfit || 0, // Handle cases where totalProfit is null
+      }));
+
+      res.json(mappedData);
+  } catch (error) {
+      console.error('Error fetching sales data:', error);
+      res.status(500).json({ error: error.message });
+  }
+};*/
 
 module.exports = controllers;

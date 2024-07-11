@@ -50,7 +50,11 @@ function TicketListBox({ numRowsToShow }) {
 
     const indexOfLastItem = currentPage * itemsPerPage;
     const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-    const currentTickets = filteredTickets.slice(indexOfFirstItem, indexOfLastItem);
+    let currentTickets = filteredTickets.slice(indexOfFirstItem, indexOfLastItem);
+
+    if (numRowsToShow !== 20) {
+        currentTickets = filteredTickets.slice(0, 6);
+    }
 
     const paginate = (pageNumber) => setCurrentPage(pageNumber);
 

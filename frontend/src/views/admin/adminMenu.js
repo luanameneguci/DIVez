@@ -107,11 +107,12 @@ const Menu = ({ userId }) => {
               <Routes>
                 <Route path="/dashboard" element={<AdminDashboard />} />
                 <Route path="/clients" element={<AdminClientList />} />
-                <Route path="/client/:clientId/:accountType" element={<AdminClientDashboard />} />
+                <Route path="/client/:idUser" element={<AdminClientDashboard />} />
                 <Route path="/product-dashboard" element={<AdminProductDashboard />} />
                 <Route path="/products" element={<AdminProductList />} />
                 <Route path="/tickets" element={<AdminTicketList />} />
                 <Route path="/sales" element={<AdminSalesList />} />
+                <Route path="/sale" element={<AdminSalesDashboard />} />
                 <Route path="/budgets" element={<AdminBudgetList />} />
                 <Route path="/package" element={<PackageAdd />} />
                 <Route path="/product" element={<ProductAdd />} />
@@ -119,7 +120,6 @@ const Menu = ({ userId }) => {
                 <Route path="/budgetreply/:idBudget" element={<AdminBudgetReply />} />
                 <Route path="/ticketreply/:idTicket" element={<AdminTicketReply />} />
                 <Route path="/ticketreply" element={<AdminTicketReply />} />
-                <Route path="/sale" element={<AdminSalesDashboard />} />
               </Routes>
             </div>
           </div>

@@ -101,7 +101,7 @@ function ClientListBox({ clientList }) {
                             <td style={{ padding: '15px 0 15px 2%' }}>{row[3]}</td>
                             <td className="d-flex justify-content-center">
                                 <Link
-                                    to={`/client/${row[4]}/${row[3]}`}
+                                    to={`/client/${row[4]}`}
                                     className="btn btn-outline-info me-2"
                                 >
                                     See more

@@ -8,7 +8,6 @@ const ProductList = () => {
     const [productFilter, setProductFilter] = useState('');
 
     useEffect(() => {
-        // Fetch data from backend API using Axios
         axios.get('http://localhost:8080/product')
             .then(response => {
                 setProducts(response.data);
@@ -16,24 +15,19 @@ const ProductList = () => {
             .catch(error => console.error('Error fetching products', error));
     }, []);
 
-    // Handle filter change
     const handleProductFilterChange = (e) => setProductFilter(e.target.value.toLowerCase());
 
-    // Filter products based on search filter
     const filteredProducts = products.filter(product =>
         product.productName.toLowerCase().includes(productFilter)
     );
 
-    // Pagination
     const itemsPerPage = 5;
     const indexOfLastItem = currentPage * itemsPerPage;
     const indexOfFirstItem = indexOfLastItem - itemsPerPage;
     const currentProducts = filteredProducts.slice(indexOfFirstItem, indexOfLastItem);
 
-    // Pagination function
     const paginate = (pageNumber) => setCurrentPage(pageNumber);
 
-    // Pagination number links
     const pageNumbers = [];
     for (let i = 1; i <= Math.ceil(filteredProducts.length / itemsPerPage); i++) {
         pageNumbers.push(
@@ -109,6 +103,6 @@ const ProductList = () => {
             </div>
         </div>
     );
-}
+};
 
 export default ProductList;

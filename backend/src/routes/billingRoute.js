@@ -1,6 +1,5 @@
 const express = require("express");
 const router = express.Router();
-
 const billingController = require("../controllers/billingController");
 
 // Get all billing records
@@ -17,5 +16,8 @@ router.get("/:id", billingController.billing_detail);
 
 // Delete a billing record by ID
 router.delete("/delete/:id", billingController.billing_delete);
+
+// Get graph data era para o AdminSaleDashboard, não consegui por a funcionar
+//router.get("/salesData", billingController.sales_data);
 
 module.exports = router;

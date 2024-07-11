@@ -1,14 +1,12 @@
-import "../../App.css";
-import { Doughnut } from "react-chartjs-2";
-import { Chart, ArcElement, Tooltip, Legend } from "chart.js";
-import { useEffect, useState, React } from "react";
+import React, { useEffect, useState } from "react";
 import axios from "axios";
-
 import notificationicon from "../../images/notification.png";
 import Box from "../../components/admin/Box";
-import TicketListBox from "../../components/admin/TicketListBox";
 import BoxProgress from "../../components/admin/ProgressBox";
+import TicketListBox from "../../components/admin/TicketListBox";
 import BudgetListBox from "../../components/admin/BudgetListBox";
+import { Doughnut } from "react-chartjs-2";
+import { Chart, ArcElement, Tooltip, Legend } from "chart.js";
 
 Chart.register(ArcElement, Tooltip, Legend);
 
@@ -16,6 +14,10 @@ const numRowsToShow = 6;
 
 const AdminDashboard = () => {
   const [waitingTicketsCount, setWaitingTicketsCount] = useState(0);
+  const [pendingBudgetsCount, setPendingBudgetsCount] = useState(0);
+  const [activeLicensesCount, setActiveLicensesCount] = useState(0);
+  const [inactiveLicensesCount, setInactiveLicensesCount] = useState(0);
+
   const [budgetCounts, setBudgetCounts] = useState({
     labels: ["Pending", "Rejected", "Approved", "Completed"],
     datasets: [
@@ -25,41 +27,90 @@ const AdminDashboard = () => {
       },
     ],
   });
-  const [inactiveLicensesCount, setInactiveLicensesCount] = useState(0);
+
+  useEffect(() => {
+    const fetchWaitingTicketsCount = async () => {
+      try {
+        const response = await axios.get("http://localhost:8080/ticket/pending");
+        setWaitingTicketsCount(response.data.count || 0);
+      } catch (error) {
+        console.error("Error fetching waiting tickets count:", error);
+      }
+    };
+
+    fetchWaitingTicketsCount();
+  }, []);
+
+  useEffect(() => {
+    const fetchPendingBudgetsCount = async () => {
+      try {
+        const response = await axios.get("http://localhost:8080/budget/pending");
+        setPendingBudgetsCount(response.data.count || 0);
+      } catch (error) {
+        console.error("Error fetching pending budgets count:", error);
+      }
+    };
+
+    fetchPendingBudgetsCount();
+  }, []);
+
+  useEffect(() => {
+    const fetchActiveLicensesCount = async () => {
+      try {
+        const response = await axios.get("http://localhost:8080/licenses/active");
+        setActiveLicensesCount(response.data.count || 0);
+      } catch (error) {
+        console.error("Error fetching active licenses count:", error);
+      }
+    };
+
+    fetchActiveLicensesCount();
+  }, []);
+
+  useEffect(() => {
+    const fetchInactiveLicensesCount = async () => {
+      try {
+        const response = await axios.get("http://localhost:8080/licenses/inactive");
+        setInactiveLicensesCount(response.data.count || 0);
+      } catch (error) {
+        console.error("Error fetching inactive licenses count:", error);
+      }
+    };
+
+    fetchInactiveLicensesCount();
+  }, []);
 
   useEffect(() => {
     const fetchBudgetCounts = async () => {
       try {
         const responses = await Promise.all([
-          axios.get("http://localhost:8080/budget/countByStatus/1"),
-          axios.get("http://localhost:8080/budget/countByStatus/2"),
-          axios.get("http://localhost:8080/budget/countByStatus/3"),
-          axios.get("http://localhost:8080/budget/countByStatus/4"),
+          axios.get("http://localhost:8080/budget/pending"),
+          axios.get("http://localhost:8080/budget/rejected"),
+          axios.get("http://localhost:8080/budget/new"),
+          axios.get("http://localhost:8080/budget/paid"),
         ]);
 
         const counts = {
           Pending: responses[0].data.count || 0,
           Rejected: responses[1].data.count || 0,
-          Approved: responses[2].data.count || 0,
-          Completed: responses[3].data.count || 0,
+          New: responses[2].data.count || 0,
+          Paid: responses[3].data.count || 0,
         };
 
         const updatedData = {
-          labels: ["Pending", "Rejected", "Approved", "Completed"],
+          labels: ["Pending", "Rejected", "New", "Paid"],
           datasets: [
             {
               data: [
                 counts.Pending,
                 counts.Rejected,
-                counts.Approved,
-                counts.Completed,
+                counts.New,
+                counts.Paid,
               ],
-              backgroundColor: ["#FFD56D", "#EB5757", "#00B69B", "#2D9CDB"],
+              backgroundColor: ["#2D9CDB", "#EB5757", "#FFD56D", "#00B69B"],
             },
           ],
         };
-
-        console.log("Updated data for Doughnut:", updatedData);
 
         setBudgetCounts(updatedData);
       } catch (error) {
@@ -70,39 +121,6 @@ const AdminDashboard = () => {
     fetchBudgetCounts();
   }, []);
 
-  useEffect(() => {
-    const fetchWaitingTicketsCount = async () => {
-      try {
-        const response = await axios.get("http://localhost:8080/ticket/status/4");
-
-        const waitingTickets = response.data.count || 0;
-
-        setWaitingTicketsCount(waitingTickets);
-      } catch (error) {
-        console.error("Error fetching waiting tickets count:", error);
-      }
-    };
-
-    fetchWaitingTicketsCount();
-  }, []);
-
-  useEffect(() => {
-    const fetchInactiveLicensesCount = async () => {
-      try {
-        const response = await axios.get(
-          "http://localhost:8080/license/countByStatus/1"
-        );
-        setInactiveLicensesCount(response.data.count || 0); // Assuming your API response has a 'count' field
-      } catch (error) {
-        console.error("Error fetching inactive licenses count:", error);
-      }
-    };
-
-    fetchInactiveLicensesCount();
-  }, []);
-
-  const pendingCount = budgetCounts.datasets[0].data[0];
-
   return (
     <div className="dashboard-content bg-light w-100">
       <h4 className="title mt-2 mb-0 mx-4">Dashboard</h4>
@@ -111,7 +129,7 @@ const AdminDashboard = () => {
           <div className="d-flex justify-content-between">
             <div className="col mx-1">
               <Box
-                title="Waiting tickets"
+                title="Pending tickets"
                 number={waitingTicketsCount}
                 image={notificationicon}
                 evolution="10"
@@ -120,7 +138,15 @@ const AdminDashboard = () => {
             <div className="col mx-1">
               <Box
                 title="Pending Budgets"
-                number={pendingCount}
+                number={pendingBudgetsCount}
+                image={notificationicon}
+                evolution="10"
+              />
+            </div>
+            <div className="col mx-1">
+              <Box
+                title="Active Licences"
+                number={activeLicensesCount}
                 image={notificationicon}
                 evolution="10"
               />
@@ -129,14 +155,6 @@ const AdminDashboard = () => {
               <Box
                 title="Inactive Licences"
                 number={inactiveLicensesCount}
-                image={notificationicon}
-                evolution="10"
-              />
-            </div>
-            <div className="col mx-1">
-              <Box
-                title="Active Licences"
-                number="20"
                 image={notificationicon}
                 evolution="10"
               />

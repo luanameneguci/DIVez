@@ -28,8 +28,8 @@ controllers.ticketStatus_update = async (req, res) => {
   const { TICKETSTATUS } = req.body;
   try {
     const updatedStatus = await TicketStatus.update(
-      { TICKETSTATUS },
-      { where: { IDTICKETSTATUS: statusId } }
+      { TicketStatus },
+      { where: { idTicketStatus: statusId } }
     );
     res.json({ updatedStatus });
   } catch (error) {
@@ -41,7 +41,7 @@ controllers.ticketStatus_detail = async (req, res) => {
   const statusId = req.params.id;
   try {
     const status = await TicketStatus.findOne({
-      where: { IDTICKETSTATUS: statusId }
+      where: { idTicketStatus: statusId }
     });
     if (!status) {
       res.status(404).json({ message: "Ticket Status not found" });

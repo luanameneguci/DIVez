@@ -126,4 +126,33 @@ controllers.licensesByUser = async (req, res) => {
   }
 };
 
+controllers.countLicensesWithStatus1 = async (req, res) => {
+  try {
+      const count = await Licenses.count({
+          where: {
+              idLicenseStatus: 1
+          }
+      });
+      res.json({ count });
+  } catch (error) {
+      console.error('Error:', error);
+      res.status(500).json({ error: 'Internal Server Error' });
+  }
+};
+
+controllers.countLicensesWithStatus2 = async (req, res) => {
+  try {
+      const count = await Licenses.count({
+          where: {
+              idLicenseStatus: 2
+          }
+      });
+      res.json({ count });
+  } catch (error) {
+      console.error('Error:', error);
+      res.status(500).json({ error: 'Internal Server Error' });
+  }
+};
+
+
 module.exports = controllers;

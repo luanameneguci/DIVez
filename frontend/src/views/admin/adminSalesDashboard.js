@@ -4,7 +4,6 @@ import notificationicon from "../../images/notification.png";
 import Box from '../../components/admin/Box';
 import SalesGraph from '../../components/admin/SalesGraph';
 
-
 const AdminSalesDashboard = () => {
     return (
         <div className="bg-light w-100">
@@ -27,6 +26,6 @@ const AdminSalesDashboard = () => {
             </div>
         </div>
     );
-}
+};
 
 export default AdminSalesDashboard;

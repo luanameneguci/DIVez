@@ -160,4 +160,63 @@ controllers.getBudgetProducts = async (req, res) => {
   }
 };
 
+controllers.countBudgetsWithStatus1 = async (req, res) => {
+  try {
+      const count = await Budget.count({
+          where: {
+              idBudgetStatus: 1
+          }
+      });
+      res.json({ count });
+  } catch (error) {
+      console.error('Error:', error);
+      res.status(500).json({ error: 'Internal Server Error' });
+  }
+};
+
+controllers.countBudgetsWithStatus2 = async (req, res) => {
+  try {
+      const count = await Budget.count({
+          where: {
+              idBudgetStatus: 2
+          }
+      });
+      res.json({ count });
+  } catch (error) {
+      console.error('Error:', error);
+      res.status(500).json({ error: 'Internal Server Error' });
+  }
+};
+
+controllers.countBudgetsWithStatus3 = async (req, res) => {
+  try {
+      const count = await Budget.count({
+          where: {
+              idBudgetStatus: 3
+          }
+      });
+      res.json({ count });
+  } catch (error) {
+      console.error('Error:', error);
+      res.status(500).json({ error: 'Internal Server Error' });
+  }
+};
+
+
+controllers.countBudgetsWithStatus4 = async (req, res) => {
+  try {
+      const count = await Budget.count({
+          where: {
+              idBudgetStatus: 4
+          }
+      });
+      res.json({ count });
+  } catch (error) {
+      console.error('Error:', error);
+      res.status(500).json({ error: 'Internal Server Error' });
+  }
+};
+
+
+
 module.exports = controllers;

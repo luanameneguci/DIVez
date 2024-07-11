@@ -8,6 +8,18 @@ router.get("/", budgetController.budget_list);
 // Create a new budget
 router.post("/create", budgetController.budget_create);
 
+// Get number of New Budgets
+router.get("/new", budgetController.countBudgetsWithStatus1);
+
+// Get number of Pending Budgets
+router.get("/pending", budgetController.countBudgetsWithStatus2);
+
+// Get number of Paid Budgets
+router.get("/paid", budgetController.countBudgetsWithStatus3);
+
+// Get number of Rejected Budgets
+router.get("/rejected", budgetController.countBudgetsWithStatus4);
+
 // Update a budget
 router.put("/update/:id", budgetController.budget_update);
 

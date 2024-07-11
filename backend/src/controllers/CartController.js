@@ -7,9 +7,6 @@ const Product = require("../models/product");
 const ProductCart = require("../models/productCart");
 const Licenses = require("../models/licenses");
 
-
-
-
 const controllers = {};
 
 controllers.cart_list = async (req, res) => {
@@ -168,6 +165,5 @@ controllers.getAllProductsInCart = async (req, res) => {
       res.status(500).json({ message: 'Internal server error' });
   }
 };
-
 
 module.exports = controllers;

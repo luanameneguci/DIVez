@@ -1,6 +1,6 @@
 import '../../App.css';
 
-// Retorna as boxs
+// Top Dashboard Info Boxes
 function Box(props) {
     return (
         <div className="box-container bg-white col-auto roundbg d-flex px-4 py-4 align-items-center shadow">
