@@ -19,9 +19,9 @@ controllers.cart_list = async (req, res) => {
 };
 
 controllers.cart_create = async (req, res) => {
-  const { IDUSER, CARTPRICE } = req.body;
+  const { idUser, cartPrice } = req.body;
   try {
-    const newCart = await Cart.create({ IDUSER, CARTPRICE });
+    const newCart = await Cart.create({ idUser, cartPrice });
     res.json(newCart);
   } catch (error) {
     res.status(400).json({ error: error.message });
@@ -166,6 +166,25 @@ controllers.getAllProductsInCart = async (req, res) => {
       console.error('Error fetching products in cart:', error);
       res.status(500).json({ message: 'Internal server error' });
   }
+};
+
+controllers.CartsByUserId = async (req, res) => {
+  const idUser = req.params.idUser;
+
+    try {
+        const carts = await Cart.findAll({
+            where: { idUser: idUser }
+        });
+
+        if (!carts || carts.length === 0) {
+            return res.status(404).json({ message: 'Carts not found for the user' });
+        }
+
+        res.json(carts);
+    } catch (error) {
+        console.error('Error fetching carts:', error);
+        res.status(500).json({ error: 'Internal server error' });
+    }
 };
 
 module.exports = controllers;

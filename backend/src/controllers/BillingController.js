@@ -2,6 +2,8 @@ const sequelize = require("../models/database");
 const Billing = require("../models/billing");
 const Cart = require("../models/cart");
 const ProductCart = require("../models/productCart");
+const Product = require("../models/product");
+const Licenses = require("../models/licenses");
 
 
 
@@ -73,6 +75,8 @@ controllers.billing_delete = async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 };
+
+
 /*
 controllers.sales_data = async (req, res) => {
   try {

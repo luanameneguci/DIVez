@@ -21,4 +21,6 @@ router.get("/user/:idUser", cartController.getUserCartDetails);
 
 router.get("/:idCart/products", cartController.getAllProductsInCart);
 
+router.get("/all/:idUser", cartController.CartsByUserId);
+
 module.exports = router;

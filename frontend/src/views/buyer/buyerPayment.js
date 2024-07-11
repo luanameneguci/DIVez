@@ -8,7 +8,8 @@ const BuyerPayment = () => {
   const [totalPrice, setTotalPrice] = useState(0);
   const [cardNumber, setCardNumber] = useState("");
   const [expiry, setExpiry] = useState("");
-  const [idCart, setIdCart] = useState(1);
+  const [idCart, setIdCart] = useState(null);
+  const [idUser, setIdUser] = useState(6); // Replace 6 with actual user ID if needed
 
   const handleDeleteFromCart = async (idProductCart) => {
     try {
@@ -20,17 +21,53 @@ const BuyerPayment = () => {
       });
 
       if (response.ok) {
-        fetch(`http://localhost:8080/cart/${idCart}/products`)
-          .then((response) => response.json())
-          .then((data) => {
-            setItems(data);
-          })
-          .catch((error) => console.error("Error fetching data:", error));
+        fetchCartProducts(idCart);
       } else {
         console.error("Failed to delete product from cart");
       }
     } catch (error) {
       console.error("Error deleting product from cart:", error);
+    }
+  };
+
+  const fetchCartProducts = async (cartId) => {
+    try {
+      const response = await fetch(`http://localhost:8080/cart/${cartId}/products`);
+      const data = await response.json();
+      setItems(data);
+      console.log("Fetched items:", data);
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
+  };
+
+  const fetchHighestIdCart = async () => {
+    try {
+      const response = await axios.get(`http://localhost:8080/cart/all/${idUser}`);
+      const carts = response.data;
+      if (carts && carts.length > 0) {
+        const highestIdCart = carts.reduce((max, cart) => (cart.idCart > max ? cart.idCart : max), carts[0].idCart);
+        setIdCart(highestIdCart);
+        fetchCartProducts(highestIdCart);
+      } else {
+        console.error("No carts found for the user");
+      }
+    } catch (error) {
+      console.error("Error fetching carts:", error);
+    }
+  };
+
+  const createNewCart = async () => {
+    try {
+      const response = await axios.post("http://localhost:8080/cart/create", {
+        idUser: idUser,
+        cartPrice: 0,
+      });
+      const newCart = response.data;
+      setIdCart(newCart.idCart);
+      fetchCartProducts(newCart.idCart);
+    } catch (error) {
+      console.error("Error creating new cart:", error);
     }
   };
 
@@ -48,6 +85,10 @@ const BuyerPayment = () => {
     setTotalPrice(totalPrice);
   }, [items]);
 
+  useEffect(() => {
+    fetchHighestIdCart();
+  }, []);
+
   const handleCardNumberChange = (event) => {
     const inputWithoutSpaces = event.target.value.replace(/\s+/g, "");
     const formattedValue = inputWithoutSpaces.replace(/(\d{4})/g, "$1 ").trim();
@@ -62,52 +103,37 @@ const BuyerPayment = () => {
     setExpiry(formattedValue);
   };
 
-  useEffect(() => {
-    fetch(`http://localhost:8080/cart/${idCart}/products`)
-      .then((response) => response.json())
-      .then((data) => {
-        setItems(data);
-        console.log("Fetched items:", data); // Log items to verify data
-      })
-      .catch((error) => console.error("Error fetching data:", error));
-  }, [idCart]);
-
   const handleCheckout = async (event) => {
     event.preventDefault();
-  
+
     try {
-      // Step 1: Create a bill
       const billResponse = await axios.post("http://localhost:8080/billing/create", {
-        idCart: idCart
+        idCart: idCart,
       });
-  
+
       if (billResponse.status === 201) {
         console.log("Bill created successfully:", billResponse.data);
-  
-        // Step 2: Fetch idUser associated with idCart
+
         const cartResponse = await axios.get(`http://localhost:8080/cart/${idCart}`);
         const idUser = cartResponse.data.idUser;
-  
+
         console.log("Fetched idUser:", idUser);
-  
-        // Step 3: Prepare licenses data and create licenses
+
         const licensesData = items.map((item) => ({
-          numberOfLicenses: item.numberOfLicenses, // Ensure item.numberOfLicenses is set correctly
-          idLicenseStatus: 2, // Example value for idLicenseStatus
+          numberOfLicenses: item.numberOfLicenses,
+          idLicenseStatus: 2,
           licenseVersion: item.productVersion,
           idBill: billResponse.data.idBill,
           idUser: idUser,
-          idProduct: item.idProduct
+          idProduct: item.idProduct,
         }));
-  
+
         console.log("Sending licensesData:", licensesData);
-  
-        // Step 4: Send licensesData to create licenses
+
         const licensesResponse = await axios.post("http://localhost:8080/licenses/create", licensesData);
-  
+
         if (licensesResponse.status === 200) {
           console.log(`${licensesData.length} licenses created successfully.`);
-          // Optionally, you can redirect or show a success message
         } else {
           console.error("Error creating licenses:", licensesResponse.statusText);
         }
@@ -120,6 +146,7 @@ const BuyerPayment = () => {
         console.error("Server responded with:", error.response.data);
       }
     }
+    createNewCart();
   };
 
   return (
