@@ -27,7 +27,10 @@ const BudgetProduct = sequelize.define('budgetProduct', {
             model: Budget,
             key: 'idBudget'
         }
-    }
+    },
+    numberOfLicenses: {
+        type: Sequelize.INTEGER,
+    },
 }, {
     timestamps: false,
     freezeTableName: true

@@ -21,7 +21,11 @@ const Budget = sequelize.define('budget', {
     idUser: {
         type: Sequelize.INTEGER,
         allowNull: false
-    }
+    },
+    budgetPrice: {
+        type: Sequelize.REAL,
+        allowNull: true,
+    },
 }, {
     timestamps: false,
     freezeTableName: true

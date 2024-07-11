@@ -5,28 +5,25 @@ import Select from 'react-select';
 import axios from 'axios';
 
 function ManagersList() {
-    // States for input filters
     const [nameFilter, setNameFilter] = useState('');
     const [nifFilter, setNifFilter] = useState('');
     const [mailFilter, setMailFilter] = useState('');
     const [productsFilter, setProductsFilter] = useState('');
-
-    // States for managers and products
     const [managersList, setManagersList] = useState([]);
     const [productList, setProductList] = useState([]);
-
-    // State for modal data and visibility
     const [modalData, setModalData] = useState(null);
     const [lgShow, setLgShow] = useState(false);
+    const [selectedProducts, setSelectedProducts] = useState([]);
+    const idUser = 6; // Set idUser to 6
 
     useEffect(() => {
-        // Fetch managers list from the URL
-        axios.get('http://localhost:8080/userLicenses/6/managers')
+        axios.get(`http://localhost:8080/userLicenses/${idUser}/managers`)
             .then(response => {
                 const managers = response.data.map(manager => {
                     return {
+                        id: manager.idUser,
                         name: manager.managerName,
-                        nif: manager.managerNif.toString(), // Convert NIF to string if necessary
+                        nif: manager.managerNif.toString(),
                         email: manager.managerEmail,
                         products: manager.managedProducts.map(mp => mp.productName).join(', ')
                     };
@@ -35,26 +32,22 @@ function ManagersList() {
             })
             .catch(error => console.error('Error fetching managers:', error));
 
-        // Fetch all products associated with licenses for user ID 6
-        axios.get('http://localhost:8080/licenses/user/6')
+        axios.get(`http://localhost:8080/licenses/user/${idUser}`)
             .then(response => {
                 const licenses = response.data;
-
-                // Extract unique products from licenses
-                const uniqueProducts = Array.from(new Set(licenses.map(license => license.product.productName)));
-
-                // Map unique products to format suitable for react-select
-                const products = uniqueProducts.map(productName => ({
-                    label: productName,
-                    value: productName // Assuming product name as value for simplicity
+                const uniqueProducts = Array.from(new Set(licenses.map(license => ({
+                    id: license.product.idProduct,
+                    name: license.product.productName
+                }))));
+                const products = uniqueProducts.map(product => ({
+                    label: product.name,
+                    value: product.id
                 }));
-
                 setProductList(products);
             })
             .catch(error => console.error('Error fetching products:', error));
     }, []);
 
-    // Function to filter rows based on input filters
     const filteredRows = managersList.filter(row =>
         row.name.toLowerCase().includes(nameFilter.toLowerCase()) &&
         row.nif.includes(nifFilter) &&
@@ -62,16 +55,69 @@ function ManagersList() {
         row.products.toLowerCase().includes(productsFilter.toLowerCase())
     );
 
-    // Function to show modal with selected manager details
     const handleShow = (row) => {
-        setModalData(row.email);
+        setModalData(row);
         setLgShow(true);
     };
 
-    // Function to close modal
     const handleClose = () => {
         setLgShow(false);
         setModalData(null);
+        setSelectedProducts([]);
+    };
+
+    const handleSubmit = async (event) => {
+        event.preventDefault();
+        try {
+            const email = modalData.email;
+            const productIds = selectedProducts.map(product => product.value);
+
+            for (let productId of productIds) {
+                await axios.post(`http://localhost:8080/userLicenses/create`, {
+                    email,
+                    productId
+                });
+            }
+
+            handleClose();
+            alert('UserLicense created successfully!');
+        } catch (error) {
+            console.error('Error creating UserLicense:', error);
+            alert('Failed to create UserLicense');
+        }
+    };
+
+    const handleDelete = async (email) => {
+        try {
+            await axios.delete(`http://localhost:8080/userLicenses/delete`, {
+                data: { email }
+            });
+
+            await axios.post(`http://localhost:8080/user/updateBuyerId`, {
+                email,
+                buyerId: null
+            });
+
+            console.log('Request payload:', { email, idBuyer: null });
+
+            alert('User licenses deleted and idBuyer updated successfully!');
+
+            // Refresh the managers list after deletion
+            const response = await axios.get(`http://localhost:8080/userLicenses/${idUser}/managers`);
+            const managers = response.data.map(manager => {
+                return {
+                    id: manager.idUser,
+                    name: manager.managerName,
+                    nif: manager.managerNif.toString(),
+                    email: manager.managerEmail,
+                    products: manager.managedProducts.map(mp => mp.productName).join(', ')
+                };
+            });
+            setManagersList(managers);
+        } catch (error) {
+            console.error('Error deleting user licenses or updating idBuyer:', error);
+            alert('Failed to delete user licenses or update idBuyer');
+        }
     };
 
     return (
@@ -129,7 +175,7 @@ function ManagersList() {
                                 <button onClick={() => handleShow(row)} className="btn btn-outline-info me-2">
                                     Add
                                 </button>
-                                <button className='btn btn-outline-danger'>
+                                <button onClick={() => handleDelete(row.email)} className='btn btn-outline-danger'>
                                     Delete
                                 </button>
                             </td>
@@ -148,7 +194,7 @@ function ManagersList() {
                     <Modal.Title>Add Manager</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
-                    <form>
+                    <form onSubmit={handleSubmit}>
                         <div className="col">
                             <div className="form-group mb-3">
                                 <label htmlFor="manageremailinput">E-mail</label>
@@ -157,7 +203,7 @@ function ManagersList() {
                                     className="form-control" 
                                     id="manageremailinput" 
                                     placeholder="E-mail" 
-                                    value={modalData || ''} 
+                                    value={modalData ? modalData.email : ''} 
                                     readOnly
                                 />
                             </div>
@@ -169,6 +215,8 @@ function ManagersList() {
                                     isMulti
                                     placeholder="Choose Products..."
                                     className="form-control p-0"
+                                    onChange={setSelectedProducts}
+                                    value={selectedProducts}
                                 />
                             </div>
                         </div>

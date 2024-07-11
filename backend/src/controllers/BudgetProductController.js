@@ -15,12 +15,23 @@ controllers.budgetProduct_list = async (req, res) => {
 };
 
 controllers.budgetProduct_create = async (req, res) => {
-  const { idProduct, idBudget } = req.body;
+  const { idBudget, idProduct, numberOfLicenses } = req.body;
+
+  if (!idBudget || !idProduct || !numberOfLicenses) {
+    return res.status(400).json({ error: 'Missing required fields' });
+  }
+
   try {
-    const newBudgetProduct = await BudgetProduct.create({ idProduct, idBudget });
-    res.json(newBudgetProduct);
+    const newBudgetProduct = await BudgetProduct.create({
+      idBudget,
+      idProduct,
+      numberOfLicenses,
+    });
+
+    return res.status(201).json(newBudgetProduct);
   } catch (error) {
-    res.status(400).json({ error: error.message });
+    console.error('Error creating BudgetProduct:', error);
+    return res.status(500).json({ error: 'Internal server error' });
   }
 };
 

@@ -6,7 +6,7 @@ const budgetController = require("../controllers/BudgetController");
 router.get("/", budgetController.budget_list);
 
 // Create a new budget
-router.post("/create", budgetController.budget_create);
+router.post("/create/:idUser", budgetController.budget_create);
 
 // Get number of New Budgets
 router.get("/new", budgetController.countBudgetsWithStatus1);
@@ -32,6 +32,8 @@ router.delete("/delete/:id", budgetController.budget_delete);
 router.get('/count/:idUser', budgetController.count_budgets_status2);
 
 router.get('/status2/user/:idUser', budgetController.getPendingBudgets);
+
+router.get('/status1/user/:idUser', budgetController.getNewBudgets);
 
 router.get('/user/:idUser', budgetController.getBudgetsByUser);
 

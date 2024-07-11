@@ -61,21 +61,22 @@ controllers.product_update = async (req, res) => {
         res.status(400).json({ error: error.message });
     }
 };
-
 controllers.product_detail = async (req, res) => {
     const idReceived = req.params.idProduct;
+    
     try {
-        const product = await Product.findByPk(idReceived);
-        if (product) {
-            res.json(product);
-        } else {
-            res.status(404).json({ message: "Product not found" });
-        }
+      const product = await Product.findOne({ where: { idProduct: idReceived } });
+      
+      if (product) {
+        res.json(product);
+      } else {
+        res.status(404).json({ message: "Product not found" });
+      }
     } catch (error) {
-        console.error('Error fetching product details:', error);
-        res.status(500).json({ error: error.message });
+      console.error('Error fetching product:', error);
+      res.status(500).json({ error: 'Internal server error' });
     }
-};
+  };
 
 controllers.product_delete = async (req, res) => {
     const productId = req.params.id;

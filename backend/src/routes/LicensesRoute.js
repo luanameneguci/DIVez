@@ -6,7 +6,7 @@ const licensesController = require("../controllers/LicensesController");
 router.get("/", licensesController.licenses_list);
 
 // Create a new license
-router.post("/create", licensesController.licenses_create);
+router.post("/create", licensesController.createLicenses);
 
 // Get count of licenses with idLicenseStatus = 1
 router.get('/active', licensesController.countLicensesWithStatus1);
@@ -22,7 +22,7 @@ router.put("/update/:licenseKey", licensesController.licenses_update);
 router.get("/:licenseKey", licensesController.licenses_detail);
 
 // Delete a license by licenseKey
-router.delete("/delete/:licenseKey", licensesController.licenses_delete);
+router.delete("/delete", licensesController.licenses_delete);
 
 router.get("/status/:idUser", licensesController.getActiveLicenses);
 

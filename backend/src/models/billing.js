@@ -16,8 +16,9 @@ const Billing = sequelize.define('billing', {
         }
     },
     billDate: {
-        type: Sequelize.DATE,
+        type: Sequelize.DATEONLY,
         allowNull: false,
+        defaultValue: Sequelize.literal('CURRENT_TIMESTAMP') // Set default value to current timestamp
     }
 }, {
     timestamps: false,
