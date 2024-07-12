@@ -24,16 +24,19 @@ controllers.ticket_list = async (req, res) => {
 };
 
 controllers.ticket_create = async (req, res) => {
-  const { idTicketPriority, idTicketDepartment, idTicketStatus, ticketName, ticketDescription, ticketDate } = req.body;
+  const { idTicketDepartment, ticketDescription, ticketDate, idUser } = req.body;
+  
   try {
     const newTicket = await Ticket.create({
-      idTicketPriority,
+      idTicketPriority: 1,
       idTicketDepartment,
-      idTicketStatus,
-      ticketName,
+      idTicketStatus: 1, 
+      idBuyer: idUser, 
+      ticketName: 'Ticket', 
       ticketDescription,
       ticketDate
     });
+
     res.json(newTicket);
   } catch (error) {
     res.status(400).json({ error: error.message });

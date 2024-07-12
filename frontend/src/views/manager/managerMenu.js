@@ -89,7 +89,7 @@ const Menu = ({ userId }) => {
               <Route path="/dashboard" element={<ManagerProducts userId={userId} />} />
               <Route path="/tickets" element={<ManagerTicketList userId={userId} />} />
               <Route path="/product" element={<ManagerProduct userId={userId} />} />
-              <Route path="/faq" element={<FAQ />} />
+              <Route path="/faq" element={<FAQ userId={userId} />} />
             </Routes>
           </div>
         </div>
