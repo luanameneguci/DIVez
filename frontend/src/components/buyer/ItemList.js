@@ -81,26 +81,3 @@ const ItemList = ({ items, productVersion }) => {
 };
 
 export default ItemList;
-
-/* não estava a ser usado
-function calculatePercentages(result) {
-  // Initialize the result array
-  let resultado = [];
-
-  // Loop through the data and create sub-arrays with percentage
-  for (let i = 0; i < result.length; i++) {
-    let item = result[i];
-    let percentage = (item[2] / item[1]) * 100;
-    // Create a new object with the original values and the calculated percentage
-    let newItem = {
-      ...item,
-      percentage: percentage.toFixed(0), // Fix to 2 decimal places
-    };
-    resultado.push(newItem);
-  }
-
-  // Return the result array
-  return resultado;
-}*/
-
-

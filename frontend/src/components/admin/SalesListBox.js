@@ -176,7 +176,7 @@ const SalesListBox = () => {
                                     <td>{new Date(bill.billDate).toLocaleDateString('en-GB')}</td>
                                     <td>{cartProducts.map(product => product.productName).join(', ')}</td>
                                     <td>{cartProducts.map(product => product.productPrice).reduce((acc, price) => acc + price, 0).toFixed(2)}</td>
-                                    <td>{/* Additional actions or details */}</td>
+                                    <td></td>
                                 </tr>
                             );
                         })}

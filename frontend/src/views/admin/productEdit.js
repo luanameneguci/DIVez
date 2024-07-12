@@ -25,7 +25,7 @@ const EditProduct = () => {
                 const response = await axios.get(`http://localhost:8080/product/${idProduct}`);
                 const data = response.data;
                 setProduct(data);
-                setEditedProduct(data); // Set initial editedProduct state
+                setEditedProduct(data);
                 setIsLoading(false);
             } catch (error) {
                 console.error('Error fetching product details:', error);

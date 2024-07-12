@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import Select from 'react-select';
 import axios from 'axios';
-import '../../App.css'; // Import your global CSS file for consistency with other components
+import '../../App.css'; 
 
 const PackageAdd = () => {
     const [productList, setProductList] = useState([]);
