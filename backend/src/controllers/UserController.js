@@ -223,6 +223,7 @@ controllers.billingByUser = async (req, res) => {
                         "idBill",
                         "idUser",
                         "idProduct",
+                        "licenseVersion"
                       ],
                       where: { idUser: idUser }, // Filter licenses by idUser
                       required: false, // Allow products without licenses
@@ -278,6 +279,27 @@ controllers.updateBuyerId = async (req, res) => {
     res.status(500).json({ message: "Failed to update idBuyer" });
   }
 };
+
+controllers.getIdBuyerId = async (req, res) =>{
+  const { idUser } = req.params; // Extract idUser from request parameters
+
+  try {
+    // Find the user by idUser
+    const user = await User.findOne({
+      where: { idUser },
+      attributes: ['idBuyer'] // Select only the idBuyer field
+    });
+
+    if (!user) {
+      return res.status(404).json({ error: 'User not found' }); // Handle case where idUser doesn't exist
+    }
+
+    return res.json({ idBuyer: user.idBuyer }); // Return idBuyer associated with the found user
+  } catch (error) {
+    console.error('Error retrieving idBuyer:', error.message);
+    return res.status(500).json({ error: 'Internal Server Error' }); // Return server error
+  }
+}
 
 
 

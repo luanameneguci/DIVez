@@ -15,5 +15,6 @@ router.get("/managers/:idBuyer", userController.getManagers);
 router.get("/:idUser/billings", userController.billingByUser);
 router.post('/login', userController.login);
 router.post('/updateBuyerId', userController.updateBuyerId);
+router.get('/checkIdBuyer/:idUser', userController.getIdBuyerId);
 
 module.exports = router;
