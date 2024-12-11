@@ -1,19 +1,31 @@
-import './App.css';
+import React, { useContext } from 'react';
+import { UserContext } from './views/All/UserContext';
 import AdminMenu from './views/admin/adminMenu';
-
-import BuyerShop from './views/buyer/buyerShop';
 import BuyerMenu from './views/buyer/buyerMenu';
-import BuyerDashboard from './views/buyer/buyerDashboard';
 import ManagerMenu from './views/manager/managerMenu';
-import ManagerDashboard from './views/manager/managerDashboard';
-import AdminDashboard from './views/admin/adminDashboard';
+import Menu from './views/All/menu';
 
 function App() {
+  const { user } = useContext(UserContext);
+  const { userRole, userId } = user;
+
+  const renderMenu = () => {
+    switch (userRole) {
+      case "admin":
+        return <AdminMenu userId={userId} />;
+      case "buyer":
+        return <BuyerMenu userId={userId} />;
+      case "manager":
+        return <ManagerMenu userId={userId} />;
+      default:
+        return <Menu />;
+    }
+  };
+
   return (
     <div>
-      <BuyerMenu />
+      {renderMenu()}
     </div>
-
   );
 }
 

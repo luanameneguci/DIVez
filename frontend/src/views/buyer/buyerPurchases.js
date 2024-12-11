@@ -1,70 +1,40 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import '../../App.css';
+import BoughtList from "../../components/buyer/BoughtList";
 
-const list = [
-    1, 'Software 1', '01-02-2024', 'Amount', 'Price',
-    1, 'Software 1', '01-02-2024', 'Amount', 'Price',
-    1, 'Software 1', '01-02-2024', 'Amount', 'Price',
-    1, 'Software 1', '01-02-2024', 'Amount', 'Price',
-    1, 'Software 1', '01-02-2024', 'Amount', 'Price',
-    1, 'Software 1', '01-02-2024', 'Amount', 'Price',
-    1, 'Software 1', '01-02-2024', 'Amount', 'Price',
-    1, 'Software 1', '01-02-2024', 'Amount', 'Price',
-];
+const BuyerPurchasesList = ({ userId }) => {
+    const [purchases, setPurchases] = useState([]);
+    const idUser = 6;
 
-// Split the box3content array into rows of 6 items each
-const rows = [];
-const itemsPerRow = 5;
+    useEffect(() => {
+        // Fetch data from your API endpoint
+        fetch(`http://localhost:8080/cart/user/${userId}`)
+            .then(response => response.json())
+            .then(data => {
+                // Process the received data into the format needed for the list
+                const formattedList = data.map(cart => ({
+                    idBill: cart.bills.length > 0 ? cart.bills[0].idBill : '', 
+                    productList: cart.products.map(product => product.productName).join(', '), // Concatenate product names
+                    billDate: cart.bills.length > 0 ? new Date(cart.bills[0].billDate).toLocaleDateString() : '',
+                    numberOfLicenses: cart.licensesCount,
+                    cartPrice: cart.cartPrice
+                })).filter(cart => cart.idBill !== ''); // Filter out entries with empty idBill
 
-for (let i = 0; i < list.length; i += itemsPerRow) {
-    rows.push(list.slice(i, i + itemsPerRow));
-}
+                setPurchases(formattedList);
+            })
+            .catch(error => console.error('Error fetching data:', error));
+    }, [idUser]); // Add idUser to dependency array to re-fetch when idUser changes
 
-
-const BuyerPurchasesList = () => {
     return (
         <div className="dashboard-content bg-light w-100 h-100">
-            <div className='d-flex justify-content-between p-2'>
-                <h4 className="title my-2 ">Purchases</h4>
+            <div className='d-flex justify-content-between p-2 mx-3'>
+                <h4 className="title my-2">Purchases</h4>
             </div>
-            <Products />
+            <div className="p-3">
+                <BoughtList rows={purchases} />
+            </div>
         </div>
-
     );
 }
-
-function Products() {
-    return <div className="box-container bg-white col-auto rounded d-flex shadow">
-    <div className="col-12 bg-info rounded">
-        <table className='container-fluid text-start bg-info py-4 rounded table3'>
-            <thead className='text-white'>
-                <th className="ps-3 py-2">ID</th>
-                <th className="ps-3 py-2">Product</th>
-                <th className="ps-3 py-2">Date</th>
-                <th className="ps-3 py-2">Amount</th>
-                <th className="ps-3 py-2">Price</th>
-            </thead>
-            <tbody className='bg-white'>
-            {rows.map((row, rowIndex) => (
-                    <tr key={rowIndex}>
-                        {row.map((data, colIndex) => (
-                           <td
-                           key={colIndex}
-                           style={{ 
-                               color: colIndex === 5 ? '#FFD56D' : 'inherit',
-                               padding: '10px 0 10px 1%' 
-                           }}
-                       >
-                            {data}
-                          </td>
-                        ))}
-                    </tr>
-                ))}
-            </tbody>
-        </table>
-    </div>
-</div>
-}
-
 
 export default BuyerPurchasesList;

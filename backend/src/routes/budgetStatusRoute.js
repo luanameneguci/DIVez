@@ -1,18 +1,20 @@
 const express = require("express");
 const router = express.Router();
+const budgetStatusController = require("../controllers/BudgetStatusController");
 
-module.exports = router;
+// Get all budget statuses
+router.get("/", budgetStatusController.budgetStatus_list);
 
-const budgetStatusController = require("../controllers/budgetStatusController");
-
-router.get("/list", budgetStatusController.budgetStatus_list); 
-
-router.get("/:id", budgetStatusController.budgetStatus_detail);
-
+// Create a new budget status
 router.post("/create", budgetStatusController.budgetStatus_create);
 
+// Update a budget status by ID
 router.put("/update/:id", budgetStatusController.budgetStatus_update);
 
+// Get a budget status by ID
+router.get("/:id", budgetStatusController.budgetStatus_detail);
+
+// Delete a budget status by ID
 router.delete("/delete/:id", budgetStatusController.budgetStatus_delete);
 
 module.exports = router;

@@ -1,14 +1,24 @@
 const express = require("express");
 const router = express.Router();
 
-const billController = require("../controllers/billingController");
+const billingController = require("../controllers/BillingController");
 
-router.get("/", billController.bill_list); 
+// Get all billing records
+router.get("/", billingController.billing_list);
 
-router.get("/:id", billController.bill_detail);
+// Create a new billing record
+router.post("/create", billingController.billing_create);
 
-router.post("/create", billController.bill_create);
+// Update a billing record by ID
+router.put("/update/:id", billingController.billing_update);
 
-router.put("/update/:id", billController.bill_update);
+// Get a billing record by ID
+router.get("/:id", billingController.billing_detail);
+
+// Delete a billing record by ID
+router.delete("/delete/:id", billingController.billing_delete);
+
+// Get graph data era para o AdminSaleDashboard, não consegui por a funcionar
+//router.get("/salesData", billingController.sales_data);
 
 module.exports = router;

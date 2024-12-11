@@ -1,6 +1,27 @@
 body {
   overflow-x: hidden;
+  max-width: 1920px;
 }
+
+.removebtstyle {
+  border: none;
+  background: transparent;
+}
+
+a {
+  text-decoration: none !important;
+}
+
+.border-none {
+  border: none !important;
+}
+
+.dashboard-content {
+  display: flex; 
+  flex-direction: column; 
+  min-height: 92vh;
+}
+
 
 .box-height {
   height: 300px;
@@ -9,6 +30,64 @@ body {
 .border-product {
   border-color: #979797;
 }
+
+.fixed-bottom-buttons {
+  position: fixed;
+  right: 0;
+  bottom: 0;
+  left: auto;
+  z-index: 1030;
+}
+
+/*start tabelas*/
+.table {
+  background-color: transparent;
+  width: 100%;
+  color: #212529;
+  border-collapse: collapse;
+}
+
+.w-10 {
+  width: 10% !important;
+}
+
+.table thead th:first-child {
+  width: 12%;
+  border-radius: 15px 0 0 0;
+}
+
+.table thead th:last-child {
+  border-radius: 0 15px 0 0;
+}
+
+.table thead th {
+  vertical-align: bottom;
+  padding-bottom: 10px;
+  color: white;
+  background-color: #10ccf4 !important;
+}
+
+.table tbody tr:last-child {
+  border-radius: 0 0 15px 15px !important;
+}
+/*end tabelas*/
+
+/* DatePicker ver as classes no f12 */
+.react-datepicker-wrapper {
+  width: 100%;
+}
+
+.react-datepicker__day--selected {
+  background-color: #10ccf4 !important; 
+
+}
+
+.react-datepicker__day--keyboard-selected {
+  background-color: #10ccf4 !important; 
+  color: white;
+}
+
+/*End datepicker*/
 
 .roundbg {
   border-radius: 15px;
@@ -19,9 +98,14 @@ body {
   height: 50px;
 }
 
-/*Remover isto prob*/
+.thumb-img img {
+  width: 100px;
+  height: 100px;
+}
+
+
 .admin-box-maxw {
-  max-width: 283.5px;
+  max-width: 250px;
 }
 
 .active-true {
@@ -29,7 +113,7 @@ body {
   border-radius: 5px;
   color: white !important;
 }
-
+/*Remover isto prob*/
 .header-logo {
   width: 60%;
   max-width: 60%;
@@ -63,6 +147,11 @@ body {
   height: 50px;
 }
 
+.ticket-print {
+  width: 75px;
+  height: 75px;
+}
+
 .hover {
   transition: all 0.2s ease;
   cursor: pointer;
@@ -70,6 +159,15 @@ body {
 
 .hover:hover {
   box-shadow: 5px 6px 6px 2px #e9ecef;
+  transform: scale(1.05);
+}
+
+.hover1 {
+  transition: all 0.2s ease;
+  cursor: pointer;
+}
+
+.hover1:hover {
   transform: scale(1.05);
 }
 
@@ -84,6 +182,12 @@ body {
 .text-updated {
   color: #00b69b;
 }
+
+.Gradient {
+  background:linear-gradient(rgb(0, 204, 255),transparent);
+  background-color:blue /*this your primary color*/
+}
+
 /*
 Já cá estava, tirar isto tudo acho eu
 
